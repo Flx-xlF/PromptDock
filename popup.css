@@ -1,0 +1,443 @@
+/* ==========================================================================
+   Universal AI Prompter — Popup Styles
+   Design: Swiss Minimal Functional (dark)
+   ========================================================================== */
+
+:root {
+    --bg-primary:     #1a1a1a;
+    --bg-card:        #242424;
+    --bg-surface:     #2e2e2e;
+    --text-primary:   #e8e8e8;
+    --text-secondary: #888888;
+    --text-tertiary:  #5a5a5a;
+    --accent:         #4a9eff;
+    --accent-hover:   #3a8ae5;
+    --danger:         #e54d51;
+    --border:         #333333;
+}
+
+/* --- Base ---------------------------------------------------------------- */
+
+html, body {
+    width: 360px;
+    margin: 0;
+}
+
+body {
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* --- Header -------------------------------------------------------------- */
+
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.logo {
+    background: transparent;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1.5px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+h2 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+/* --- Prompt Cards -------------------------------------------------------- */
+
+#prompts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.prompt-item {
+    background-color: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.15s ease;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.prompt-item:hover {
+    background-color: var(--bg-card);
+}
+
+.prompt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.prompt-name {
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: -0.01em;
+}
+
+.prompt-preview {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 24px;
+    line-height: 1.4;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* --- Action Buttons (always visible, visually quiet) --------------------- */
+
+.prompt-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.run-btn {
+    background-color: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 11px;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    min-height: 28px;
+    display: flex;
+    align-items: center;
+}
+
+.run-btn:hover {
+    background-color: var(--accent);
+    color: var(--bg-primary);
+}
+
+.edit-btn, .delete-btn {
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    padding: 4px 6px;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+    min-width: 28px;
+    min-height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-btn:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-surface);
+}
+
+.delete-btn:hover {
+    color: var(--danger);
+    background-color: rgba(229, 77, 81, 0.1);
+}
+
+/* --- Drag Handle --------------------------------------------------------- */
+
+.drag-handle {
+    cursor: grab;
+    color: var(--text-tertiary);
+    margin-right: 8px;
+    font-size: 14px;
+    user-select: none;
+    opacity: 0.5;
+    transition: opacity 0.15s ease;
+}
+
+.prompt-item:hover .drag-handle {
+    opacity: 1;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+.prompt-item.dragging {
+    opacity: 0.4;
+    background-color: var(--bg-card);
+}
+
+/* --- Add Form ------------------------------------------------------------ */
+
+.add-section {
+    margin-top: 16px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+input, textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    transition: border-color 0.15s ease;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.primary-btn {
+    background-color: var(--accent);
+    color: var(--bg-primary);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background-color 0.15s ease;
+}
+
+.primary-btn:hover {
+    background-color: var(--accent-hover);
+}
+
+.secondary-btn {
+    background-color: transparent;
+    color: var(--text-secondary);
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    transition: all 0.15s ease;
+}
+
+.secondary-btn:hover {
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
+    background-color: var(--bg-card);
+}
+
+.text-btn {
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: color 0.15s ease;
+}
+
+.text-btn:hover {
+    color: var(--text-secondary);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* --- Byte Counter (in add/edit form) ------------------------------------ */
+
+.byte-counter {
+    text-align: right;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-bottom: 8px;
+    margin-top: -4px;
+    transition: color 0.15s ease;
+}
+
+.byte-counter.over-limit {
+    color: var(--danger);
+    font-weight: 500;
+}
+
+/* --- Global Storage Bar ------------------------------------------------- */
+
+.footer-actions {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    gap: 8px;
+}
+
+.footer-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.global-storage-bar {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    text-align: center;
+    opacity: 0.6;
+    transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+.global-storage-bar.storage-warning {
+    color: var(--danger);
+    opacity: 1;
+}
+
+/* --- Modal Overlay ------------------------------------------------------- */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.modal-content {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    width: 80%;
+    max-width: 300px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.sync-status {
+    font-size: 12px;
+    padding: 8px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    word-break: break-all;
+}
+
+.sync-status.success {
+    background-color: rgba(16, 124, 16, 0.1);
+    color: #4cc24c;
+    border: 1px solid rgba(16, 124, 16, 0.3);
+}
+
+.sync-status.error {
+    background-color: rgba(229, 77, 81, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(229, 77, 81, 0.3);
+}
+
+/* --- Attribution Footer -------------------------------------------------- */
+
+.app-footer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--text-tertiary);
+    text-align: center;
+}
+
+.creator-tagline {
+    color: var(--text-secondary);
+}
+
+.footer-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s ease, text-decoration 0.15s ease;
+}
+
+.footer-link:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+.kofi-section {
+    color: var(--text-tertiary);
+    font-size: 11px;
+}
+
+.kofi-link {
+    color: #ff5e5b;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.15s ease, text-decoration 0.15s ease;
+}
+
+.kofi-link:hover {
+    opacity: 0.85;
+    text-decoration: underline;
+}
+

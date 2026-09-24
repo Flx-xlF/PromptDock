@@ -1,0 +1,22 @@
+# Virtual environment
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment variables
+.env
+
+# Runtime data
+processed_emails.json
+results.json
+logs/
+
+# OS
+.DS_Store
+
+# Release packages
+release/
+

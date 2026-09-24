@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo">AI</div>
+        <h2>Universal AI Prompter</h2>
+    </div>
+    
+    <div id="prompts-list">
+        <!-- Prompts will be dynamically injected here -->
+    </div>
+
+    <div class="add-section">
+        <button id="toggle-add-btn" class="secondary-btn">+ Neuer Prompt</button>
+        <div id="add-form" class="hidden">
+            <input type="text" id="prompt-name" placeholder="Name (z.B. Medienanfrage)">
+            <textarea id="prompt-content" placeholder="Prompt Text..."></textarea>
+            <div id="char-counter" class="byte-counter">0 / 8192 Bytes verfügbar</div>
+            <label class="checkbox-label" style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: var(--text-secondary); font-size: 13px; cursor: pointer;">
+                <input type="checkbox" id="prompt-auto-send">
+                Automatisch absenden
+            </label>
+            <div class="actions">
+                <button id="cancel-add-btn" class="text-btn">Abbrechen</button>
+                <button id="save-btn" class="primary-btn">Speichern</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-actions">
+        <div class="footer-row">
+            <button id="export-btn" class="text-btn" style="font-size: 12px;">Exportieren</button>
+            <button id="import-btn" class="text-btn" style="font-size: 12px;">Importieren</button>
+            <button id="mobile-sync-btn" class="text-btn" style="font-size: 12px;">Mobile Sync</button>
+            <input type="file" id="import-file" accept=".json" style="display: none;">
+        </div>
+        <div id="global-storage" class="global-storage-bar"></div>
+    </div>
+    
+    <footer class="app-footer">
+        <div class="creator-tagline">
+            Built with care (and a bit of madness) by <a href="https://github.com/Flx-xlF" target="_blank" rel="noopener noreferrer" class="footer-link">schema/f</a>
+        </div>
+        <div class="kofi-section">
+            Enjoy my work? <a href="https://ko-fi.com/flxxlf" target="_blank" rel="noopener noreferrer" class="kofi-link">Tip me on Ko-fi</a>
+        </div>
+    </footer>
+    
+    <!-- Mobile Sync Modal -->
+    <div id="sync-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3>GitHub Gist Sync</h3>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Synchronisiere deine Prompts mit deinem iPhone über Apple Shortcuts und GitHub Gists (kostenlos).</p>
+            <label style="font-size: 12px; font-weight: 500; display: block; margin-bottom: 4px;">GitHub Personal Access Token (PAT):</label>
+            <input type="password" id="github-pat-input" placeholder="ghp_xxxxxxxxxxxx" style="width: 100%; box-sizing: border-box; margin-bottom: 12px; font-family: monospace;">
+            <div id="sync-status" class="sync-status hidden"></div>
+            <div class="actions" style="margin-top: 16px;">
+                <button id="close-sync-btn" class="text-btn">Schliessen</button>
+                <button id="save-sync-btn" class="primary-btn">Verbinden</button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="popup.js"></script>
+</body>
+</html>
