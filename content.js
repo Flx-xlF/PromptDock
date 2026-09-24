@@ -1,5 +1,5 @@
 /**
- * Universal AI Prompter — Content Script
+ * PromptDock — Content Script
  * 
  * Injected into supported AI platforms (Microsoft Copilot, Google Gemini).
  * Responsibilities:
@@ -75,14 +75,14 @@ window.injectCopilotPrompt = function(promptText, autoSend) {
         PLATFORM = PLATFORM_CONFIGS.copilot; // fallback
     }
     
-    console.log(`[Universal AI Prompter] Checking frame for ${PLATFORM.name}...`, window.location.href);
+    console.log(`[PromptDock] Checking frame for ${PLATFORM.name}...`, window.location.href);
     
     // --- CRITICAL SECURITY SANDBOX ---
     const isIframe = window !== window.top;
     
     if (PLATFORM.requiresIframe && !isIframe) {
         // Obsolete block for Copilot, but kept for future strict iframe platforms
-        console.log(`[Universal AI Prompter] Execution blocked: Main window detected for ${PLATFORM.name}.`);
+        console.log(`[PromptDock] Execution blocked: Main window detected for ${PLATFORM.name}.`);
         return false;
     }
     
@@ -100,7 +100,7 @@ window.injectCopilotPrompt = function(promptText, autoSend) {
         return false;
     }
     
-    console.log(`[Universal AI Prompter] Found input field for ${PLATFORM.name}!`);
+    console.log(`[PromptDock] Found input field for ${PLATFORM.name}!`);
     
     // --- Step 2: Inject Prompt ---
     inputField.focus();
@@ -123,7 +123,7 @@ window.injectCopilotPrompt = function(promptText, autoSend) {
             const sendBtn = document.querySelector(PLATFORM.selectors.sendBtn);
             if (sendBtn && !sendBtn.disabled) {
                 sendBtn.click();
-                console.log(`[Universal AI Prompter] Auto-send clicked for ${PLATFORM.name}.`);
+                console.log(`[PromptDock] Auto-send clicked for ${PLATFORM.name}.`);
             }
         }, 500);
     }
@@ -146,7 +146,7 @@ if (PLATFORM) {
 
 function initInlineComments() {
     const platformName = PLATFORM ? PLATFORM.name : 'Unknown';
-    console.log(`[Universal AI Prompter] Initializing Inline Comments for ${platformName}...`);
+    console.log(`[PromptDock] Initializing Inline Comments for ${platformName}...`);
 
     // 1. Create UI Elements within a ShadowRoot
     const shadowHost = document.createElement('div');
@@ -837,7 +837,7 @@ ${finalContexts.join('\n\n---\n\n')}`;
                 if (window._uapChatObserver === observer) {
                     observer.disconnect();
                     window._uapChatObserver = null;
-                    console.log('[Universal AI Prompter] Observer auto-disconnected after timeout.');
+                    console.log('[PromptDock] Observer auto-disconnected after timeout.');
                 }
             }, 60000);
 

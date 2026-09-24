@@ -6,7 +6,7 @@ import { ext, StorageAdapter, PROMPT_KEY_PREFIX, ORDER_KEY } from './shared/brow
  * Fetches the corresponding prompt and attempts direct injection into the active tab.
  */
 ext.commands.onCommand.addListener(async (command) => {
-    console.log("[Universal AI Prompter] Command received:", command);
+    console.log("[PromptDock] Command received:", command);
     
     if (command.startsWith("run-prompt-")) {
         const indexStr = command.replace("run-prompt-", "");
@@ -33,7 +33,7 @@ ext.commands.onCommand.addListener(async (command) => {
         }
         
         if (index >= prompts.length) {
-            console.warn(`[Universal AI Prompter] No prompt configured at index ${index}`);
+            console.warn(`[PromptDock] No prompt configured at index ${index}`);
             return;
         }
         
@@ -81,10 +81,10 @@ ext.commands.onCommand.addListener(async (command) => {
                 
                 const success = results && results.some(r => r.result === true);
                 if (success) {
-                    console.log(`[Universal AI Prompter] Prompt ${index} injected via shortcut.`);
+                    console.log(`[PromptDock] Prompt ${index} injected via shortcut.`);
                 } else {
                     // --- 4. Fallback: Copy to Clipboard and Notify User ---
-                    console.log(`[Universal AI Prompter] Input field not found for prompt ${index}, falling back to clipboard.`);
+                    console.log(`[PromptDock] Input field not found for prompt ${index}, falling back to clipboard.`);
                     await ext.scripting.executeScript({
                         target: { tabId: tab.id }, // main frame only
                         func: async (text) => {
@@ -93,7 +93,7 @@ ext.commands.onCommand.addListener(async (command) => {
                             try {
                                 await navigator.clipboard.writeText(text);
                             } catch (err) {
-                                console.error("[Universal AI Prompter] Clipboard write failed:", err);
+                                console.error("[PromptDock] Clipboard write failed:", err);
                                 message = "Fehler: Zwischenablage nicht verfügbar";
                                 bgColor = "#e54d51";
                             }
@@ -133,7 +133,7 @@ ext.commands.onCommand.addListener(async (command) => {
                     });
                 }
             } catch (e) {
-                console.error("[Universal AI Prompter] Failed to inject via shortcut:", e);
+                console.error("[PromptDock] Failed to inject via shortcut:", e);
             }
         }
     }

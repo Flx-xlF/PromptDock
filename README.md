@@ -1,4 +1,4 @@
-# Universal AI Prompter
+# PromptDock
 
 > **One-click prompt injection, inline commenting, and effortless prompt library management for Microsoft Copilot and Google Gemini.**
 
@@ -12,7 +12,7 @@ Unless your organization pays premium enterprise tiers for custom Copilot Studio
 
 Instead, thousands of professionals spend their workdays copy-pasting multi-step instructions from OneNote, sticky notes, and text files. And when an AI response needs tweaking, you are forced to retype instructions from scratch because you cannot easily comment on or refine specific paragraphs inline.
 
-**Universal AI Prompter** is the missing local-first productivity layer built right into your browser.
+**PromptDock** is the missing local-first productivity layer built right into your browser.
 
 ---
 
@@ -53,7 +53,7 @@ Instead, thousands of professionals spend their workdays copy-pasting multi-step
 #### Option B: Load as Developer Extension (Unpacked)
 1. Clone or download this repository:
    ```bash
-   git clone https://github.com/Flx-xlF/universal-ai-prompter.git
+   git clone https://github.com/Flx-xlF/prompt-dock.git
    ```
 2. Open your Chromium browser and go to `chrome://extensions` (or `edge://extensions`).
 3. Enable **Developer mode** (toggle in top-right corner).
@@ -77,7 +77,7 @@ Instead, thousands of professionals spend their workdays copy-pasting multi-step
 ### Privacy & Data Ownership
 
 Your prompts belong to you.
-- Universal AI Prompter operates completely client-side.
+- PromptDock operates completely client-side.
 - We do not run a backend server.
 - The optional GitHub Gist synchronization connects directly from your browser to GitHub's official API (`api.github.com`) using your personal token.
 - See full details in [PRIVACY_POLICY.md](PRIVACY_POLICY.md).
@@ -90,7 +90,7 @@ To validate syntax and create a store-compliant, clean ZIP package:
 ```bash
 python3 build_release.py
 ```
-Outputs: `release/universal-ai-prompter-v1.0.0.zip`
+Outputs: `release/promptdock-v1.0.0.zip`
 
 ---
 

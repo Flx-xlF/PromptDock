@@ -1,11 +1,11 @@
-# Privacy Policy for Universal AI Prompter
+# Privacy Policy for PromptDock
 
 **Last updated:** September 24, 2026
 
-Universal AI Prompter ("we", "our", or "the extension") is committed to protecting your privacy. This Privacy Policy explains our data practices and demonstrates our commitment to transparency.
+PromptDock ("we", "our", or "the extension") is committed to protecting your privacy. This Privacy Policy explains our data practices and demonstrates our commitment to transparency.
 
 ## 1. Single Purpose & Data Processing Principle
-Universal AI Prompter is designed to store user-defined AI prompt templates and inject them into web-based AI assistant interfaces (such as Microsoft Copilot and Google Gemini) upon user request. 
+PromptDock is designed to store user-defined AI prompt templates and inject them into web-based AI assistant interfaces (such as Microsoft Copilot and Google Gemini) upon user request. 
 
 **We do not collect, track, sell, or monetize any personal data.**
 

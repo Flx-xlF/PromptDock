@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Release Packager for Universal AI Prompter
+Release Packager for PromptDock
 Creates a clean, store-compliant ZIP archive ready for Chrome Web Store, Firefox AMO, and Edge Add-ons.
 """
 
@@ -12,7 +12,7 @@ import subprocess
 import hashlib
 
 def main():
-    print("🚀 [Universal AI Prompter] Starting Pre-Release Build & Package...")
+    print("🚀 [PromptDock] Starting Pre-Release Build & Package...")
     base_dir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(base_dir)
 
@@ -70,7 +70,7 @@ def main():
     # 4. Prepare release directory
     release_dir = "release"
     os.makedirs(release_dir, exist_ok=True)
-    zip_filename = os.path.join(release_dir, f"universal-ai-prompter-v{version}.zip")
+    zip_filename = os.path.join(release_dir, f"promptdock-v{version}.zip")
 
     if os.path.exists(zip_filename):
         os.remove(zip_filename)

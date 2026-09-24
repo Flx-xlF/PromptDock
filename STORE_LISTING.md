@@ -1,4 +1,4 @@
-# Store Listing & Submission Guide: Universal AI Prompter
+# Store Listing & Submission Guide: PromptDock
 
 Use this guide and copy-paste ready text when submitting the extension to the **Chrome Web Store Developer Dashboard**, **Firefox Add-ons Developer Hub (AMO)**, and **Microsoft Edge Add-ons**.
 
@@ -7,7 +7,7 @@ Use this guide and copy-paste ready text when submitting the extension to the **
 ## 1. Store Metadata
 
 ### Title
-Universal AI Prompter
+PromptDock
 
 ### Summary / Short Description (Max 132 characters)
 One-click prompt injection, inline commenting, and rewriting for AI assistants (Microsoft Copilot, Google Gemini).
@@ -25,7 +25,7 @@ One-click prompt injection, inline commenting, and rewriting for AI assistants (
 ## 2. Store Description (Markdown / Text)
 
 ```markdown
-Boost your AI workflow with Universal AI Prompter — the fastest way to save, organize, and inject recurring prompts into Microsoft Copilot (Outlook, Teams, M365) and Google Gemini.
+Boost your AI workflow with PromptDock — the fastest way to save, organize, and inject recurring prompts into Microsoft Copilot (Outlook, Teams, M365) and Google Gemini.
 
 Key Features:
 ⚡ One-Click Prompt Injection: Instantly inject complex prompt workflows and multi-step tasks into the chat input.
@@ -73,7 +73,7 @@ When submitting to the Chrome Web Store, reviewers require clear explanations fo
 ---
 
 ## 4. Single-Purpose Policy Declaration
-> "The single purpose of Universal AI Prompter is to allow users to store, organize, and insert reusable AI prompt templates into web-based AI assistant tools."
+> "The single purpose of PromptDock is to allow users to store, organize, and insert reusable AI prompt templates into web-based AI assistant tools."
 
 ---
 
@@ -98,7 +98,7 @@ When submitting to the Chrome Web Store, reviewers require clear explanations fo
    python3 build_release.py
    ```
 2. The store-ready zip will be generated at:
-   `release/universal-ai-prompter-v1.0.0.zip`
+   `release/promptdock-v1.0.0.zip`
 3. Upload to:
    - **Chrome Web Store:** [https://chrome.google.com/webstore/devconsole](https://chrome.google.com/webstore/devconsole)
    - **Firefox Add-ons (AMO):** [https://addons.mozilla.org/developers/](https://addons.mozilla.org/developers/)

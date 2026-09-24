@@ -27,7 +27,7 @@ export const StorageAdapter = {
         try {
             if (this._useSync) return await ext.storage.sync.get(keys);
         } catch (e) {
-            console.warn('[Universal AI Prompter] Sync storage failed, falling back to local:', e);
+            console.warn('[PromptDock] Sync storage failed, falling back to local:', e);
             this._useSync = false;
         }
         return await ext.storage.local.get(keys);
@@ -41,7 +41,7 @@ export const StorageAdapter = {
         try {
             if (this._useSync) return await ext.storage.sync.set(items);
         } catch (e) {
-            console.warn('[Universal AI Prompter] Sync storage failed, falling back to local:', e);
+            console.warn('[PromptDock] Sync storage failed, falling back to local:', e);
             this._useSync = false;
         }
         return await ext.storage.local.set(items);
@@ -55,7 +55,7 @@ export const StorageAdapter = {
         try {
             if (this._useSync) return await ext.storage.sync.remove(keys);
         } catch (e) {
-            console.warn('[Universal AI Prompter] Sync storage failed, falling back to local:', e);
+            console.warn('[PromptDock] Sync storage failed, falling back to local:', e);
             this._useSync = false;
         }
         return await ext.storage.local.remove(keys);

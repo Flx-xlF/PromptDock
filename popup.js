@@ -1,5 +1,5 @@
 /**
- * Universal AI Prompter — Popup Controller
+ * PromptDock — Popup Controller
  * 
  * Manages the extension popup UI:
  * 1. Prompt Management: CRUD operations with live byte counting against chrome.storage.sync quotas.
@@ -68,7 +68,7 @@ const PromptStorage = {
             const legacy = allSync.prompts;
             await this.save(legacy);                       // migrate
             await StorageAdapter.remove('prompts');   // clean up
-            console.log('[Universal AI Prompter] Migrated from legacy sync format.');
+            console.log('[PromptDock] Migrated from legacy sync format.');
             return legacy;
         }
 
@@ -78,7 +78,7 @@ const PromptStorage = {
             const legacy = localData.prompts;
             await this.save(legacy);                        // migrate to sync
             await ext.storage.local.remove('prompts');   // clean up
-            console.log('[Universal AI Prompter] Migrated from legacy local format.');
+            console.log('[PromptDock] Migrated from legacy local format.');
             return legacy;
         }
 
@@ -126,7 +126,7 @@ const PromptStorage = {
         
         const fileContent = JSON.stringify(mobileFormat, null, 2);
         const payload = {
-            description: "UAP Prompts Sync",
+            description: "PromptDock Prompts Sync",
             public: false,
             files: {
                 "prompts": { content: fileContent } // New dot-less file for iOS

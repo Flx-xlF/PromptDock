@@ -2,11 +2,11 @@
   "manifest_version": 3,
   "browser_specific_settings": {
     "gecko": {
-      "id": "universal-ai-prompter@flx.dev",
+      "id": "promptdock@flx.dev",
       "strict_min_version": "115.0"
     }
   },
-  "name": "Universal AI Prompter",
+  "name": "PromptDock",
   "version": "1.0.0",
   "description": "One-click prompt injection, inline commenting, and rewriting for AI assistants (Copilot, Gemini).",
   "icons": {
@@ -17,7 +17,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Universal AI Prompter",
+    "default_title": "PromptDock",
     "default_icon": {
       "16": "icons/icon-16.png",
       "32": "icons/icon-32.png",
