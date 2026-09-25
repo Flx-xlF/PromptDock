@@ -67,3 +67,44 @@ Instead, thousands of professionals spend their workdays copy-pasting multi-step
    ```bash
    git clone https://github.com/Flx-xlF/prompt-dock.git
 
+   1. Open your Chromium browser and go to `chrome://extensions` (or `edge://extensions`).
+2. Enable **Developer mode** (toggle in top-right corner).
+3. Click **Load unpacked** and select the extension directory.
+4. Pin the extension to your toolbar and start prompting.
+
+---
+
+### Keyboard Shortcuts
+
+| Shortcut | Action |
+| :--- | :--- |
+| `Alt + Shift + 1` | Inject Prompt 1 (or copy to clipboard fallback) |
+| `Alt + Shift + 2` | Inject Prompt 2 |
+| `Alt + Shift + 3` | Inject Prompt 3 |
+
+*Customizable anytime via `chrome://extensions/shortcuts`.*
+
+---
+
+### Privacy & Data Ownership
+
+Your prompts belong to you.
+- PromptDock operates completely client-side.
+- We do not run a backend server.
+- The optional GitHub Gist synchronization connects directly from your browser to GitHub's official API (`api.github.com`) using your personal token.
+- See full details in [PRIVACY_POLICY.md](PRIVACY_POLICY.md).
+
+---
+
+### Building the Release Package
+
+To validate syntax and create a store-compliant, clean ZIP package:
+```bash
+python3 build_release.py
+
+---
+
+Built with care (and a bit of madness) by schema/f.
+
+Enjoy my work? Tip me on Ko-fi.
+
