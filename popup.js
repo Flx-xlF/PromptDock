@@ -359,7 +359,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         syncStatus.className = 'sync-status hidden';
         if (local.github_gist_id) {
-            syncStatus.innerHTML = `<strong>Status:</strong> Verbunden ✅<br><br><strong>Shortcut API URL:</strong><br><a href="https://api.github.com/gists/${local.github_gist_id}" target="_blank" style="color:var(--accent);word-break:break-all;">https://api.github.com/gists/${local.github_gist_id}</a><br><br><span style="font-size:10px;color:var(--text-tertiary);">Nutze diese URL im Apple Shortcut mit der "Inhalte von URL abrufen" Aktion (Header: Authorization = Bearer PAT).</span>`;
+            syncStatus.replaceChildren();
+            const s1 = document.createElement('strong');
+            s1.textContent = 'Status:';
+            syncStatus.appendChild(s1);
+            syncStatus.appendChild(document.createTextNode(' Verbunden ✅'));
+            syncStatus.appendChild(document.createElement('br'));
+            syncStatus.appendChild(document.createElement('br'));
+            const s2 = document.createElement('strong');
+            s2.textContent = 'Shortcut API URL:';
+            syncStatus.appendChild(s2);
+            syncStatus.appendChild(document.createElement('br'));
+            const link = document.createElement('a');
+            link.href = `https://api.github.com/gists/${local.github_gist_id}`;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.style.cssText = 'color:var(--accent);word-break:break-all;';
+            link.textContent = `https://api.github.com/gists/${local.github_gist_id}`;
+            syncStatus.appendChild(link);
+            syncStatus.appendChild(document.createElement('br'));
+            syncStatus.appendChild(document.createElement('br'));
+            const note = document.createElement('span');
+            note.style.cssText = 'font-size:10px;color:var(--text-tertiary);';
+            note.textContent = 'Nutze diese URL im Apple Shortcut mit der "Inhalte von URL abrufen" Aktion (Header: Authorization = Bearer PAT).';
+            syncStatus.appendChild(note);
             syncStatus.className = 'sync-status success';
         }
         
@@ -396,7 +419,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             await PromptStorage.syncGist(prompts);
             
             const updatedLocal = await ext.storage.local.get('github_gist_id');
-            syncStatus.innerHTML = `<strong>Erfolgreich synchronisiert! ✅</strong><br><br><strong>Shortcut API URL:</strong><br><a href="https://api.github.com/gists/${updatedLocal.github_gist_id}" target="_blank" style="color:var(--accent);word-break:break-all;">https://api.github.com/gists/${updatedLocal.github_gist_id}</a>`;
+            syncStatus.replaceChildren();
+            const s1 = document.createElement('strong');
+            s1.textContent = 'Erfolgreich synchronisiert! ✅';
+            syncStatus.appendChild(s1);
+            syncStatus.appendChild(document.createElement('br'));
+            syncStatus.appendChild(document.createElement('br'));
+            const s2 = document.createElement('strong');
+            s2.textContent = 'Shortcut API URL:';
+            syncStatus.appendChild(s2);
+            syncStatus.appendChild(document.createElement('br'));
+            const link = document.createElement('a');
+            link.href = `https://api.github.com/gists/${updatedLocal.github_gist_id}`;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.style.cssText = 'color:var(--accent);word-break:break-all;';
+            link.textContent = `https://api.github.com/gists/${updatedLocal.github_gist_id}`;
+            syncStatus.appendChild(link);
             syncStatus.className = 'sync-status success';
         } catch (err) {
             console.error(err);
@@ -450,7 +489,7 @@ async function renderPrompts() {
     });
 
     const list = document.getElementById('prompts-list');
-    list.innerHTML = '';
+    list.replaceChildren();
     
     prompts.forEach((prompt, index) => {
         const div = document.createElement('div');

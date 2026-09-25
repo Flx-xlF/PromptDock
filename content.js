@@ -868,8 +868,7 @@ ${finalContexts.join('\n\n---\n\n')}`;
                         btn.innerText = '🔍 View Diff';
                         btn.addEventListener('click', () => {
                             const newText = latestMessage.innerText.replace('🔍 View Diff', '').trim();
-                            const diffHtml = computeWordDiff(originalClean, newText);
-                            diffContent.innerHTML = diffHtml;
+                            renderWordDiff(originalClean, newText, diffContent);
                             diffModal.style.display = 'flex';
                         });
                         latestMessage.appendChild(btn);
@@ -909,16 +908,12 @@ ${finalContexts.join('\n\n---\n\n')}`;
     });
 }
 
-/** Escape a string for safe HTML insertion. */
-function escapeHtml(str) {
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-}
-
 /**
- * Compute a word-level diff between two strings using Myers algorithm.
- * Significantly more memory efficient than LCS for large texts.
+ * Compute a word-level diff between two strings using Myers algorithm
+ * and render directly into the DOM container without innerHTML.
  */
-function computeWordDiff(oldStr, newStr) {
+function renderWordDiff(oldStr, newStr, container) {
+    container.replaceChildren();
     let oldWords = oldStr.split(/(\s+)/);
     let newWords = newStr.split(/(\s+)/);
 
@@ -979,18 +974,26 @@ function computeWordDiff(oldStr, newStr) {
                 }
                 
                 ops.reverse();
-                let diffHtml = "";
+                const fragment = document.createDocumentFragment();
                 ops.forEach(op => {
-                    const val = escapeHtml(op.val);
-                    if (op.type === 'eq') diffHtml += val;
-                    else if (op.type === 'add') diffHtml += `<span class="diff-add">${val}</span>`;
-                    else if (op.type === 'rm') diffHtml += `<span class="diff-remove">${val}</span>`;
+                    if (op.type === 'eq') {
+                        fragment.appendChild(document.createTextNode(op.val));
+                    } else if (op.type === 'add') {
+                        const span = document.createElement('span');
+                        span.className = 'diff-add';
+                        span.textContent = op.val;
+                        fragment.appendChild(span);
+                    } else if (op.type === 'rm') {
+                        const span = document.createElement('span');
+                        span.className = 'diff-remove';
+                        span.textContent = op.val;
+                        fragment.appendChild(span);
+                    }
                 });
-                return diffHtml;
+                container.appendChild(fragment);
+                return;
             }
         }
     }
-    
-    return ""; // Fallback
 }
 }
