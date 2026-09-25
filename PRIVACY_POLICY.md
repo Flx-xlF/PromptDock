@@ -38,5 +38,4 @@ The extension communicates exclusively with:
 - `host_permissions`: To enable content script interaction on supported AI assistant web applications.
 
 ## 5. Contact
-For questions or concerns regarding this policy, please open an issue on the official project repository or contact the developer at:
-`support@flx.dev`
+For questions or concerns regarding this policy, please open an issue on the official project repository [https://github.com/Flx-xlF](https://github.com/Flx-xlF/PromptDock).
