@@ -66,11 +66,11 @@ Instead, thousands of professionals spend their workdays copy-pasting multi-step
 1. Clone or download this repository:
    ```bash
    git clone https://github.com/Flx-xlF/prompt-dock.git
-
-   1. Open your Chromium browser and go to `chrome://extensions` (or `edge://extensions`).
-2. Enable **Developer mode** (toggle in top-right corner).
-3. Click **Load unpacked** and select the extension directory.
-4. Pin the extension to your toolbar and start prompting.
+   ```
+2. Open your Chromium browser and go to `chrome://extensions` (or `edge://extensions`).
+3. Enable **Developer mode** (toggle in top-right corner).
+4. Click **Load unpacked** and select the extension directory.
+5. Pin the extension to your toolbar and start prompting.
 
 ---
 
@@ -101,10 +101,11 @@ Your prompts belong to you.
 To validate syntax and create a store-compliant, clean ZIP package:
 ```bash
 python3 build_release.py
+```
+Outputs: `release/promptdock-v1.0.0.zip`
 
 ---
 
-Built with care (and a bit of madness) by schema/f.
+Built with care (and a bit of madness) by [schema/f](https://github.com/Flx-xlF).
 
-Enjoy my work? Tip me on Ko-fi.
-
+☕ Enjoy my work? [Tip me on Ko-fi](https://ko-fi.com/flxxlf)
