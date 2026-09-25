@@ -10,7 +10,7 @@ Use this guide and copy-paste ready text when submitting the extension to the **
 PromptDock
 
 ### Summary / Short Description (Max 132 characters)
-One-click prompt injection, inline commenting, and rewriting for AI assistants (Microsoft Copilot, Google Gemini).
+One-click prompt injection, inline commenting, and rewriting for AI assistants (Copilot, Gemini, ChatGPT, Claude).
 
 ### Category
 - Chrome Web Store: **Productivity** / **Workflow & Planning**
@@ -25,11 +25,12 @@ One-click prompt injection, inline commenting, and rewriting for AI assistants (
 ## 2. Store Description (Markdown / Text)
 
 ```markdown
-Boost your AI workflow with PromptDock — the fastest way to save, organize, and inject recurring prompts into Microsoft Copilot (Outlook, Teams, M365) and Google Gemini.
+Boost your AI workflow with PromptDock — the fastest way to save, organize, and inject recurring prompts into Microsoft Copilot, Google Gemini, ChatGPT, and Claude.
 
 Key Features:
 ⚡ One-Click Prompt Injection: Instantly inject complex prompt workflows and multi-step tasks into the chat input.
 ⌨️ Keyboard Shortcuts: Trigger your favorite prompts using custom hotkeys (Alt+Shift+1, 2, 3...) without touching the mouse.
+💬 Contextual Inline Commenting: Highlight text from any assistant response to trigger one-click refinements ("sachlicher", "einkürzen") or custom rewrite instructions with side-by-side diffs.
 🔄 Smart Fallback: If an input field isn't detected or is obscured, prompts are automatically copied to your clipboard with an instant toast notification.
 📱 Mobile & iOS Shortcut Sync: Seamlessly sync prompts to your iPhone via private GitHub Gists to access your library on the go.
 🔒 100% Private & Local-First: Zero tracking, zero telemetry, no external ad scripts. All prompts remain stored safely inside your browser.
@@ -38,6 +39,8 @@ Key Features:
 Supported AI Platforms:
 - Microsoft 365 Copilot (Outlook Web, Teams Web, M365 Portal)
 - Google Gemini (gemini.google.com)
+- ChatGPT (chatgpt.com, chat.openai.com)
+- Claude (claude.ai)
 
 ---
 Built with care (and a bit of madness) by [schema/f](https://github.com/Flx-xlF).  
