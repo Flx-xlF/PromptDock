@@ -45,6 +45,34 @@ const PLATFORM_CONFIGS = {
         quickActions: ['sachlicher', 'einkürzen', 'positiv formulieren', 'empathischer', 'verständlicher'],
         requiresIframe: false,
         name: "Google Gemini"
+    },
+    chatgpt: {
+        isMatch: () => window.location.hostname === 'chatgpt.com' || window.location.hostname.endsWith('.chatgpt.com') || window.location.hostname === 'chat.openai.com' || window.location.hostname.endsWith('.chat.openai.com'),
+        selectors: {
+            input: '#prompt-textarea, textarea[aria-label*="ChatGPT" i], textarea[placeholder*="ChatGPT" i], textarea#mobile-composer-prompt, div#prompt-textarea[contenteditable="true"]',
+            sendBtn: 'button[aria-label="Send message"], button[aria-label="Send prompt"], button[data-testid="send-button"], button[data-testid="fruitjuice-send-button"]',
+            messageContainers: 'article, li[data-message-role="assistant"], [data-message-author-role="assistant"], [data-message-author-role="user"], li[data-message-role="user"]',
+            chatContainer: 'ol[data-conversation-transcript], main',
+            messageSelector: 'article, [data-message-author-role]'
+        },
+        urlPatterns: ['chatgpt.com', 'chat.openai.com'],
+        quickActions: ['sachlicher', 'einkürzen', 'positiv formulieren', 'empathischer', 'verständlicher'],
+        requiresIframe: false,
+        name: "ChatGPT"
+    },
+    claude: {
+        isMatch: () => window.location.hostname === 'claude.ai' || window.location.hostname.endsWith('.claude.ai'),
+        selectors: {
+            input: 'div.ProseMirror[contenteditable="true"], fieldset div[contenteditable="true"], div[contenteditable="true"][role="textbox"], div[contenteditable="true"]',
+            sendBtn: 'button[aria-label="Send Message"], button[aria-label="Send message"], button[aria-label*="Send" i], button[data-testid="send-button"]',
+            messageContainers: '.font-user-message, div[data-testid="user-message"], .font-claude-message, div[data-testid="claude-message"], div.standard-markdown',
+            chatContainer: 'main, div[data-testid="chat-messages"]',
+            messageSelector: '.font-user-message, .font-claude-message, div[data-testid$="-message"]'
+        },
+        urlPatterns: ['claude.ai'],
+        quickActions: ['sachlicher', 'einkürzen', 'positiv formulieren', 'empathischer', 'verständlicher'],
+        requiresIframe: false,
+        name: "Claude"
     }
 };
 
@@ -72,7 +100,15 @@ for (const key in PLATFORM_CONFIGS) {
 
 window.injectCopilotPrompt = function(promptText, autoSend) {
     if (!PLATFORM) {
-        PLATFORM = PLATFORM_CONFIGS.copilot; // fallback
+        for (const key in PLATFORM_CONFIGS) {
+            if (PLATFORM_CONFIGS[key].isMatch()) {
+                PLATFORM = PLATFORM_CONFIGS[key];
+                break;
+            }
+        }
+        if (!PLATFORM) {
+            PLATFORM = PLATFORM_CONFIGS.copilot; // fallback
+        }
     }
     
     console.log(`[PromptDock] Checking frame for ${PLATFORM.name}...`, window.location.href);
@@ -90,6 +126,12 @@ window.injectCopilotPrompt = function(promptText, autoSend) {
     if (!inputField && (PLATFORM === PLATFORM_CONFIGS.copilot)) {
         inputField = document.querySelector('.fai-EditorInput__input');
     }
+    if (!inputField && (PLATFORM === PLATFORM_CONFIGS.chatgpt)) {
+        inputField = document.querySelector('#prompt-textarea') || document.querySelector('textarea');
+    }
+    if (!inputField && (PLATFORM === PLATFORM_CONFIGS.claude)) {
+        inputField = document.querySelector('div[contenteditable="true"]');
+    }
     
     if (!inputField && PLATFORM.requiresIframe && !window.name.includes("embedded-page-container")) {
         // Fallback name check for strict iframe platforms
@@ -105,23 +147,44 @@ window.injectCopilotPrompt = function(promptText, autoSend) {
     // --- Step 2: Inject Prompt ---
     inputField.focus();
     if (inputField.isContentEditable) {
-        // Select all existing content and replace with prompt text via InputEvent
+        // Select all existing content and replace
         const selection = window.getSelection();
         selection.selectAllChildren(inputField);
-        const range = selection.getRangeAt(0);
-        range.deleteContents();
-        range.insertNode(document.createTextNode(promptText));
-        // Dispatch input event so the app's framework picks up the change
-        inputField.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText', data: promptText }));
+        
+        let inserted = false;
+        try {
+            inserted = document.execCommand && document.execCommand('insertText', false, promptText);
+        } catch (e) {
+            inserted = false;
+        }
+        
+        if (!inserted) {
+            try {
+                const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : document.createRange();
+                range.selectNodeContents(inputField);
+                range.deleteContents();
+                range.insertNode(document.createTextNode(promptText));
+            } catch (e) {}
+            // Dispatch input event so the app's framework picks up the change
+            inputField.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText', data: promptText }));
+        }
     } else {
-        inputField.value = promptText;
+        // Textarea / input element (React synthetic event bypass)
+        const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value')?.set ||
+                             Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set;
+        if (nativeSetter) {
+            nativeSetter.call(inputField, promptText);
+        } else {
+            inputField.value = promptText;
+        }
         inputField.dispatchEvent(new Event('input', { bubbles: true }));
+        inputField.dispatchEvent(new Event('change', { bubbles: true }));
     }
     
     if (autoSend) {
         setTimeout(() => {
             const sendBtn = document.querySelector(PLATFORM.selectors.sendBtn);
-            if (sendBtn && !sendBtn.disabled) {
+            if (sendBtn && !sendBtn.disabled && sendBtn.getAttribute('aria-disabled') !== 'true') {
                 sendBtn.click();
                 console.log(`[PromptDock] Auto-send clicked for ${PLATFORM.name}.`);
             }
@@ -137,7 +200,7 @@ if (PLATFORM) {
     const isIframe = window !== window.top;
     if (!PLATFORM.requiresIframe || isIframe) {
         setTimeout(() => {
-            if (PLATFORM === PLATFORM_CONFIGS.gemini || document.querySelector(PLATFORM.selectors.input) || window.name.includes("embedded-page-container")) {
+            if (PLATFORM !== PLATFORM_CONFIGS.copilot || document.querySelector(PLATFORM.selectors.input) || window.name.includes("embedded-page-container")) {
                 initInlineComments();
             }
         }, 1000);

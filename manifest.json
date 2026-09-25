@@ -8,7 +8,7 @@
   },
   "name": "PromptDock",
   "version": "1.0.0",
-  "description": "One-click prompt injection, inline commenting, and rewriting for AI assistants (Copilot, Gemini).",
+  "description": "One-click prompt injection, inline commenting, and rewriting for AI assistants (Copilot, Gemini, ChatGPT, Claude).",
   "icons": {
     "16": "icons/icon-16.png",
     "32": "icons/icon-32.png",
@@ -39,6 +39,11 @@
     "*://*.office.net/*",
     "*://*.bing.com/*",
     "*://gemini.google.com/*",
+    "*://*.chatgpt.com/*",
+    "*://chatgpt.com/*",
+    "*://*.openai.com/*",
+    "*://*.claude.ai/*",
+    "*://claude.ai/*",
     "https://api.github.com/*"
   ],
   "background": {
@@ -55,7 +60,12 @@
         "*://*.office365.com/*",
         "*://*.office.net/*",
         "*://*.bing.com/*",
-        "*://gemini.google.com/*"
+        "*://gemini.google.com/*",
+        "*://*.chatgpt.com/*",
+        "*://chatgpt.com/*",
+        "*://*.openai.com/*",
+        "*://*.claude.ai/*",
+        "*://claude.ai/*"
       ],
       "css": [
         "content.css"
@@ -90,7 +100,12 @@
         "*://*.office365.com/*",
         "*://*.office.net/*",
         "*://*.bing.com/*",
-        "*://gemini.google.com/*"
+        "*://gemini.google.com/*",
+        "*://*.chatgpt.com/*",
+        "*://chatgpt.com/*",
+        "*://*.openai.com/*",
+        "*://*.claude.ai/*",
+        "*://claude.ai/*"
       ]
     }
   ]

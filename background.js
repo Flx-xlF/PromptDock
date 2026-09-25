@@ -56,7 +56,10 @@ ext.commands.onCommand.addListener(async (command) => {
                 'outlook.office365.com',
                 'outlook.live.com',
                 'outlook.com',
-                'gemini.google.com'
+                'gemini.google.com',
+                'chatgpt.com',
+                'chat.openai.com',
+                'claude.ai'
             ];
             isSupported = validHosts.some(h => urlObj.hostname === h || urlObj.hostname.endsWith('.' + h));
         } catch (e) {

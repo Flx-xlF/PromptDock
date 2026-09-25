@@ -573,7 +573,19 @@ async function runPrompt(content, buttonEl) {
     let isSupported = false;
     try {
         const urlObj = new URL(tab.url);
-        const validHosts = ['outlook.cloud.microsoft', 'm365.cloud.microsoft', 'teams.microsoft.com', 'outlook.office.com', 'outlook.office365.com', 'outlook.live.com', 'outlook.com', 'gemini.google.com'];
+        const validHosts = [
+            'outlook.cloud.microsoft',
+            'm365.cloud.microsoft',
+            'teams.microsoft.com',
+            'outlook.office.com',
+            'outlook.office365.com',
+            'outlook.live.com',
+            'outlook.com',
+            'gemini.google.com',
+            'chatgpt.com',
+            'chat.openai.com',
+            'claude.ai'
+        ];
         isSupported = validHosts.some(h => urlObj.hostname === h || urlObj.hostname.endsWith('.' + h));
     } catch (e) {
         // Invalid URL
@@ -629,7 +641,7 @@ async function runPrompt(content, buttonEl) {
             setTimeout(() => { buttonEl.innerText = oldText; }, 2000);
         }
     } else {
-        alert("Bitte öffne Outlook oder Gemini im aktuellen Tab, um einen Prompt auszuführen.");
+        alert("Bitte öffne einen unterstützten KI-Chat (Copilot, Gemini, ChatGPT oder Claude) im aktuellen Tab, um einen Prompt auszuführen.");
     }
 }
 
