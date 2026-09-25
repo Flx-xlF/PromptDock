@@ -1,6 +1,14 @@
-# PromptDock
+# PromptDock ⚡
 
-> **One-click prompt injection, inline commenting, and effortless prompt library management for Microsoft Copilot and Google Gemini.**
+> **Built with care (and a bit of madness) by [schema/f](https://github.com/Flx-xlF)**
+
+### *Are you using Microsoft Copilot or Google Gemini on the web? This lightweight extension delivers one-click prompt injection, inline contextual commenting, and effortless prompt library management.*
+
+[![Manifest V3](https://img.shields.io/badge/Chrome%20Extension-Manifest%20V3-blue?logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/intro/)
+[![Microsoft Copilot](https://img.shields.io/badge/Microsoft%20Copilot-Web%20App-0078D4?logo=microsoft&logoColor=white)](https://copilot.microsoft.com)
+[![Google Gemini](https://img.shields.io/badge/Google%20Gemini-Web%20App-8E75B2?logo=googlegemini&logoColor=white)](https://gemini.google.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
+[![Author](https://img.shields.io/badge/Dev-schema%2Ff-indigo)](https://github.com/Flx-xlF)
 
 ---
 
