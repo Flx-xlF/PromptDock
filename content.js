@@ -22,7 +22,7 @@ const PLATFORM_CONFIGS = {
         isMatch: () => window.name.includes("embedded-page-container") || !!document.querySelector('.fai-EditorInput__input') || !!document.getElementById('m365-chat-input-shared-wrapper'),
         selectors: {
             input: '#m365-chat-input-shared-wrapper [contenteditable="true"], #m365-chat-input-shared-wrapper textarea, .fai-ExpandableChatInput__inputWrapper [contenteditable="true"], .fai-ChatInput__inputWrapper [contenteditable="true"], .fai-EditorInput__input, [contenteditable="true"][aria-label*="Copilot" i], textarea[aria-label*="Copilot" i]',
-            sendBtn: 'button.fai-SendButton, button.fai-ChatInput__send',
+            sendBtn: 'button.fai-SendButton, button.fai-ChatInput__send, button[aria-label*="Senden" i], button[aria-label*="Send" i], button[title*="Senden" i], button[title*="Send" i]',
             messageContainers: '.fai-Message, .ac-container, .fai-ChatMessage, [role="listitem"], [data-content-id], [data-message-id], .chat-message',
             chatContainer: '.fai-ChatMessages__list',
             messageSelector: '.fai-Message, .fai-ChatMessage, [role="listitem"]'
@@ -147,15 +147,17 @@ window.injectCopilotPrompt = function(promptText, autoSend) {
     // --- Step 2: Inject Prompt ---
     inputField.focus();
     if (inputField.isContentEditable) {
-        // Select all existing content and replace
-        const selection = window.getSelection();
-        selection.selectAllChildren(inputField);
-        
-        let inserted = false;
+        // 1. Clear existing content completely first
         try {
-            // Industry-standard approach: Dispatch a synthetic paste event with text/plain data.
-            // Rich text editors (ProseMirror in Claude/Copilot, Quill, Draft.js, Lexical) listen to 'paste'
-            // and parse multiline plaintext into proper paragraphs/break tags instead of stripping newlines.
+            const selection = window.getSelection();
+            selection.selectAllChildren(inputField);
+            document.execCommand('delete', false, null);
+        } catch (e) {}
+
+        let inserted = false;
+
+        // Method A: Synthetic Paste Event (preferred for rich-text editors like ProseMirror / Lexical)
+        try {
             const dt = new DataTransfer();
             dt.setData('text/plain', promptText);
             const pasteEvt = new ClipboardEvent('paste', {
@@ -164,39 +166,62 @@ window.injectCopilotPrompt = function(promptText, autoSend) {
                 clipboardData: dt
             });
             inputField.dispatchEvent(pasteEvt);
-            // If the editor handled the paste event and modified content, consider it inserted
-            inserted = !pasteEvt.defaultPrevented;
+
+            // Crucial: Check if the editor actually inserted the text!
+            // When ProseMirror/Lexical handles paste, it calls preventDefault() and inserts content synchronously.
+            const contentNow = (inputField.innerText || inputField.textContent || '').trim();
+            if (contentNow.length > 0 && (contentNow.includes(promptText.slice(0, 30)) || contentNow.length >= Math.min(promptText.length, 40))) {
+                inserted = true;
+            }
         } catch (e) {
             inserted = false;
         }
-        
+
+        // Method B: insertHTML with proper line breaks (ONLY if paste was not handled)
         if (!inserted) {
             try {
-                inserted = document.execCommand && document.execCommand('insertText', false, promptText);
+                const selection = window.getSelection();
+                selection.selectAllChildren(inputField);
+
+                const html = promptText
+                    .split('\n')
+                    .map(line => {
+                        const escaped = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        return escaped ? `<div>${escaped}</div>` : '<div><br></div>';
+                    })
+                    .join('');
+
+                inserted = document.execCommand && document.execCommand('insertHTML', false, html);
+                const contentNow = (inputField.innerText || inputField.textContent || '').trim();
+                if (contentNow.length > 0) {
+                    inserted = true;
+                }
             } catch (e) {
                 inserted = false;
             }
         }
-        
+
+        // Method C: Direct DOM Replacement Fallback
         if (!inserted) {
             try {
-                const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : document.createRange();
-                range.selectNodeContents(inputField);
-                range.deleteContents();
-                // Split by newline and insert text nodes with <br> elements so contenteditable preserves breaks
+                inputField.replaceChildren();
                 const lines = promptText.split('\n');
-                const fragment = document.createDocumentFragment();
-                lines.forEach((line, index) => {
-                    fragment.appendChild(document.createTextNode(line));
-                    if (index < lines.length - 1) {
-                        fragment.appendChild(document.createElement('br'));
+                lines.forEach((line) => {
+                    const div = document.createElement('div');
+                    if (line) {
+                        div.textContent = line;
+                    } else {
+                        div.appendChild(document.createElement('br'));
                     }
+                    inputField.appendChild(div);
                 });
-                range.insertNode(fragment);
+                inserted = true;
             } catch (e) {}
-            // Dispatch input event so the app's framework picks up the change
-            inputField.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText', data: promptText }));
         }
+
+        // Dispatch input and change events so frameworks (React, Angular, Lit) detect value update
+        inputField.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText', data: promptText }));
+        inputField.dispatchEvent(new Event('change', { bubbles: true }));
     } else {
         // Textarea / input element (React synthetic event bypass)
         const nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value')?.set ||
