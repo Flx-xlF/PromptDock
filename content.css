@@ -743,6 +743,10 @@
 
 .pd-running-body {
     padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .pd-running-indicator {
@@ -751,6 +755,69 @@
     gap: 8px;
     font-size: 12px;
     color: #a1a1aa;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pd-running-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.pd-cancel-btn {
+    background: transparent;
+    border: 1px solid rgba(229, 77, 81, 0.35);
+    color: #f87171;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 11px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    white-space: nowrap;
+    line-height: 1.2;
+}
+
+.pd-cancel-btn:hover {
+    background: rgba(229, 77, 81, 0.15);
+    border-color: #f87171;
+    color: #fca5a5;
+    transform: translateY(-1px);
+}
+
+.pd-cancel-btn:active {
+    transform: translateY(0);
+}
+
+.pd-skip-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #d4d4d8;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 11px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    white-space: nowrap;
+    line-height: 1.2;
+}
+
+.pd-skip-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+.pd-skip-btn:active {
+    transform: translateY(0);
 }
 
 .pd-spinner {
@@ -760,6 +827,7 @@
     border-top-color: #6366f1;
     border-radius: 50%;
     animation: pd-spin 0.8s linear infinite;
+    flex-shrink: 0;
 }
 
 .pd-done-message {

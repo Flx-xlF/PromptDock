@@ -1062,9 +1062,20 @@ function getOrCreateShadowRoot() {
     return shadowRoot;
 }
 
+function cancelWorkflow() {
+    if (RecipeState.streamCheckInterval) {
+        clearInterval(RecipeState.streamCheckInterval);
+        RecipeState.streamCheckInterval = null;
+    }
+    RecipeState.status = 'idle';
+    RecipeState.activeRecipe = null;
+    RecipeState.isMinimized = false;
+    renderRailUI();
+}
+
 /**
  * Cross-Platform Generation Completion Detector (Copilot, Gemini, ChatGPT, Claude)
- * Listens for active streaming indicators and triggers onComplete when finished.
+ * Listens for active streaming indicators, manual stop clicks, and triggers onComplete when finished.
  */
 function observeTurnCompletion(onComplete) {
     if (RecipeState.streamCheckInterval) {
@@ -1075,18 +1086,56 @@ function observeTurnCompletion(onComplete) {
     let isStreaming = false;
     let streamSawStart = false;
 
-    const checkGenerationState = () => {
-        let currentlyStreaming = false;
+    // Listen for manual stop button click in chat interface to instantly advance to checkpoint
+    const onManualStopClicked = (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const aria = (btn.getAttribute('aria-label') || '').toLowerCase();
+        const title = (btn.getAttribute('title') || '').toLowerCase();
+        const isStopBtn = btn.matches('.fai-StopButton, [data-testid="stop-button"], .stop-button') ||
+            aria.includes('stop') || aria.includes('stopp') || aria.includes('beenden') || aria.includes('anhalten') || aria.includes('abbrechen') ||
+            title.includes('stop') || title.includes('stopp') || title.includes('beenden') || title.includes('anhalten');
 
-        if (PLATFORM === PLATFORM_CONFIGS.chatgpt) {
-            currentlyStreaming = !!document.querySelector('button[data-testid="stop-button"], button[aria-label="Stop streaming"], button[aria-label="Stop generating"]');
-        } else if (PLATFORM === PLATFORM_CONFIGS.claude) {
-            currentlyStreaming = !!document.querySelector('button[aria-label="Stop Response"], button[data-testid="stop-button"]');
-        } else if (PLATFORM === PLATFORM_CONFIGS.gemini) {
-            currentlyStreaming = !!document.querySelector('.stop-button, button[aria-label*="Stoppen" i], button[aria-label*="Stop" i]');
-        } else if (PLATFORM === PLATFORM_CONFIGS.copilot) {
-            currentlyStreaming = !!document.querySelector('.fai-StopButton, button[aria-label*="Stop" i]');
+        if (isStopBtn) {
+            console.log('[PromptDock] Detected manual chat stop by user.');
+            document.removeEventListener('click', onManualStopClicked, true);
+            if (RecipeState.streamCheckInterval) {
+                clearInterval(RecipeState.streamCheckInterval);
+                RecipeState.streamCheckInterval = null;
+            }
+            setTimeout(() => {
+                if (RecipeState.status === 'running_turn') {
+                    onComplete();
+                }
+            }, 600);
         }
+    };
+    document.addEventListener('click', onManualStopClicked, true);
+
+    const checkGenerationState = () => {
+        if (RecipeState.status !== 'running_turn') {
+            document.removeEventListener('click', onManualStopClicked, true);
+            clearInterval(RecipeState.streamCheckInterval);
+            RecipeState.streamCheckInterval = null;
+            return;
+        }
+
+        const stopSelectors = [
+            '.fai-StopButton',
+            'button[aria-label*="Stop" i]',
+            'button[aria-label*="Stopp" i]',
+            'button[aria-label*="Beenden" i]',
+            'button[aria-label*="anhalten" i]',
+            'button[aria-label*="abbrechen" i]',
+            'button[title*="Stop" i]',
+            'button[title*="Stopp" i]',
+            'button[data-testid="stop-button"]',
+            'button[aria-label="Stop Response"]',
+            'button[aria-label="Stop streaming"]',
+            'button[aria-label="Stop generating"]',
+            '.stop-button'
+        ];
+        const currentlyStreaming = !!document.querySelector(stopSelectors.join(', '));
 
         if (currentlyStreaming) {
             isStreaming = true;
@@ -1094,26 +1143,29 @@ function observeTurnCompletion(onComplete) {
         } else if (isStreaming && !currentlyStreaming) {
             // Transitioned from streaming to complete!
             isStreaming = false;
+            document.removeEventListener('click', onManualStopClicked, true);
             clearInterval(RecipeState.streamCheckInterval);
             RecipeState.streamCheckInterval = null;
             setTimeout(onComplete, 700);
         }
     };
 
-    // Check every 350ms
-    RecipeState.streamCheckInterval = setInterval(checkGenerationState, 350);
+    // Check every 300ms
+    RecipeState.streamCheckInterval = setInterval(checkGenerationState, 300);
 
     // Timeout safety fallback: if no generation started within 8s, or runs for > 3 minutes
     setTimeout(() => {
         if (!streamSawStart && RecipeState.status === 'running_turn') {
+            document.removeEventListener('click', onManualStopClicked, true);
             clearInterval(RecipeState.streamCheckInterval);
             RecipeState.streamCheckInterval = null;
             onComplete();
         }
-    }, 10000);
+    }, 8000);
 
     setTimeout(() => {
         if (RecipeState.streamCheckInterval) {
+            document.removeEventListener('click', onManualStopClicked, true);
             clearInterval(RecipeState.streamCheckInterval);
             RecipeState.streamCheckInterval = null;
             if (RecipeState.status === 'running_turn') onComplete();
@@ -1357,6 +1409,19 @@ function renderRailUI() {
             sendBtn.innerHTML = `Weiter ➔ <span class="pd-shortcut">⌥⇧→</span>`;
             sendBtn.addEventListener('click', () => executeNextTurn(''));
             rightActions.appendChild(sendBtn);
+        } else if (RecipeState.status === 'running_turn') {
+            const unlockBtn = document.createElement('button');
+            unlockBtn.className = 'pd-skip-btn pd-min-send';
+            unlockBtn.textContent = 'Fertig ➔';
+            unlockBtn.title = 'Klicken, wenn KI fertig ist oder manuell gestoppt wurde';
+            unlockBtn.addEventListener('click', () => {
+                if (RecipeState.streamCheckInterval) {
+                    clearInterval(RecipeState.streamCheckInterval);
+                    RecipeState.streamCheckInterval = null;
+                }
+                handleTurnCompletion();
+            });
+            rightActions.appendChild(unlockBtn);
         }
 
         const expandBtn = document.createElement('button');
@@ -1372,13 +1437,8 @@ function renderRailUI() {
         const closeBtn = document.createElement('button');
         closeBtn.className = 'pd-ctrl-btn';
         closeBtn.textContent = '×';
-        closeBtn.title = 'Workflow beenden';
-        closeBtn.addEventListener('click', () => {
-            RecipeState.status = 'idle';
-            RecipeState.activeRecipe = null;
-            RecipeState.isMinimized = false;
-            renderRailUI();
-        });
+        closeBtn.title = 'Workflow abbrechen (×)';
+        closeBtn.addEventListener('click', cancelWorkflow);
         rightActions.appendChild(closeBtn);
 
         minDock.appendChild(rightActions);
@@ -1456,13 +1516,8 @@ function renderRailUI() {
     const closeBtn = document.createElement('button');
     closeBtn.className = 'pd-ctrl-btn';
     closeBtn.textContent = '×';
-    closeBtn.title = 'Workflow beenden';
-    closeBtn.addEventListener('click', () => {
-        RecipeState.status = 'idle';
-        RecipeState.activeRecipe = null;
-        RecipeState.isMinimized = false;
-        renderRailUI();
-    });
+    closeBtn.title = 'Workflow abbrechen (×)';
+    closeBtn.addEventListener('click', cancelWorkflow);
     controls.appendChild(closeBtn);
 
     header.appendChild(controls);
@@ -1505,7 +1560,7 @@ function renderRailUI() {
         });
         body.appendChild(modsRow);
 
-        // Action Row: Input + Primary Advance Button
+        // Action Row: Input + Primary Advance Button + Cancel Button
         const actionRow = document.createElement('div');
         actionRow.className = 'pd-action-row';
 
@@ -1522,6 +1577,13 @@ function renderRailUI() {
         nextBtn.innerHTML = `Weiter ➔ <span class="pd-shortcut">⌥⇧→</span>`;
         nextBtn.addEventListener('click', () => executeNextTurn(noteInput.value));
         actionRow.appendChild(nextBtn);
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'pd-cancel-btn';
+        cancelBtn.textContent = 'Abbrechen';
+        cancelBtn.title = 'Workflow komplett beenden';
+        cancelBtn.addEventListener('click', cancelWorkflow);
+        actionRow.appendChild(cancelBtn);
 
         body.appendChild(actionRow);
 
@@ -1600,12 +1662,7 @@ function renderRailUI() {
         const finishBtn = document.createElement('button');
         finishBtn.className = 'pd-primary-btn';
         finishBtn.textContent = 'Schliessen ✓';
-        finishBtn.addEventListener('click', () => {
-            RecipeState.status = 'idle';
-            RecipeState.activeRecipe = null;
-            RecipeState.isMinimized = false;
-            renderRailUI();
-        });
+        finishBtn.addEventListener('click', cancelWorkflow);
         actionsRow.appendChild(finishBtn);
 
         body.appendChild(actionsRow);
@@ -1613,7 +1670,38 @@ function renderRailUI() {
     } else if (RecipeState.status === 'running_turn') {
         const body = document.createElement('div');
         body.className = 'pd-hud-body pd-running-body';
-        body.innerHTML = `<div class="pd-running-indicator"><span class="pd-spinner"></span> Schritt ${currentIdx + 1} (${recipe.turns[currentIdx].title}) wird generiert...</div>`;
+
+        const indicator = document.createElement('div');
+        indicator.className = 'pd-running-indicator';
+        indicator.innerHTML = `<span class="pd-spinner"></span> <span>Schritt ${currentIdx + 1} (${recipe.turns[currentIdx].title}) wird generiert...</span>`;
+        body.appendChild(indicator);
+
+        const actions = document.createElement('div');
+        actions.className = 'pd-running-actions';
+
+        const unlockBtn = document.createElement('button');
+        unlockBtn.className = 'pd-skip-btn';
+        unlockBtn.textContent = (currentIdx < totalTurns - 1) 
+            ? `Fertig? Weiter zu Schritt ${currentIdx + 2} ➔` 
+            : 'Fertig? Abschliessen ➔';
+        unlockBtn.title = 'Klicken, falls die KI fertig ist oder manuell gestoppt wurde';
+        unlockBtn.addEventListener('click', () => {
+            if (RecipeState.streamCheckInterval) {
+                clearInterval(RecipeState.streamCheckInterval);
+                RecipeState.streamCheckInterval = null;
+            }
+            handleTurnCompletion();
+        });
+        actions.appendChild(unlockBtn);
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'pd-cancel-btn';
+        cancelBtn.textContent = 'Abbrechen';
+        cancelBtn.title = 'Workflow sofort komplett abbrechen';
+        cancelBtn.addEventListener('click', cancelWorkflow);
+        actions.appendChild(cancelBtn);
+
+        body.appendChild(actions);
         hud.appendChild(body);
     }
 
