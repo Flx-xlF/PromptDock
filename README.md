@@ -20,12 +20,16 @@ PromptDock 2.0 evolves from a fast prompt launcher into an **interactive AI work
 
 - 🚊 **In-Chat Rail UX ("Rail, Checkpoint, Fork")**  
   Complex corporate communication, audit, and strategic tasks are split into discrete cognitive turns (*Turn 1: Research/Lagebild* ➔ *Turn 2: Strategy/Audit* ➔ *Turn 3: Output*). A floating stepper rail sits directly above the chat input, showing your current step and workflow progress.
-- 🛑 **Smart Checkpoint Cards & Streaming Detection**  
-  As soon as the LLM finishes streaming its response, PromptDock activates a Checkpoint Card with instant steering chips (*"✓ Direkt weiter"*, *"Fakten korrigieren"*, *"Tiefer recherchieren"*, *"Haltung vorgeben"*) and a free-text input for fast corrections.
+- 🎯 **Draggable & Minimizable Cockpit**  
+  Drag the HUD header or floating pill anywhere on screen with automatic 12px viewport boundary clamps. Minimize to a slim status pill (`—`) while reading long AI outputs, expand (`↗`) to steer, or double-click to snap back to center-bottom.
+- 🛑 **Streaming Detection & Manual Stop Interception**  
+  PromptDock automatically detects when the LLM finishes generating. If you click the host chat's native stop button (*"Stop generating"* / *"Stop Response"*), PromptDock immediately catches the stop event and advances to your checkpoint without freezing. Workflows can be cancelled at any point via the dedicated **Abbrechen** / `×` button.
+- ⚡ **Command Palette & Fast Search (`⌘K` / `Ctrl+K`)**  
+  The redesigned popup features instant search across titles, prompt content, and recipe steps, category filter pills (*Audit*, *Inquiry*, *Memo*, *Single-Shot*, *Custom*), and direct click-to-run execution.
 - 🔀 **Dynamic Forking**  
   Branch out at completion points: turn an analysis into a press reply, a Q&A defense document, an editorial planning entry, or a strategic briefing with one click.
-- ⚡ **Muscle Memory Turn Advancement (`⌥⇧→` / `Alt+Shift+Right`)**  
-  Advance through multi-turn workflows without leaving your keyboard.
+- ⌨️ **Muscle Memory Turn Advancement (`⌥⇧→` / `Alt+Shift+Right`)**  
+  Advance through multi-turn workflows or press `Enter` in the steering note input without leaving your keyboard.
 - 📋 **Variable Sheet Modal**  
   Fill in dynamic variables (e.g. `ZEITRAUM`, `PERSON`, `THEMA`, `SUCHBEGRIFF`) before launching, and choose your preferred execution mode (*Guided*, *Autopilot*, or *Express One-Shot*).
 
@@ -45,11 +49,15 @@ Both editions share the same local-first, zero-telemetry architecture. PromptDoc
 ### Key Features
 
 - ⚡ **One-Click Prompt & Workflow Injection**  
-  Keep high-leverage prompts and multi-turn recipes organized in a lightweight popup dock. One click injects them into the active chat.
+  Keep high-leverage prompts and multi-turn recipes organized in a Swiss-minimalist command palette. One click on any item row injects and launches it in the active chat.
+- 🎛️ **Draggable In-Chat HUD Rail**  
+  A floating cockpit that keeps you focused on complex multi-turn workflows without switching tabs. Reposition freely on your screen or minimize to a status pill.
 - ⌨️ **Muscle Memory Hotkeys**  
-  Trigger your top 3 prompts with global keyboard shortcuts (`Alt+Shift+1`, `Alt+Shift+2`, `Alt+Shift+3`) and advance turns with `Alt+Shift+ArrowRight`.
+  Trigger your top 3 prompts with global keyboard shortcuts (`Alt+Shift+1`, `Alt+Shift+2`, `Alt+Shift+3`), search with `Cmd+K`, and advance turns with `Alt+Shift+ArrowRight`.
 - 💬 **Contextual Inline Commenting & Rewrites**  
   Highlight any generated text inside Copilot, Gemini, ChatGPT, or Claude to trigger a floating action bar. Run quick one-click adjustments (*"sachlicher"*, *"einkürzen"*, *"positiv formulieren"*, *"empathischer"*) or leave custom instructions with a side-by-side visual diff comparison.
+- 🛡️ **Resilient 3-Tier Injection Engine**  
+  Uses synthetic paste events with synchronous editor verification, `insertHTML`, and direct DOM node construction to prevent duplicate injection and preserve paragraph formatting across complex rich text editors (ProseMirror, Lexical, Quill).
 - 🔄 **Smart Clipboard Fallback**  
   If an input field is obscured, inside a nested iframe, or momentarily unreachable, your prompt or turn step is copied to your clipboard instantly with an unobtrusive toast notification.
 - 📱 **Mobile & iOS Shortcut Sync**  
@@ -86,7 +94,7 @@ PromptDock 2.0 includes a vendor-agnostic Corporate Communications & Intelligenc
 
 | Platform | Environments Supported | Injection & Inline Commenting | Workflow Rail |
 | :--- | :--- | :---: | :---: |
-| **Microsoft Copilot** | Outlook on the Web, Teams Web, M365 Portal | ✅ | ✅ |
+| **Microsoft Copilot** | copilot.microsoft.com, copilot.cloud.microsoft, Outlook on Web, Teams Web, M365 Portal | ✅ | ✅ |
 | **Google Gemini** | gemini.google.com | ✅ | ✅ |
 | **ChatGPT** | chatgpt.com, chat.openai.com | ✅ | ✅ |
 | **Claude** | claude.ai | ✅ | ✅ |
@@ -121,6 +129,9 @@ PromptDock 2.0 includes a vendor-agnostic Corporate Communications & Intelligenc
 | `Alt + Shift + 2` | Inject Prompt 2 |
 | `Alt + Shift + 3` | Inject Prompt 3 |
 | `Alt + Shift + →` | Advance to next turn at workflow checkpoint |
+| `⌘ + K` / `Ctrl + K` | Focus prompt search bar in popup dock |
+| `Enter` | Submit steering note & advance turn at checkpoint |
+| `Esc` | Clear search query or close dialogs |
 
 *Customizable anytime via `chrome://extensions/shortcuts`.*
 
