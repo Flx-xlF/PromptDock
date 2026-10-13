@@ -19,18 +19,18 @@ const ID_PREFIX = 'uap-' + Math.random().toString(36).substring(2, 9) + '-';
 
 const PLATFORM_CONFIGS = {
     copilot: {
-        isMatch: () => window.name.includes("embedded-page-container") || !!document.querySelector('.fai-EditorInput__input') || !!document.getElementById('m365-chat-input-shared-wrapper'),
+        isMatch: () => window.location.hostname === 'copilot.microsoft.com' || window.location.hostname.endsWith('.copilot.microsoft.com') || window.location.hostname === 'copilot.cloud.microsoft' || window.location.hostname.endsWith('.copilot.cloud.microsoft') || window.name.includes("embedded-page-container") || !!document.querySelector('.fai-EditorInput__input') || !!document.getElementById('m365-chat-input-shared-wrapper'),
         selectors: {
-            input: '#m365-chat-input-shared-wrapper [contenteditable="true"], #m365-chat-input-shared-wrapper textarea, .fai-ExpandableChatInput__inputWrapper [contenteditable="true"], .fai-ChatInput__inputWrapper [contenteditable="true"], .fai-EditorInput__input, [contenteditable="true"][aria-label*="Copilot" i], textarea[aria-label*="Copilot" i]',
-            sendBtn: 'button.fai-SendButton, button.fai-ChatInput__send',
+            input: '#m365-chat-input-shared-wrapper [contenteditable="true"], #m365-chat-input-shared-wrapper textarea, .fai-ExpandableChatInput__inputWrapper [contenteditable="true"], .fai-ChatInput__inputWrapper [contenteditable="true"], .fai-EditorInput__input, textarea#userInput, textarea[placeholder*="Copilot" i], textarea[aria-label*="Copilot" i], [contenteditable="true"][aria-label*="Copilot" i]',
+            sendBtn: 'button.fai-SendButton, button.fai-ChatInput__send, button[aria-label*="Submit" i], button[aria-label*="Send" i]',
             messageContainers: '.fai-Message, .ac-container, .fai-ChatMessage, [role="listitem"], [data-content-id], [data-message-id], .chat-message',
-            chatContainer: '.fai-ChatMessages__list',
+            chatContainer: '.fai-ChatMessages__list, main, [role="feed"]',
             messageSelector: '.fai-Message, .fai-ChatMessage, [role="listitem"]'
         },
-        urlPatterns: ['outlook.cloud.microsoft', 'm365.cloud.microsoft', 'teams.microsoft.com', 'outlook.office.com', 'outlook.office365.com', 'outlook.live.com', 'outlook.com'],
+        urlPatterns: ['outlook.cloud.microsoft', 'm365.cloud.microsoft', 'teams.microsoft.com', 'outlook.office.com', 'outlook.office365.com', 'outlook.live.com', 'outlook.com', 'copilot.microsoft.com', 'copilot.cloud.microsoft'],
         quickActions: ['sachlicher', 'einkürzen', 'positiv formulieren', 'empathischer', 'verständlicher'],
-        requiresIframe: false, // Changed to false: Copilot UI might be in the main frame now
-        name: "Outlook Copilot"
+        requiresIframe: false,
+        name: "Copilot"
     },
     gemini: {
         isMatch: () => window.location.hostname === 'gemini.google.com',
@@ -786,6 +786,7 @@ function initInlineComments() {
         if (currentCluster.length > 0) clusters.push(currentCluster);
         
         let finalContexts = [];
+        let originalCleanParts = [];
         
         clusters.forEach(cluster => {
             let pureChunk = cluster[0].prefixContext + cluster[0].exact + cluster[0].suffixContext;
@@ -805,6 +806,8 @@ function initInlineComments() {
                 }
             }
             
+            originalCleanParts.push(pureChunk.replace(/\n{3,}/g, '\n\n'));
+
             let annotatedChunk = pureChunk;
             // Insert backwards to not disturb earlier string indices
             for (let i = cluster.length - 1; i >= 0; i--) {
@@ -822,6 +825,8 @@ function initInlineComments() {
             
             finalContexts.push(annotatedChunk);
         });
+
+        const originalClean = originalCleanParts.join('\n\n---\n\n');
 
         const finalPrompt = `Überarbeite den folgenden Text basierend auf meinen Kommentaren in den doppelten Klammern (( > ... )).
 Gib nur den überarbeiteten Text zurück, keine Erklärungen. 

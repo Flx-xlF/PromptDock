@@ -86,12 +86,24 @@
   ],
   "commands": {
     "run-prompt-0": {
+      "suggested_key": {
+        "default": "Alt+Shift+1",
+        "mac": "Alt+Shift+1"
+      },
       "description": "Run Prompt 1"
     },
     "run-prompt-1": {
+      "suggested_key": {
+        "default": "Alt+Shift+2",
+        "mac": "Alt+Shift+2"
+      },
       "description": "Run Prompt 2"
     },
     "run-prompt-2": {
+      "suggested_key": {
+        "default": "Alt+Shift+3",
+        "mac": "Alt+Shift+3"
+      },
       "description": "Run Prompt 3"
     }
   },

@@ -56,6 +56,8 @@ ext.commands.onCommand.addListener(async (command) => {
                 'outlook.office365.com',
                 'outlook.live.com',
                 'outlook.com',
+                'copilot.microsoft.com',
+                'copilot.cloud.microsoft',
                 'gemini.google.com',
                 'chatgpt.com',
                 'chat.openai.com',
