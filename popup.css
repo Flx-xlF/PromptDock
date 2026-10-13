@@ -19,12 +19,12 @@
 /* --- Base ---------------------------------------------------------------- */
 
 html, body {
-    width: 360px;
+    width: 380px;
     margin: 0;
 }
 
 body {
-    padding: 20px;
+    padding: 18px;
     box-sizing: border-box;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background-color: var(--bg-primary);
@@ -38,8 +38,8 @@ body {
 .header {
     display: flex;
     align-items: center;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
     border-bottom: 1px solid var(--border);
 }
 
@@ -56,7 +56,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 12px;
+    margin-right: 10px;
     flex-shrink: 0;
 }
 
@@ -67,42 +67,210 @@ h2 {
     letter-spacing: -0.01em;
 }
 
-/* --- Prompt Cards -------------------------------------------------------- */
+/* --- Search & Category Filters (2026 Command Palette) -------------------- */
+
+.search-section {
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0 10px;
+    transition: all 0.15s ease;
+}
+
+.search-input-wrapper:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.15);
+}
+
+.search-icon {
+    font-size: 12px;
+    opacity: 0.6;
+    margin-right: 6px;
+}
+
+#prompt-search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    padding: 8px 0;
+    font-size: 12px;
+    outline: none;
+    margin-bottom: 0;
+}
+
+.search-clear-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-tertiary);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.search-clear-btn:hover {
+    color: var(--text-primary);
+}
+
+.category-filter-bar {
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+}
+
+.category-filter-bar::-webkit-scrollbar {
+    display: none;
+}
+
+.cat-pill {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    border-radius: 12px;
+    padding: 3px 9px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+    font-family: inherit;
+}
+
+.cat-pill:hover {
+    color: var(--text-primary);
+    border-color: var(--text-tertiary);
+}
+
+.cat-pill.active {
+    background: rgba(74, 158, 255, 0.12);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* --- Prompt Cards (Clean, Clickable Rows) -------------------------------- */
 
 #prompts-list {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
+    max-height: 420px;
+    overflow-y: auto;
+    padding-right: 2px;
 }
 
 .prompt-item {
-    background-color: transparent;
-    border: none;
+    background-color: var(--bg-card);
+    border: 1px solid transparent;
     border-radius: 8px;
-    padding: 12px;
+    padding: 9px 12px;
     display: flex;
     flex-direction: column;
-    transition: background-color 0.15s ease;
+    gap: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
     width: 100%;
     box-sizing: border-box;
-    min-width: 0;
+    position: relative;
+    user-select: none;
 }
 
 .prompt-item:hover {
-    background-color: var(--bg-card);
+    background-color: var(--bg-surface);
+    border-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.prompt-item:active {
+    transform: translateY(0);
 }
 
 .prompt-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 4px;
+    width: 100%;
+    min-width: 0;
+}
+
+.prompt-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    flex: 1;
+}
+
+.drag-handle {
+    cursor: grab;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    opacity: 0.3;
+    transition: opacity 0.15s ease;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.prompt-item:hover .drag-handle {
+    opacity: 0.7;
+}
+
+.prompt-icon {
+    font-size: 13px;
+    flex-shrink: 0;
+    line-height: 1;
 }
 
 .prompt-name {
     font-weight: 500;
     font-size: 13px;
+    color: var(--text-primary);
     letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recipe-turn-badge {
+    font-size: 10px;
+    font-weight: 600;
+    color: #a5b4fc;
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    padding: 1px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.shortcut-pill {
+    font-size: 10px;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1px 5px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    font-family: monospace;
+}
+
+.auto-send-icon {
+    color: var(--accent);
+    font-size: 12px;
+    flex-shrink: 0;
 }
 
 .prompt-preview {
@@ -112,65 +280,52 @@ h2 {
     overflow: hidden;
     text-overflow: ellipsis;
     padding-left: 24px;
-    line-height: 1.4;
-    width: 100%;
-    box-sizing: border-box;
+    line-height: 1.3;
 }
 
-/* --- Action Buttons (always visible, visually quiet) --------------------- */
-
+/* Hover Action Strip: reveals on card hover */
 .prompt-actions {
     display: flex;
-    gap: 4px;
+    gap: 3px;
     align-items: center;
     flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.15s ease;
 }
 
-.run-btn {
-    background-color: transparent;
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    border-radius: 4px;
-    padding: 4px 10px;
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 11px;
-    font-family: inherit;
-    transition: all 0.15s ease;
-    min-height: 28px;
-    display: flex;
-    align-items: center;
+.prompt-item:hover .prompt-actions {
+    opacity: 1;
 }
 
-.run-btn:hover {
-    background-color: var(--accent);
-    color: var(--bg-primary);
-}
-
-.edit-btn, .delete-btn {
+.action-icon-btn {
     background: none;
     border: none;
     color: var(--text-tertiary);
     cursor: pointer;
-    padding: 4px 6px;
-    font-size: 14px;
+    padding: 3px 5px;
+    font-size: 13px;
     border-radius: 4px;
-    transition: color 0.15s ease, background-color 0.15s ease;
-    min-width: 28px;
-    min-height: 28px;
+    transition: all 0.15s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    line-height: 1;
 }
 
-.edit-btn:hover {
+.action-icon-btn:hover {
     color: var(--text-primary);
-    background-color: var(--bg-surface);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-.delete-btn:hover {
+.action-icon-btn.delete-btn:hover {
     color: var(--danger);
-    background-color: rgba(229, 77, 81, 0.1);
+    background-color: rgba(229, 77, 81, 0.15);
+}
+
+.play-hint-icon {
+    font-size: 10px;
+    color: var(--accent);
+    margin-right: 2px;
 }
 
 /* --- Drag Handle --------------------------------------------------------- */

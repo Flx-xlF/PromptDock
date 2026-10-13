@@ -1037,6 +1037,7 @@ const RecipeState = {
     variableValues: {},
     mode: 'guided', // 'guided' | 'autopilot' | 'express'
     status: 'idle', // 'idle' | 'running_turn' | 'checkpoint' | 'completed'
+    isMinimized: false,
     streamCheckInterval: null
 };
 
@@ -1104,7 +1105,6 @@ function observeTurnCompletion(onComplete) {
     // Timeout safety fallback: if no generation started within 8s, or runs for > 3 minutes
     setTimeout(() => {
         if (!streamSawStart && RecipeState.status === 'running_turn') {
-            // Assume single-turn completed or fast answer
             clearInterval(RecipeState.streamCheckInterval);
             RecipeState.streamCheckInterval = null;
             onComplete();
@@ -1128,19 +1128,16 @@ function handleTurnCompletion() {
     if (currentIdx < recipe.turns.length - 1) {
         RecipeState.currentTurnIndex++;
         if (RecipeState.mode === 'autopilot') {
-            // In autopilot mode, automatically trigger next turn after brief pause
             RecipeState.status = 'running_turn';
             renderRailUI();
             setTimeout(() => {
                 executeNextTurn('');
             }, 1200);
         } else {
-            // Guided mode: pause at checkpoint
             RecipeState.status = 'checkpoint';
             renderRailUI();
         }
     } else {
-        // All turns completed
         RecipeState.status = 'completed';
         renderRailUI();
     }
@@ -1161,10 +1158,14 @@ function executeNextTurn(userSteeringNote) {
         previousTurnTitle: prevTurnTitle
     });
 
+    const injected = window.injectCopilotPrompt(turnPrompt, true);
+    if (!injected) {
+        console.warn('[PromptDock] Turn injection failed in this frame.');
+        return;
+    }
+
     RecipeState.status = 'running_turn';
     renderRailUI();
-
-    window.injectCopilotPrompt(turnPrompt, true);
     observeTurnCompletion(() => handleTurnCompletion());
 }
 
@@ -1187,10 +1188,11 @@ function executeFork(outputChunkId, userSteeringNote) {
     promptParts.push(chunkText);
 
     const fullPrompt = promptParts.join('\n\n');
+    const injected = window.injectCopilotPrompt(fullPrompt, true);
+    if (!injected) return;
+
     RecipeState.status = 'running_turn';
     renderRailUI();
-
-    window.injectCopilotPrompt(fullPrompt, true);
     observeTurnCompletion(() => {
         RecipeState.status = 'completed';
         renderRailUI();
@@ -1218,14 +1220,75 @@ function renderRailUI() {
     const currentIdx = RecipeState.currentTurnIndex;
     const totalTurns = recipe.turns.length;
 
-    // 1. Progress Steps Bar
-    const railBar = document.createElement('div');
-    railBar.className = 'pd-rail-bar';
+    // --- State A: Minimized Floating Pill ---
+    if (RecipeState.isMinimized) {
+        const minDock = document.createElement('div');
+        minDock.className = 'pd-hud-dock pd-minimized';
 
-    const recipeBadge = document.createElement('div');
-    recipeBadge.className = 'pd-rail-badge';
-    recipeBadge.textContent = recipe.name;
-    railBar.appendChild(recipeBadge);
+        const leftInfo = document.createElement('div');
+        leftInfo.className = 'pd-min-left';
+        const isCheckpoint = RecipeState.status === 'checkpoint';
+        const isCompleted = RecipeState.status === 'completed';
+        leftInfo.innerHTML = `
+            <span class="pd-min-badge">⚡ ${recipe.name}</span>
+            <span class="pd-min-text">${
+                isCompleted ? 'Workflow abgeschlossen! 🎉' :
+                isCheckpoint ? `Bereit für Schritt ${currentIdx + 1}: <strong>${recipe.turns[currentIdx].title}</strong>` :
+                `Schritt ${currentIdx + 1} von ${totalTurns} läuft...`
+            }</span>
+        `;
+        minDock.appendChild(leftInfo);
+
+        const rightActions = document.createElement('div');
+        rightActions.className = 'pd-min-actions';
+
+        if (isCheckpoint) {
+            const sendBtn = document.createElement('button');
+            sendBtn.className = 'pd-primary-btn pd-min-send';
+            sendBtn.innerHTML = `Weiter ➔ <span class="pd-shortcut">⌥⇧→</span>`;
+            sendBtn.addEventListener('click', () => executeNextTurn(''));
+            rightActions.appendChild(sendBtn);
+        }
+
+        const expandBtn = document.createElement('button');
+        expandBtn.className = 'pd-ctrl-btn';
+        expandBtn.textContent = '↗';
+        expandBtn.title = 'Erweitern (Steuerung öffnen)';
+        expandBtn.addEventListener('click', () => {
+            RecipeState.isMinimized = false;
+            renderRailUI();
+        });
+        rightActions.appendChild(expandBtn);
+
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'pd-ctrl-btn';
+        closeBtn.textContent = '×';
+        closeBtn.title = 'Workflow beenden';
+        closeBtn.addEventListener('click', () => {
+            RecipeState.status = 'idle';
+            RecipeState.activeRecipe = null;
+            RecipeState.isMinimized = false;
+            renderRailUI();
+        });
+        rightActions.appendChild(closeBtn);
+
+        minDock.appendChild(rightActions);
+        railContainer.appendChild(minDock);
+        return;
+    }
+
+    // --- State B: Unified Full HUD Dock ---
+    const hud = document.createElement('div');
+    hud.className = 'pd-hud-dock';
+
+    // 1. Header: Title, Stepper, Controls
+    const header = document.createElement('div');
+    header.className = 'pd-hud-header';
+
+    const titleDiv = document.createElement('div');
+    titleDiv.className = 'pd-hud-title';
+    titleDiv.innerHTML = `<span class="pd-hud-icon">⚡</span> <span class="pd-hud-name">${recipe.name}</span>`;
+    header.appendChild(titleDiv);
 
     const stepsList = document.createElement('div');
     stepsList.className = 'pd-rail-steps';
@@ -1254,78 +1317,110 @@ function renderRailUI() {
             stepsList.appendChild(line);
         }
     });
+    header.appendChild(stepsList);
 
-    railBar.appendChild(stepsList);
+    const controls = document.createElement('div');
+    controls.className = 'pd-hud-controls';
 
-    // Close button
+    const minBtn = document.createElement('button');
+    minBtn.className = 'pd-ctrl-btn';
+    minBtn.textContent = '—';
+    minBtn.title = 'Minimieren (Chat lesen)';
+    minBtn.addEventListener('click', () => {
+        RecipeState.isMinimized = true;
+        renderRailUI();
+    });
+    controls.appendChild(minBtn);
+
     const closeBtn = document.createElement('button');
-    closeBtn.className = 'pd-rail-close';
+    closeBtn.className = 'pd-ctrl-btn';
     closeBtn.textContent = '×';
     closeBtn.title = 'Workflow beenden';
     closeBtn.addEventListener('click', () => {
         RecipeState.status = 'idle';
         RecipeState.activeRecipe = null;
+        RecipeState.isMinimized = false;
         renderRailUI();
     });
-    railBar.appendChild(closeBtn);
-    railContainer.appendChild(railBar);
+    controls.appendChild(closeBtn);
 
-    // 2. Checkpoint Card (Visible when paused between turns)
+    header.appendChild(controls);
+    hud.appendChild(header);
+
+    // 2. Body based on current status
     if (RecipeState.status === 'checkpoint') {
-        const cpCard = document.createElement('div');
-        cpCard.className = 'pd-checkpoint-card';
+        const body = document.createElement('div');
+        body.className = 'pd-hud-body';
 
-        const cpHeader = document.createElement('div');
-        cpHeader.className = 'pd-cp-header';
-        cpHeader.innerHTML = `<strong>Schritt ${currentIdx} fertig.</strong> Bereit für <em>${recipe.turns[currentIdx].title}</em>:`;
-        cpCard.appendChild(cpHeader);
+        const statusLine = document.createElement('div');
+        statusLine.className = 'pd-hud-status-line';
+        statusLine.innerHTML = `<span class="pd-step-tag">Schritt ${currentIdx + 1} von ${totalTurns}</span> <span class="pd-step-desc">Bereit für: <strong>${recipe.turns[currentIdx].title}</strong></span>`;
+        body.appendChild(statusLine);
 
-        // Steering Chips
-        const chipsContainer = document.createElement('div');
-        chipsContainer.className = 'pd-chips-container';
-
-        const chips = [
-            { label: '✓ Direkt weiter', note: '' },
-            { label: 'Fakten korrigieren', note: 'Bitte korrigiere folgende Fakten: ' },
-            { label: 'Tiefer recherchieren', note: 'Recherchiere noch tiefer zu: ' },
-            { label: 'Haltung vorgeben', note: 'Empfohlene Haltung soll lauten: ' }
-        ];
+        // Steering Modifiers (no redundant "Direkt weiter" chip!)
+        const modsRow = document.createElement('div');
+        modsRow.className = 'pd-modifiers-row';
 
         const noteInput = document.createElement('input');
         noteInput.type = 'text';
         noteInput.className = 'pd-note-input';
-        noteInput.placeholder = 'Optionale Steuerungsnotiz für nächsten Schritt...';
+        noteInput.placeholder = 'Optionale Steuerungsnotiz (oder direkt Weiter / Enter drücken)...';
 
-        chips.forEach(c => {
-            const chipBtn = document.createElement('button');
-            chipBtn.className = 'pd-chip';
-            chipBtn.textContent = c.label;
-            chipBtn.addEventListener('click', () => {
-                if (c.note) {
-                    noteInput.value = c.note;
-                    noteInput.focus();
-                } else {
-                    executeNextTurn(noteInput.value);
-                }
+        const modChips = [
+            { label: '+ Fakten korrigieren', note: 'Bitte korrigiere folgende Fakten: ' },
+            { label: '+ Tiefer recherchieren', note: 'Recherchiere noch tiefer zu: ' },
+            { label: '+ Haltung vorgeben', note: 'Empfohlene Haltung soll lauten: ' }
+        ];
+
+        modChips.forEach(c => {
+            const chip = document.createElement('button');
+            chip.className = 'pd-mod-tag';
+            chip.textContent = c.label;
+            chip.addEventListener('click', () => {
+                noteInput.value = c.note;
+                noteInput.focus();
             });
-            chipsContainer.appendChild(chipBtn);
+            modsRow.appendChild(chip);
         });
+        body.appendChild(modsRow);
 
-        cpCard.appendChild(chipsContainer);
-        cpCard.appendChild(noteInput);
+        // Action Row: Input + Primary Advance Button
+        const actionRow = document.createElement('div');
+        actionRow.className = 'pd-action-row';
 
-        // Actions Row (Fork menu + Send button)
-        const actionsRow = document.createElement('div');
-        actionsRow.className = 'pd-cp-actions';
+        noteInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                executeNextTurn(noteInput.value);
+            }
+        });
+        actionRow.appendChild(noteInput);
 
-        // Fork Dropdown (if forks exist)
-        if (recipe.forks && recipe.forks.length > 0) {
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'pd-primary-btn';
+        nextBtn.innerHTML = `Weiter ➔ <span class="pd-shortcut">⌥⇧→</span>`;
+        nextBtn.addEventListener('click', () => executeNextTurn(noteInput.value));
+        actionRow.appendChild(nextBtn);
+
+        body.appendChild(actionRow);
+
+        // Fork Dropdown: ONLY on final step if forks exist!
+        const isFinalStep = currentIdx === totalTurns - 1;
+        if (isFinalStep && recipe.forks && recipe.forks.length > 0) {
+            const forkRow = document.createElement('div');
+            forkRow.className = 'pd-fork-row';
+            
+            const forkLabel = document.createElement('span');
+            forkLabel.className = 'pd-fork-label';
+            forkLabel.textContent = 'Anderen Output wählen:';
+            forkRow.appendChild(forkLabel);
+
             const forkSelect = document.createElement('select');
             forkSelect.className = 'pd-fork-select';
-            const defaultOpt = document.createElement('option');
-            defaultOpt.value = '';
-            defaultOpt.textContent = 'Anderen Output wählen...';
-            forkSelect.appendChild(defaultOpt);
+            const defOpt = document.createElement('option');
+            defOpt.value = '';
+            defOpt.textContent = `Standard (${recipe.turns[currentIdx].title})`;
+            forkSelect.appendChild(defOpt);
 
             const catalog = window.PromptDockCatalog;
             recipe.forks.forEach(fId => {
@@ -1340,37 +1435,30 @@ function renderRailUI() {
                     executeFork(e.target.value, noteInput.value);
                 }
             });
-            actionsRow.appendChild(forkSelect);
+            forkRow.appendChild(forkSelect);
+            body.appendChild(forkRow);
         }
 
-        const nextBtn = document.createElement('button');
-        nextBtn.className = 'pd-primary-btn';
-        nextBtn.innerHTML = `Schritt ${currentIdx + 1} senden <span class="pd-shortcut">⌥⇧→</span>`;
-        nextBtn.addEventListener('click', () => executeNextTurn(noteInput.value));
-
-        actionsRow.appendChild(nextBtn);
-        cpCard.appendChild(actionsRow);
-        railContainer.appendChild(cpCard);
+        hud.appendChild(body);
     } else if (RecipeState.status === 'completed') {
-        // 3. Completed State Card with Fork Options
-        const doneCard = document.createElement('div');
-        doneCard.className = 'pd-checkpoint-card';
+        const body = document.createElement('div');
+        body.className = 'pd-hud-body';
 
-        const doneHeader = document.createElement('div');
-        doneHeader.className = 'pd-cp-header';
-        doneHeader.innerHTML = `<strong>Workflow abgeschlossen! 🎉</strong> Alle ${totalTurns} Schritte ausgeführt.`;
-        doneCard.appendChild(doneHeader);
+        const doneMsg = document.createElement('div');
+        doneMsg.className = 'pd-done-message';
+        doneMsg.innerHTML = `🎉 <strong>Workflow abgeschlossen!</strong> Alle ${totalTurns} Schritte ausgeführt.`;
+        body.appendChild(doneMsg);
 
         const actionsRow = document.createElement('div');
-        actionsRow.className = 'pd-cp-actions';
+        actionsRow.className = 'pd-action-row';
 
         if (recipe.forks && recipe.forks.length > 0) {
             const forkSelect = document.createElement('select');
             forkSelect.className = 'pd-fork-select';
-            const defaultOpt = document.createElement('option');
-            defaultOpt.value = '';
-            defaultOpt.textContent = 'Weiteren Output generieren (Fork)...';
-            forkSelect.appendChild(defaultOpt);
+            const defOpt = document.createElement('option');
+            defOpt.value = '';
+            defOpt.textContent = 'Weiteren Output generieren (Fork)...';
+            forkSelect.appendChild(defOpt);
 
             const catalog = window.PromptDockCatalog;
             recipe.forks.forEach(fId => {
@@ -1394,13 +1482,21 @@ function renderRailUI() {
         finishBtn.addEventListener('click', () => {
             RecipeState.status = 'idle';
             RecipeState.activeRecipe = null;
+            RecipeState.isMinimized = false;
             renderRailUI();
         });
         actionsRow.appendChild(finishBtn);
 
-        doneCard.appendChild(actionsRow);
-        railContainer.appendChild(doneCard);
+        body.appendChild(actionsRow);
+        hud.appendChild(body);
+    } else if (RecipeState.status === 'running_turn') {
+        const body = document.createElement('div');
+        body.className = 'pd-hud-body pd-running-body';
+        body.innerHTML = `<div class="pd-running-indicator"><span class="pd-spinner"></span> Schritt ${currentIdx + 1} (${recipe.turns[currentIdx].title}) wird generiert...</div>`;
+        hud.appendChild(body);
     }
+
+    railContainer.appendChild(hud);
 }
 
 window.startPromptDockRecipe = function(recipeIdOrName, options) {
@@ -1424,19 +1520,26 @@ window.startPromptDockRecipe = function(recipeIdOrName, options) {
         return window.injectCopilotPrompt(expressPrompt, false);
     }
 
+    const turnPrompt = catalog.compileTurn(recipe, 0, { variableValues });
+    const injected = window.injectCopilotPrompt(turnPrompt, true);
+
+    // CRITICAL FIX: If prompt could not be injected into this frame, DO NOT render UI!
+    // This stops parent or sibling iframes from spawning duplicate floating cards!
+    if (!injected) {
+        return false;
+    }
+
     RecipeState.activeRecipe = recipe;
     RecipeState.currentTurnIndex = 0;
     RecipeState.variableValues = variableValues;
     RecipeState.mode = mode;
     RecipeState.status = 'running_turn';
-
-    const turnPrompt = catalog.compileTurn(recipe, 0, { variableValues });
-    const injected = window.injectCopilotPrompt(turnPrompt, true);
+    RecipeState.isMinimized = false;
 
     renderRailUI();
     observeTurnCompletion(() => handleTurnCompletion());
 
-    return injected;
+    return true;
 };
 
 // Global Shortcut Listener: Alt+Shift+ArrowRight (⌥⇧→) to advance turn

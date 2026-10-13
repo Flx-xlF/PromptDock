@@ -11,6 +11,21 @@
         <h2>PromptDock</h2>
     </div>
     
+    <div class="search-section">
+        <div class="search-input-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="prompt-search-input" placeholder="Prompt oder Workflow suchen... (⌘K)" autocomplete="off">
+            <button id="search-clear-btn" class="search-clear-btn hidden" title="Suche leeren">×</button>
+        </div>
+        <div id="category-filter-bar" class="category-filter-bar">
+            <button class="cat-pill active" data-cat="all">Alle</button>
+            <button class="cat-pill" data-cat="respond">PR & Medien</button>
+            <button class="cat-pill" data-cat="review">Review & Audit</button>
+            <button class="cat-pill" data-cat="plan">Planung & Strategie</button>
+            <button class="cat-pill" data-cat="custom">Eigene</button>
+        </div>
+    </div>
+    
     <div id="prompts-list">
         <!-- Prompts will be dynamically injected here -->
     </div>

@@ -460,6 +460,58 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // Search input listener
+    const searchInput = document.getElementById('prompt-search-input');
+    const searchClearBtn = document.getElementById('search-clear-btn');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            currentSearchQuery = e.target.value.trim().toLowerCase();
+            if (searchClearBtn) {
+                searchClearBtn.classList.toggle('hidden', currentSearchQuery.length === 0);
+            }
+            renderPrompts();
+        });
+
+        // Global hotkey: Cmd+K / Ctrl+K to jump to search
+        window.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            } else if (e.key === 'Escape' && document.activeElement === searchInput) {
+                searchInput.value = '';
+                currentSearchQuery = '';
+                if (searchClearBtn) searchClearBtn.classList.add('hidden');
+                renderPrompts();
+            }
+        });
+    }
+
+    if (searchClearBtn) {
+        searchClearBtn.addEventListener('click', () => {
+            if (searchInput) {
+                searchInput.value = '';
+                searchInput.focus();
+            }
+            currentSearchQuery = '';
+            searchClearBtn.classList.add('hidden');
+            renderPrompts();
+        });
+    }
+
+    // Category filter pills
+    const filterBar = document.getElementById('category-filter-bar');
+    if (filterBar) {
+        filterBar.addEventListener('click', (e) => {
+            const pill = e.target.closest('.cat-pill');
+            if (!pill) return;
+            filterBar.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            currentCategoryFilter = pill.dataset.cat || 'all';
+            renderPrompts();
+        });
+    }
+
     // Ensure external links open cleanly in a new browser tab from the popup
     document.body.addEventListener('click', (e) => {
         const link = e.target.closest('a[href^="http"]');
@@ -472,6 +524,42 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 let shortcutMap = {};
 let currentPendingRecipeExecution = null;
+let currentSearchQuery = '';
+let currentCategoryFilter = 'all';
+
+function normalizeSlug(str) {
+    return (str || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function findMatchingRecipe(prompt) {
+    if (!Catalog || !Catalog.RECIPES) return null;
+    const pSlug = normalizeSlug(prompt.recipeId || prompt.name);
+    return Catalog.RECIPES.find(r => 
+        normalizeSlug(r.id) === pSlug || 
+        normalizeSlug(r.name) === pSlug ||
+        r.id === prompt.recipeId ||
+        r.name.toLowerCase() === (prompt.name || '').toLowerCase()
+    );
+}
+
+function getRecipeIcon(recipe) {
+    if (!recipe) return '⚡';
+    const id = recipe.id || '';
+    if (id.includes('medien') || id.includes('interview')) return '🎙️';
+    if (id.includes('freigabe') || id.includes('proofreading')) return '🛡️';
+    if (id.includes('plan') || id.includes('themen') || id.includes('wochen')) return '📋';
+    if (id.includes('wording') || id.includes('artikel')) return '✍️';
+    if (id.includes('berate') || id.includes('strategie')) return '💡';
+    if (id.includes('mail') || id.includes('email')) return '✉️';
+    return '⚡';
+}
+
+function getRecipeWorkflowSummary(recipe, fallbackContent) {
+    if (recipe && recipe.turns && recipe.turns.length > 0) {
+        return recipe.turns.map(t => t.title).join(' ➔ ');
+    }
+    return (fallbackContent || '').replace(/\s+/g, ' ').slice(0, 60);
+}
 
 /** Update the global storage usage bar in the footer. */
 function updateGlobalStorage() {
@@ -505,18 +593,64 @@ async function renderPrompts() {
     const list = document.getElementById('prompts-list');
     list.replaceChildren();
     
-    prompts.forEach((prompt, index) => {
+    // Filter by search query and category
+    const filteredPrompts = prompts.map((p, originalIdx) => ({ prompt: p, originalIdx })).filter(({ prompt }) => {
+        const matchedRecipe = findMatchingRecipe(prompt);
+        
+        // 1. Category Filter
+        if (currentCategoryFilter !== 'all') {
+            if (currentCategoryFilter === 'custom') {
+                if (matchedRecipe) return false;
+            } else {
+                if (!matchedRecipe || matchedRecipe.family !== currentCategoryFilter) return false;
+            }
+        }
+
+        // 2. Search Query Filter
+        if (currentSearchQuery) {
+            const nameMatch = (prompt.name || '').toLowerCase().includes(currentSearchQuery);
+            const contentMatch = (prompt.content || '').toLowerCase().includes(currentSearchQuery);
+            const recipeMatch = matchedRecipe && (
+                matchedRecipe.name.toLowerCase().includes(currentSearchQuery) ||
+                matchedRecipe.turns.some(t => t.title.toLowerCase().includes(currentSearchQuery))
+            );
+            if (!nameMatch && !contentMatch && !recipeMatch) return false;
+        }
+
+        return true;
+    });
+
+    if (filteredPrompts.length === 0) {
+        const emptyNotice = document.createElement('div');
+        emptyNotice.style.cssText = 'padding: 24px 12px; text-align: center; color: var(--text-tertiary); font-size: 12px;';
+        emptyNotice.textContent = currentSearchQuery 
+            ? `Keine Prompts für "${currentSearchQuery}" gefunden.` 
+            : 'Keine Prompts in dieser Kategorie.';
+        list.appendChild(emptyNotice);
+        updateGlobalStorage();
+        return;
+    }
+
+    filteredPrompts.forEach(({ prompt, originalIdx }) => {
         const div = document.createElement('div');
         div.className = 'prompt-item';
         div.setAttribute('draggable', 'true');
-        div.setAttribute('data-index', index);
+        div.setAttribute('data-index', originalIdx);
+        div.title = 'Klicken zum Ausführen';
+
+        // Whole row is clickable to launch!
+        div.addEventListener('click', (e) => {
+            if (e.target.closest('.action-icon-btn') || e.target.closest('.drag-handle')) {
+                return;
+            }
+            handlePromptRun(originalIdx, div);
+        });
         
-        // Build header safely using DOM APIs to prevent XSS (#4)
         const headerDiv = document.createElement('div');
         headerDiv.className = 'prompt-header';
         
         const leftDiv = document.createElement('div');
-        leftDiv.style.cssText = 'display:flex; align-items:center;';
+        leftDiv.className = 'prompt-left';
         
         const dragSpan = document.createElement('span');
         dragSpan.className = 'drag-handle';
@@ -524,12 +658,17 @@ async function renderPrompts() {
         dragSpan.textContent = '≡';
         leftDiv.appendChild(dragSpan);
         
+        const matchedRecipe = findMatchingRecipe(prompt);
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'prompt-icon';
+        iconSpan.textContent = getRecipeIcon(matchedRecipe);
+        leftDiv.appendChild(iconSpan);
+
         const nameSpan = document.createElement('span');
         nameSpan.className = 'prompt-name';
         nameSpan.textContent = prompt.name;
         leftDiv.appendChild(nameSpan);
 
-        const matchedRecipe = Catalog?.RECIPES?.find(r => r.id === prompt.recipeId || r.name.toLowerCase() === prompt.name.toLowerCase());
         if (matchedRecipe && matchedRecipe.turns && matchedRecipe.turns.length > 0) {
             const turnBadge = document.createElement('span');
             turnBadge.className = 'recipe-turn-badge';
@@ -538,42 +677,62 @@ async function renderPrompts() {
             leftDiv.appendChild(turnBadge);
         }
         
-        if (shortcutMap[index]) {
+        if (shortcutMap[originalIdx]) {
             const shortcutSpan = document.createElement('span');
-            shortcutSpan.style.cssText = 'font-size: 10px; color: var(--text-secondary); margin-left: 8px; background: var(--bg-color); padding: 2px 4px; border-radius: 4px;';
-            shortcutSpan.textContent = shortcutMap[index];
+            shortcutSpan.className = 'shortcut-pill';
+            shortcutSpan.textContent = shortcutMap[originalIdx];
             leftDiv.appendChild(shortcutSpan);
         }
         
         if (prompt.autoSend) {
             const autoSendSpan = document.createElement('span');
             autoSendSpan.title = 'Automatisch absenden';
-            autoSendSpan.style.cssText = 'color:var(--accent-color); font-size: 14px; margin-left: 6px;';
+            autoSendSpan.className = 'auto-send-icon';
             autoSendSpan.textContent = '⚡';
             leftDiv.appendChild(autoSendSpan);
         }
         
         headerDiv.appendChild(leftDiv);
         
+        // Hover actions strip
         const actionsDiv = document.createElement('div');
         actionsDiv.className = 'prompt-actions';
         
-        const runBtn = document.createElement('button');
-        runBtn.className = 'run-btn';
-        runBtn.setAttribute('data-index', index);
-        runBtn.textContent = 'Ausführen';
-        actionsDiv.appendChild(runBtn);
-        
+        const playHint = document.createElement('span');
+        playHint.className = 'play-hint-icon';
+        playHint.title = 'Ausführen';
+        playHint.textContent = '▶';
+        actionsDiv.appendChild(playHint);
+
         const editBtn = document.createElement('button');
-        editBtn.className = 'edit-btn';
-        editBtn.setAttribute('data-index', index);
+        editBtn.className = 'action-icon-btn';
         editBtn.textContent = '✎';
+        editBtn.title = 'Bearbeiten';
+        editBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            editingIndex = originalIdx;
+            document.getElementById('prompt-name').value = prompt.name;
+            document.getElementById('prompt-content').value = prompt.content;
+            document.getElementById('prompt-auto-send').checked = !!prompt.autoSend;
+            document.getElementById('add-form').classList.remove('hidden');
+            document.getElementById('toggle-add-btn').classList.add('hidden');
+            document.getElementById('save-btn').innerText = 'Aktualisieren';
+            updateCharCounter();
+        });
         actionsDiv.appendChild(editBtn);
         
         const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'delete-btn';
-        deleteBtn.setAttribute('data-index', index);
+        deleteBtn.className = 'action-icon-btn delete-btn';
         deleteBtn.textContent = '×';
+        deleteBtn.title = 'Löschen';
+        deleteBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            if (confirm(`Prompt "${prompt.name}" wirklich löschen?`)) {
+                prompts.splice(originalIdx, 1);
+                await PromptStorage.save(prompts);
+                renderPrompts();
+            }
+        });
         actionsDiv.appendChild(deleteBtn);
         
         headerDiv.appendChild(actionsDiv);
@@ -581,7 +740,7 @@ async function renderPrompts() {
         
         const previewDiv = document.createElement('div');
         previewDiv.className = 'prompt-preview';
-        previewDiv.textContent = prompt.content;
+        previewDiv.textContent = getRecipeWorkflowSummary(matchedRecipe, prompt.content);
         div.appendChild(previewDiv);
         
         list.appendChild(div);
@@ -589,43 +748,6 @@ async function renderPrompts() {
     
     // Update global storage indicator
     updateGlobalStorage();
-    
-    // Add event listeners to the new buttons
-    document.querySelectorAll('.run-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const index = parseInt(e.target.getAttribute('data-index'));
-            handlePromptRun(index, e.target);
-        });
-    });
-    
-    document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const index = e.target.getAttribute('data-index');
-            editingIndex = parseInt(index);
-            
-            document.getElementById('prompt-name').value = prompts[index].name;
-            document.getElementById('prompt-content').value = prompts[index].content;
-            document.getElementById('prompt-auto-send').checked = !!prompts[index].autoSend;
-            
-            document.getElementById('add-form').classList.remove('hidden');
-            document.getElementById('toggle-add-btn').classList.add('hidden');
-            document.getElementById('save-btn').innerText = 'Aktualisieren';
-            
-            // Update byte counter directly
-            updateCharCounter();
-        });
-    });
-    
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-            if (confirm("Prompt wirklich löschen?")) {
-                const index = e.target.getAttribute('data-index');
-                prompts.splice(index, 1);
-                await PromptStorage.save(prompts);
-                renderPrompts();
-            }
-        });
-    });
 }
 
 function isSupportedTabUrl(url) {
@@ -709,15 +831,18 @@ function openVariableModal(recipe, prompt, buttonEl, tab) {
     if (firstInput) setTimeout(() => firstInput.focus(), 50);
 }
 
-async function executeRecipe(recipe, options, buttonEl, tab) {
+async function executeRecipe(recipe, options, cardEl, tab) {
     if (!tab) {
         const tabs = await ext.tabs.query({ active: true, currentWindow: true });
         tab = tabs[0];
     }
     if (!tab) return;
 
-    const oldText = buttonEl.innerText;
-    buttonEl.innerText = "Startet...";
+    if (cardEl) {
+        cardEl.style.opacity = '0.7';
+        const playHint = cardEl.querySelector('.play-hint-icon');
+        if (playHint) playHint.textContent = '⏳';
+    }
 
     try {
         await ext.scripting.executeScript({
@@ -738,34 +863,45 @@ async function executeRecipe(recipe, options, buttonEl, tab) {
 
         const success = results && results.some(r => r.result === true);
         if (success) {
-            buttonEl.innerText = "Gestartet ✓";
-            buttonEl.style.backgroundColor = "#107c10";
+            if (cardEl) {
+                cardEl.style.borderColor = "#107c10";
+                cardEl.style.backgroundColor = "rgba(16, 124, 16, 0.15)";
+                const playHint = cardEl.querySelector('.play-hint-icon');
+                if (playHint) playHint.textContent = '✓';
+            }
             setTimeout(() => {
                 try { window.close(); } catch (e) {}
-            }, 1000);
+            }, 700);
         } else {
             const fallbackText = (options.mode === 'express')
                 ? Catalog.compileExpress(recipe, options.variableValues)
                 : Catalog.compileTurn(recipe, 0, { variableValues: options.variableValues });
             await navigator.clipboard.writeText(fallbackText);
-            buttonEl.innerText = "In Zwischenablage kopiert ✓";
-            buttonEl.style.backgroundColor = "#d2691e";
+            if (cardEl) {
+                cardEl.style.borderColor = "#d2691e";
+                const playHint = cardEl.querySelector('.play-hint-icon');
+                if (playHint) playHint.textContent = '📋';
+            }
         }
     } catch (err) {
         console.error("[PromptDock] Recipe execution failed:", err);
-        buttonEl.innerText = "Fehler";
-        setTimeout(() => { buttonEl.innerText = oldText; }, 2000);
+        if (cardEl) {
+            cardEl.style.opacity = '1';
+            cardEl.style.borderColor = "#e54d51";
+        }
     }
 }
 
-async function runPrompt(content, buttonEl) {
+async function runPrompt(content, cardEl) {
     // Get active tab
     const [tab] = await ext.tabs.query({ active: true, currentWindow: true });
     
     if (tab && isSupportedTabUrl(tab.url)) {
-        // Change button to show loading state
-        const oldText = buttonEl.innerText;
-        buttonEl.innerText = "Läuft...";
+        if (cardEl) {
+            cardEl.style.opacity = '0.7';
+            const playHint = cardEl.querySelector('.play-hint-icon');
+            if (playHint) playHint.textContent = '⏳';
+        }
         
         try {
             // Inject recipe catalog and content.js
@@ -785,31 +921,33 @@ async function runPrompt(content, buttonEl) {
             const success = results && results.some(r => r.result === true);
             
             if (success) {
-                buttonEl.innerText = "Erfolgreich eingefügt!";
-                buttonEl.style.backgroundColor = "#107c10"; // Success green color
+                if (cardEl) {
+                    cardEl.style.borderColor = "#107c10";
+                    cardEl.style.backgroundColor = "rgba(16, 124, 16, 0.15)";
+                    const playHint = cardEl.querySelector('.play-hint-icon');
+                    if (playHint) playHint.textContent = '✓';
+                }
                 setTimeout(() => {
                     try {
-                        window.close(); // Close the popup after success (Chrome)
+                        window.close();
                     } catch (e) {}
-                    // Firefox fallback: visually indicate completion if window doesn't close
-                    buttonEl.innerText = "Fertig ✓";
-                    buttonEl.style.opacity = "0.8";
-                }, 1500);
+                }, 700);
             } else {
                 try {
                     await navigator.clipboard.writeText(content);
-                    buttonEl.innerText = "In Zwischenablage kopiert ✓";
-                    buttonEl.style.backgroundColor = "#d2691e"; // Orange
+                    if (cardEl) {
+                        cardEl.style.borderColor = "#d2691e";
+                        const playHint = cardEl.querySelector('.play-hint-icon');
+                        if (playHint) playHint.textContent = '📋';
+                    }
                 } catch (e) {
                     console.error("Clipboard write failed:", e);
-                    buttonEl.innerText = "Fehler – bitte manuell kopieren";
-                    buttonEl.style.backgroundColor = "#e54d51"; // Red
+                    if (cardEl) cardEl.style.borderColor = "#e54d51";
                 }
             }
         } catch (e) {
             console.error(e);
-            buttonEl.innerText = "Error";
-            setTimeout(() => { buttonEl.innerText = oldText; }, 2000);
+            if (cardEl) cardEl.style.borderColor = "#e54d51";
         }
     } else {
         alert("Bitte öffne einen unterstützten KI-Chat (Copilot, Gemini, ChatGPT oder Claude) im aktuellen Tab, um einen Prompt auszuführen.");
