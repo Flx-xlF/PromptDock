@@ -1038,6 +1038,7 @@ const RecipeState = {
     mode: 'guided', // 'guided' | 'autopilot' | 'express'
     status: 'idle', // 'idle' | 'running_turn' | 'checkpoint' | 'completed'
     isMinimized: false,
+    customPos: null, // { left: number, top: number } when dragged
     streamCheckInterval: null
 };
 
@@ -1199,6 +1200,88 @@ function executeFork(outputChunkId, userSteeringNote) {
     });
 }
 
+let isRailDraggingInitialized = false;
+
+function setupRailDragging(railContainer) {
+    if (isRailDraggingInitialized) return;
+    isRailDraggingInitialized = true;
+
+    let isDragging = false;
+    let startMouseX = 0;
+    let startMouseY = 0;
+    let startLeft = 0;
+    let startTop = 0;
+
+    railContainer.addEventListener('mousedown', (e) => {
+        // Prevent drag when clicking on interactive controls
+        if (e.target.closest('button') || e.target.closest('input') || e.target.closest('select') || e.target.closest('textarea')) {
+            return;
+        }
+
+        const isHeader = !!e.target.closest('.pd-hud-header');
+        const isMin = !!e.target.closest('.pd-hud-dock.pd-minimized');
+        if (!isHeader && !isMin) {
+            return;
+        }
+
+        isDragging = true;
+        railContainer.classList.add('pd-dragging');
+
+        const rect = railContainer.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        startMouseX = e.clientX;
+        startMouseY = e.clientY;
+
+        // Switch to explicit fixed pixel positioning
+        railContainer.style.left = `${startLeft}px`;
+        railContainer.style.top = `${startTop}px`;
+        railContainer.style.bottom = 'auto';
+        railContainer.style.transform = 'none';
+
+        e.preventDefault();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+
+        const dx = e.clientX - startMouseX;
+        const dy = e.clientY - startMouseY;
+
+        let newLeft = startLeft + dx;
+        let newTop = startTop + dy;
+
+        const rect = railContainer.getBoundingClientRect();
+        const maxLeft = window.innerWidth - rect.width - 12;
+        const maxTop = window.innerHeight - rect.height - 12;
+
+        newLeft = Math.max(12, Math.min(maxLeft, newLeft));
+        newTop = Math.max(12, Math.min(maxTop, newTop));
+
+        railContainer.style.left = `${newLeft}px`;
+        railContainer.style.top = `${newTop}px`;
+        RecipeState.customPos = { left: newLeft, top: newTop };
+    });
+
+    window.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            railContainer.classList.remove('pd-dragging');
+        }
+    });
+
+    // Double-click on header or pill resets position back to center bottom default
+    railContainer.addEventListener('dblclick', (e) => {
+        if ((e.target.closest('.pd-hud-header') || e.target.closest('.pd-hud-dock.pd-minimized')) && !e.target.closest('button')) {
+            RecipeState.customPos = null;
+            railContainer.style.left = '50%';
+            railContainer.style.bottom = '84px';
+            railContainer.style.top = 'auto';
+            railContainer.style.transform = 'translateX(-50%)';
+        }
+    });
+}
+
 function renderRailUI() {
     const shadowRoot = getOrCreateShadowRoot();
     let railContainer = shadowRoot.querySelector('#promptdock-rail-container');
@@ -1207,6 +1290,7 @@ function renderRailUI() {
         railContainer.id = 'promptdock-rail-container';
         shadowRoot.appendChild(railContainer);
     }
+    setupRailDragging(railContainer);
 
     if (!RecipeState.activeRecipe || RecipeState.status === 'idle') {
         railContainer.style.display = 'none';
@@ -1215,6 +1299,21 @@ function renderRailUI() {
 
     railContainer.style.display = 'flex';
     railContainer.replaceChildren();
+
+    // Preserve custom drag position if moved, otherwise center at bottom
+    if (RecipeState.customPos) {
+        const safeLeft = Math.max(12, Math.min(window.innerWidth - 280, RecipeState.customPos.left));
+        const safeTop = Math.max(12, Math.min(window.innerHeight - 60, RecipeState.customPos.top));
+        railContainer.style.left = `${safeLeft}px`;
+        railContainer.style.top = `${safeTop}px`;
+        railContainer.style.bottom = 'auto';
+        railContainer.style.transform = 'none';
+    } else {
+        railContainer.style.left = '50%';
+        railContainer.style.bottom = '84px';
+        railContainer.style.top = 'auto';
+        railContainer.style.transform = 'translateX(-50%)';
+    }
 
     const recipe = RecipeState.activeRecipe;
     const currentIdx = RecipeState.currentTurnIndex;
@@ -1230,6 +1329,16 @@ function renderRailUI() {
         const isCheckpoint = RecipeState.status === 'checkpoint';
         const isCompleted = RecipeState.status === 'completed';
         leftInfo.innerHTML = `
+            <span class="pd-drag-handle" title="Ziehen zum Verschieben">
+                <svg width="7" height="11" viewBox="0 0 8 12" fill="currentColor">
+                    <circle cx="2" cy="2" r="1.2"/>
+                    <circle cx="6" cy="2" r="1.2"/>
+                    <circle cx="2" cy="6" r="1.2"/>
+                    <circle cx="6" cy="6" r="1.2"/>
+                    <circle cx="2" cy="10" r="1.2"/>
+                    <circle cx="6" cy="10" r="1.2"/>
+                </svg>
+            </span>
             <span class="pd-min-badge">${recipe.name}</span>
             <span class="pd-min-text">${
                 isCompleted ? 'Workflow abgeschlossen!' :
@@ -1287,7 +1396,19 @@ function renderRailUI() {
 
     const titleDiv = document.createElement('div');
     titleDiv.className = 'pd-hud-title';
-    titleDiv.innerHTML = `<span class="pd-hud-name">${recipe.name}</span>`;
+    titleDiv.innerHTML = `
+        <span class="pd-drag-handle" title="Ziehen zum Verschieben (Doppelklick zum Zurücksetzen)">
+            <svg width="7" height="11" viewBox="0 0 8 12" fill="currentColor">
+                <circle cx="2" cy="2" r="1.2"/>
+                <circle cx="6" cy="2" r="1.2"/>
+                <circle cx="2" cy="6" r="1.2"/>
+                <circle cx="6" cy="6" r="1.2"/>
+                <circle cx="2" cy="10" r="1.2"/>
+                <circle cx="6" cy="10" r="1.2"/>
+            </svg>
+        </span>
+        <span class="pd-hud-name">${recipe.name}</span>
+    `;
     header.appendChild(titleDiv);
 
     const stepsList = document.createElement('div');

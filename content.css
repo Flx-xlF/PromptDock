@@ -396,7 +396,12 @@
     flex-direction: column;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     pointer-events: auto;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+#promptdock-rail-container.pd-dragging {
+    transition: none !important;
+    user-select: none;
 }
 
 .pd-hud-dock {
@@ -420,6 +425,13 @@
     border-radius: 20px;
     background: rgba(22, 22, 28, 0.96);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    cursor: grab;
+    user-select: none;
+}
+
+.pd-hud-dock.pd-minimized:active,
+.pd-dragging .pd-hud-dock.pd-minimized {
+    cursor: grabbing;
 }
 
 .pd-min-left {
@@ -455,6 +467,30 @@
     border-radius: 6px !important;
 }
 
+.pd-drag-handle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #71717a;
+    cursor: grab;
+    opacity: 0.5;
+    transition: opacity 0.15s ease, color 0.15s ease;
+    margin-right: 4px;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.pd-hud-header:hover .pd-drag-handle,
+.pd-hud-dock.pd-minimized:hover .pd-drag-handle {
+    opacity: 0.9;
+    color: #a1a1aa;
+}
+
+.pd-drag-handle:active,
+.pd-dragging .pd-drag-handle {
+    cursor: grabbing;
+}
+
 .pd-hud-header {
     padding: 10px 14px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -463,6 +499,13 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+    cursor: grab;
+    user-select: none;
+}
+
+.pd-hud-header:active,
+.pd-dragging .pd-hud-header {
+    cursor: grabbing;
 }
 
 .pd-hud-title {
