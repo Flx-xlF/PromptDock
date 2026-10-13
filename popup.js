@@ -447,6 +447,45 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // Search input listener
+    const searchInput = document.getElementById('prompt-search-input');
+    const searchClearBtn = document.getElementById('search-clear-btn');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            currentSearchQuery = e.target.value.trim().toLowerCase();
+            if (searchClearBtn) {
+                searchClearBtn.classList.toggle('hidden', currentSearchQuery.length === 0);
+            }
+            renderPrompts();
+        });
+
+        // Global hotkey: Cmd+K / Ctrl+K to jump to search
+        window.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            } else if (e.key === 'Escape' && document.activeElement === searchInput) {
+                searchInput.value = '';
+                currentSearchQuery = '';
+                if (searchClearBtn) searchClearBtn.classList.add('hidden');
+                renderPrompts();
+            }
+        });
+    }
+
+    if (searchClearBtn) {
+        searchClearBtn.addEventListener('click', () => {
+            if (searchInput) {
+                searchInput.value = '';
+                searchInput.focus();
+            }
+            currentSearchQuery = '';
+            searchClearBtn.classList.add('hidden');
+            renderPrompts();
+        });
+    }
+
     // Ensure external links open cleanly in a new browser tab from the popup
     document.body.addEventListener('click', (e) => {
         const link = e.target.closest('a[href^="http"]');
@@ -458,6 +497,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 let shortcutMap = {};
+let currentSearchQuery = '';
 
 /** Update the global storage usage bar in the footer. */
 function updateGlobalStorage() {
@@ -491,23 +531,55 @@ async function renderPrompts() {
     const list = document.getElementById('prompts-list');
     list.replaceChildren();
     
-    prompts.forEach((prompt, index) => {
+    const filteredPrompts = prompts.map((p, originalIdx) => ({ prompt: p, originalIdx })).filter(({ prompt }) => {
+        if (!currentSearchQuery) return true;
+        const nameMatch = (prompt.name || '').toLowerCase().includes(currentSearchQuery);
+        const contentMatch = (prompt.content || '').toLowerCase().includes(currentSearchQuery);
+        return nameMatch || contentMatch;
+    });
+
+    if (filteredPrompts.length === 0) {
+        const emptyNotice = document.createElement('div');
+        emptyNotice.style.cssText = 'padding: 24px 12px; text-align: center; color: var(--text-tertiary); font-size: 12px;';
+        emptyNotice.textContent = currentSearchQuery 
+            ? `Keine Prompts für "${currentSearchQuery}" gefunden.` 
+            : 'Keine Prompts vorhanden.';
+        list.appendChild(emptyNotice);
+        updateGlobalStorage();
+        return;
+    }
+
+    const isFiltered = currentSearchQuery !== '';
+
+    filteredPrompts.forEach(({ prompt, originalIdx }) => {
         const div = document.createElement('div');
         div.className = 'prompt-item';
-        div.setAttribute('draggable', 'true');
-        div.setAttribute('data-index', index);
+        div.setAttribute('draggable', isFiltered ? 'false' : 'true');
+        div.setAttribute('data-index', originalIdx);
+        div.title = 'Klicken zum Ausführen';
+
+        // Whole row is clickable to launch!
+        div.addEventListener('click', (e) => {
+            if (e.target.closest('.action-icon-btn') || e.target.closest('.drag-handle')) {
+                return;
+            }
+            runPrompt(prompt.content, div);
+        });
         
-        // Build header safely using DOM APIs to prevent XSS (#4)
         const headerDiv = document.createElement('div');
         headerDiv.className = 'prompt-header';
         
         const leftDiv = document.createElement('div');
-        leftDiv.style.cssText = 'display:flex; align-items:center;';
+        leftDiv.className = 'prompt-left';
         
         const dragSpan = document.createElement('span');
         dragSpan.className = 'drag-handle';
-        dragSpan.title = 'Ziehen zum Sortieren';
-        dragSpan.textContent = '≡';
+        if (isFiltered) {
+            dragSpan.style.display = 'none';
+        } else {
+            dragSpan.title = 'Ziehen zum Sortieren';
+            dragSpan.textContent = '≡';
+        }
         leftDiv.appendChild(dragSpan);
         
         const nameSpan = document.createElement('span');
@@ -515,42 +587,62 @@ async function renderPrompts() {
         nameSpan.textContent = prompt.name;
         leftDiv.appendChild(nameSpan);
         
-        if (shortcutMap[index]) {
+        if (shortcutMap[originalIdx]) {
             const shortcutSpan = document.createElement('span');
-            shortcutSpan.style.cssText = 'font-size: 10px; color: var(--text-secondary); margin-left: 8px; background: var(--bg-color); padding: 2px 4px; border-radius: 4px;';
-            shortcutSpan.textContent = shortcutMap[index];
+            shortcutSpan.className = 'shortcut-pill';
+            shortcutSpan.textContent = shortcutMap[originalIdx];
             leftDiv.appendChild(shortcutSpan);
         }
         
         if (prompt.autoSend) {
             const autoSendSpan = document.createElement('span');
             autoSendSpan.title = 'Automatisch absenden';
-            autoSendSpan.style.cssText = 'color:var(--accent-color); font-size: 14px; margin-left: 6px;';
-            autoSendSpan.textContent = '⚡';
+            autoSendSpan.className = 'auto-send-badge';
+            autoSendSpan.innerHTML = '<svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>';
             leftDiv.appendChild(autoSendSpan);
         }
         
         headerDiv.appendChild(leftDiv);
         
+        // Hover actions strip
         const actionsDiv = document.createElement('div');
         actionsDiv.className = 'prompt-actions';
         
-        const runBtn = document.createElement('button');
-        runBtn.className = 'run-btn';
-        runBtn.setAttribute('data-index', index);
-        runBtn.textContent = 'Ausführen';
-        actionsDiv.appendChild(runBtn);
-        
+        const playHint = document.createElement('span');
+        playHint.className = 'play-hint-icon';
+        playHint.title = 'Ausführen';
+        playHint.innerHTML = '<svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>';
+        actionsDiv.appendChild(playHint);
+
         const editBtn = document.createElement('button');
-        editBtn.className = 'edit-btn';
-        editBtn.setAttribute('data-index', index);
-        editBtn.textContent = '✎';
+        editBtn.className = 'action-icon-btn';
+        editBtn.title = 'Bearbeiten';
+        editBtn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>';
+        editBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            editingIndex = originalIdx;
+            document.getElementById('prompt-name').value = prompt.name;
+            document.getElementById('prompt-content').value = prompt.content;
+            document.getElementById('prompt-auto-send').checked = !!prompt.autoSend;
+            document.getElementById('add-form').classList.remove('hidden');
+            document.getElementById('toggle-add-btn').classList.add('hidden');
+            document.getElementById('save-btn').innerText = 'Aktualisieren';
+            updateCharCounter();
+        });
         actionsDiv.appendChild(editBtn);
         
         const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'delete-btn';
-        deleteBtn.setAttribute('data-index', index);
+        deleteBtn.className = 'action-icon-btn delete-btn';
         deleteBtn.textContent = '×';
+        deleteBtn.title = 'Löschen';
+        deleteBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            if (confirm(`Prompt "${prompt.name}" wirklich löschen?`)) {
+                prompts.splice(originalIdx, 1);
+                await PromptStorage.save(prompts);
+                renderPrompts();
+            }
+        });
         actionsDiv.appendChild(deleteBtn);
         
         headerDiv.appendChild(actionsDiv);
@@ -566,46 +658,9 @@ async function renderPrompts() {
     
     // Update global storage indicator
     updateGlobalStorage();
-    
-    // Add event listeners to the new buttons
-    document.querySelectorAll('.run-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const index = e.target.getAttribute('data-index');
-            runPrompt(prompts[index].content, e.target);
-        });
-    });
-    
-    document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const index = e.target.getAttribute('data-index');
-            editingIndex = parseInt(index);
-            
-            document.getElementById('prompt-name').value = prompts[index].name;
-            document.getElementById('prompt-content').value = prompts[index].content;
-            document.getElementById('prompt-auto-send').checked = !!prompts[index].autoSend;
-            
-            document.getElementById('add-form').classList.remove('hidden');
-            document.getElementById('toggle-add-btn').classList.add('hidden');
-            document.getElementById('save-btn').innerText = 'Aktualisieren';
-            
-            // Update byte counter directly
-            updateCharCounter();
-        });
-    });
-    
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
-            if (confirm("Prompt wirklich löschen?")) {
-                const index = e.target.getAttribute('data-index');
-                prompts.splice(index, 1);
-                await PromptStorage.save(prompts);
-                renderPrompts();
-            }
-        });
-    });
 }
 
-async function runPrompt(content, buttonEl) {
+async function runPrompt(content, cardEl) {
     // Get active tab
     const [tab] = await ext.tabs.query({ active: true, currentWindow: true });
     
@@ -620,6 +675,8 @@ async function runPrompt(content, buttonEl) {
             'outlook.office365.com',
             'outlook.live.com',
             'outlook.com',
+            'copilot.microsoft.com',
+            'copilot.cloud.microsoft',
             'gemini.google.com',
             'chatgpt.com',
             'chat.openai.com',
@@ -631,9 +688,11 @@ async function runPrompt(content, buttonEl) {
     }
     
     if (isSupported) {
-        // Change button to show loading state
-        const oldText = buttonEl.innerText;
-        buttonEl.innerText = "Läuft...";
+        if (cardEl) {
+            cardEl.style.opacity = '0.7';
+            const playHint = cardEl.querySelector('.play-hint-icon');
+            if (playHint) playHint.innerHTML = '<span class="pd-spinner-sm"></span>';
+        }
         
         try {
             // Inject the content.js file first
@@ -653,31 +712,33 @@ async function runPrompt(content, buttonEl) {
             const success = results && results.some(r => r.result === true);
             
             if (success) {
-                buttonEl.innerText = "Erfolgreich eingefügt!";
-                buttonEl.style.backgroundColor = "#107c10"; // Success green color
+                if (cardEl) {
+                    cardEl.style.borderColor = "#107c10";
+                    cardEl.style.backgroundColor = "rgba(16, 124, 16, 0.15)";
+                    const playHint = cardEl.querySelector('.play-hint-icon');
+                    if (playHint) playHint.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+                }
                 setTimeout(() => {
                     try {
                         window.close(); // Close the popup after success (Chrome)
                     } catch (e) {}
-                    // Firefox fallback: visually indicate completion if window doesn't close
-                    buttonEl.innerText = "Fertig ✓";
-                    buttonEl.style.opacity = "0.8";
-                }, 1500);
+                }, 700);
             } else {
                 try {
                     await navigator.clipboard.writeText(content);
-                    buttonEl.innerText = "In Zwischenablage kopiert ✓";
-                    buttonEl.style.backgroundColor = "#d2691e"; // Orange
+                    if (cardEl) {
+                        cardEl.style.borderColor = "#d2691e";
+                        const playHint = cardEl.querySelector('.play-hint-icon');
+                        if (playHint) playHint.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+                    }
                 } catch (e) {
                     console.error("Clipboard write failed:", e);
-                    buttonEl.innerText = "Fehler – bitte manuell kopieren";
-                    buttonEl.style.backgroundColor = "#e54d51"; // Red
+                    if (cardEl) cardEl.style.borderColor = "#e54d51";
                 }
             }
         } catch (e) {
             console.error(e);
-            buttonEl.innerText = "Error";
-            setTimeout(() => { buttonEl.innerText = oldText; }, 2000);
+            if (cardEl) cardEl.style.borderColor = "#e54d51";
         }
     } else {
         alert("Bitte öffne einen unterstützten KI-Chat (Copilot, Gemini, ChatGPT oder Claude) im aktuellen Tab, um einen Prompt auszuführen.");
@@ -689,6 +750,10 @@ let draggedItem = null;
 let dragStartIndex = -1;
 
 document.getElementById('prompts-list').addEventListener('dragstart', (e) => {
+    if (currentSearchQuery !== '') {
+        e.preventDefault();
+        return;
+    }
     if (e.target.className.includes('prompt-item')) {
         draggedItem = e.target;
         dragStartIndex = parseInt(draggedItem.getAttribute('data-index'));
@@ -703,6 +768,7 @@ document.getElementById('prompts-list').addEventListener('dragend', async (e) =>
 
 document.getElementById('prompts-list').addEventListener('dragover', (e) => {
     e.preventDefault();
+    if (currentSearchQuery !== '') return;
     const list = document.getElementById('prompts-list');
     const afterElement = getDragAfterElement(list, e.clientY);
     const currentDrag = document.querySelector('.dragging');
@@ -715,7 +781,7 @@ document.getElementById('prompts-list').addEventListener('dragover', (e) => {
 
 document.getElementById('prompts-list').addEventListener('drop', async (e) => {
     e.preventDefault();
-    if (dragStartIndex === -1) return;
+    if (dragStartIndex === -1 || currentSearchQuery !== '') return;
     
     // Calculate new order
     const currentItems = [...document.getElementById('prompts-list').querySelectorAll('.prompt-item')];

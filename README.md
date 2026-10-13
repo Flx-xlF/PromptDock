@@ -2,7 +2,7 @@
 
 > **Built with care (and a bit of madness) by [schema/f](https://github.com/Flx-xlF)**
 
-### *Are you using Microsoft Copilot, Google Gemini, ChatGPT, or Claude on the web? This lightweight extension delivers one-click prompt injection, inline contextual commenting, and effortless prompt library management.*
+### *Are you using Microsoft Copilot, Google Gemini, ChatGPT, or Claude on the web? This lightweight extension delivers instant one-click prompt injection, command palette search, inline contextual commenting, and effortless prompt library management.*
 
 [![Manifest V3](https://img.shields.io/badge/Chrome%20Extension-Manifest%20V3-blue?logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/intro/)
 [![Microsoft Copilot](https://img.shields.io/badge/Microsoft%20Copilot-Web%20App-0078D4?logo=microsoft&logoColor=white)](https://copilot.microsoft.com)
@@ -18,7 +18,7 @@
 
 If your company runs on Microsoft 365 or you work daily with Google Gemini, ChatGPT, or Claude, you have likely noticed a maddening omission:
 
-Unless your organization pays premium enterprise tiers for custom Copilot Studio add-ons or custom enterprise portals, **there is simply no organic way to save, organize, or reuse prompts.** 
+Unless your organization pays premium enterprise tiers for custom Copilot Studio add-ons or custom enterprise portals, **there is simply no organic way to save, organize, search, or reuse prompts.**
 
 Instead, thousands of professionals spend their workdays copy-pasting multi-step instructions from OneNote, sticky notes, and text files. And when an AI response needs tweaking, you are forced to retype instructions from scratch because you cannot easily comment on or refine specific paragraphs inline.
 
@@ -28,10 +28,14 @@ Instead, thousands of professionals spend their workdays copy-pasting multi-step
 
 ### What It Does
 
-- ⚡ **One-Click Prompt Injection**  
-  Keep your high-leverage prompts (email replies, executive briefings, logic audits, proofreading) organized in a lightweight popup dock. One click injects them directly into the active AI chat.
+- ⚡ **Click-to-Run Prompt Execution**  
+  Click anywhere on a prompt card to immediately inject and trigger it in the active AI chat. In-card feedback displays live execution spinners and success indicators.
+- 🔍 **Command Palette Quick Search (`⌘K` / `Ctrl+K`)**  
+  Instantly filter through dozens of prompts with real-time fuzzy matching. Hit `Escape` anytime to clear your query and return to your full deck.
 - ⌨️ **Muscle Memory Hotkeys**  
-  Trigger your top 3 prompts with global keyboard shortcuts (`Alt+Shift+1`, `Alt+Shift+2`, `Alt+Shift+3`) without reaching for the mouse.
+  Trigger your top 3 prompts with global keyboard shortcuts (`Alt+Shift+1`, `Alt+Shift+2`, `Alt+Shift+3`) without reaching for your mouse.
+- 🎨 **Modern 2026 Swiss-Minimalist Interface**  
+  Refined dark palette, crisp typography, clean SVG vector actions, and smooth drag-and-drop reordering that automatically guards against state loss during active search.
 - 💬 **Contextual Inline Commenting & Rewrites**  
   Highlight any generated text inside Copilot, Gemini, ChatGPT, or Claude to trigger a floating action bar. Run quick one-click adjustments (*"sachlicher"*, *"einkürzen"*, *"positiv formulieren"*, *"empathischer"*) or leave custom instructions with a side-by-side visual diff comparison.
 - 🔄 **Smart Clipboard Fallback**  
@@ -47,7 +51,7 @@ Instead, thousands of professionals spend their workdays copy-pasting multi-step
 
 | Platform | Environments Supported | Injection & Inline Commenting |
 | :--- | :--- | :---: |
-| **Microsoft Copilot** | Outlook on the Web, Teams Web, M365 Portal | ✅ |
+| **Microsoft Copilot** | Standalone web (`copilot.microsoft.com`, `copilot.cloud.microsoft`), Outlook on Web, Teams Web, M365 Portal | ✅ |
 | **Google Gemini** | gemini.google.com | ✅ |
 | **ChatGPT** | chatgpt.com, chat.openai.com | ✅ |
 | **Claude** | claude.ai | ✅ |
@@ -76,13 +80,15 @@ Instead, thousands of professionals spend their workdays copy-pasting multi-step
 
 ### Keyboard Shortcuts
 
-| Shortcut | Action |
-| :--- | :--- |
-| `Alt + Shift + 1` | Inject Prompt 1 (or copy to clipboard fallback) |
-| `Alt + Shift + 2` | Inject Prompt 2 |
-| `Alt + Shift + 3` | Inject Prompt 3 |
+| Shortcut | Scope | Action |
+| :--- | :--- | :--- |
+| `⌘K` / `Ctrl+K` | Popup Dock | Focus quick search palette |
+| `Escape` | Popup Dock | Clear search query or close modal |
+| `Alt + Shift + 1` | Global Browser | Inject Prompt 1 (or copy to clipboard fallback) |
+| `Alt + Shift + 2` | Global Browser | Inject Prompt 2 |
+| `Alt + Shift + 3` | Global Browser | Inject Prompt 3 |
 
-*Customizable anytime via `chrome://extensions/shortcuts`.*
+*Global shortcuts are customizable anytime via `chrome://extensions/shortcuts`.*
 
 ---
 
