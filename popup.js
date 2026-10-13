@@ -624,7 +624,12 @@ async function renderPrompts() {
         div.className = 'prompt-item';
         div.setAttribute('draggable', 'true');
         div.setAttribute('data-index', originalIdx);
-        div.title = 'Klicken zum Ausführen';
+        const matchedRecipe = findMatchingRecipe(prompt);
+        if (matchedRecipe && matchedRecipe.turns && matchedRecipe.turns.length > 0) {
+            div.title = `Klicken, um ${matchedRecipe.turns.length}-Schritte Workflow zu starten (Turn 1: ${matchedRecipe.turns[0].title})`;
+        } else {
+            div.title = 'Klicken zum Ausführen';
+        }
 
         // Whole row is clickable to launch!
         div.addEventListener('click', (e) => {
@@ -645,8 +650,6 @@ async function renderPrompts() {
         dragSpan.title = 'Ziehen zum Sortieren';
         dragSpan.textContent = '≡';
         leftDiv.appendChild(dragSpan);
-        
-        const matchedRecipe = findMatchingRecipe(prompt);
 
         const nameSpan = document.createElement('span');
         nameSpan.className = 'prompt-name';
@@ -767,7 +770,7 @@ async function handlePromptRun(index, buttonEl) {
         return;
     }
 
-    const matchedRecipe = Catalog?.RECIPES?.find(r => r.id === prompt.recipeId || r.name.toLowerCase() === prompt.name.toLowerCase());
+    const matchedRecipe = findMatchingRecipe(prompt);
 
     if (matchedRecipe && matchedRecipe.variables && matchedRecipe.variables.length > 0) {
         openVariableModal(matchedRecipe, prompt, buttonEl, tab);
