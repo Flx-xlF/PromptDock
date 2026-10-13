@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const s1 = document.createElement('strong');
             s1.textContent = 'Status:';
             syncStatus.appendChild(s1);
-            syncStatus.appendChild(document.createTextNode(' Verbunden ✅'));
+            syncStatus.appendChild(document.createTextNode(' Verbunden'));
             syncStatus.appendChild(document.createElement('br'));
             syncStatus.appendChild(document.createElement('br'));
             const s2 = document.createElement('strong');
@@ -402,7 +402,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const updatedLocal = await ext.storage.local.get('github_gist_id');
             syncStatus.replaceChildren();
             const s1 = document.createElement('strong');
-            s1.textContent = 'Erfolgreich synchronisiert! ✅';
+            s1.textContent = 'Erfolgreich synchronisiert! ✓';
             syncStatus.appendChild(s1);
             syncStatus.appendChild(document.createElement('br'));
             syncStatus.appendChild(document.createElement('br'));
@@ -542,18 +542,6 @@ function findMatchingRecipe(prompt) {
     );
 }
 
-function getRecipeIcon(recipe) {
-    if (!recipe) return '⚡';
-    const id = recipe.id || '';
-    if (id.includes('medien') || id.includes('interview')) return '🎙️';
-    if (id.includes('freigabe') || id.includes('proofreading')) return '🛡️';
-    if (id.includes('plan') || id.includes('themen') || id.includes('wochen')) return '📋';
-    if (id.includes('wording') || id.includes('artikel')) return '✍️';
-    if (id.includes('berate') || id.includes('strategie')) return '💡';
-    if (id.includes('mail') || id.includes('email')) return '✉️';
-    return '⚡';
-}
-
 function getRecipeWorkflowSummary(recipe, fallbackContent) {
     if (recipe && recipe.turns && recipe.turns.length > 0) {
         return recipe.turns.map(t => t.title).join(' ➔ ');
@@ -659,10 +647,6 @@ async function renderPrompts() {
         leftDiv.appendChild(dragSpan);
         
         const matchedRecipe = findMatchingRecipe(prompt);
-        const iconSpan = document.createElement('span');
-        iconSpan.className = 'prompt-icon';
-        iconSpan.textContent = getRecipeIcon(matchedRecipe);
-        leftDiv.appendChild(iconSpan);
 
         const nameSpan = document.createElement('span');
         nameSpan.className = 'prompt-name';
@@ -687,8 +671,8 @@ async function renderPrompts() {
         if (prompt.autoSend) {
             const autoSendSpan = document.createElement('span');
             autoSendSpan.title = 'Automatisch absenden';
-            autoSendSpan.className = 'auto-send-icon';
-            autoSendSpan.textContent = '⚡';
+            autoSendSpan.className = 'auto-send-badge';
+            autoSendSpan.innerHTML = '<svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>';
             leftDiv.appendChild(autoSendSpan);
         }
         
@@ -701,13 +685,13 @@ async function renderPrompts() {
         const playHint = document.createElement('span');
         playHint.className = 'play-hint-icon';
         playHint.title = 'Ausführen';
-        playHint.textContent = '▶';
+        playHint.innerHTML = '<svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>';
         actionsDiv.appendChild(playHint);
 
         const editBtn = document.createElement('button');
         editBtn.className = 'action-icon-btn';
-        editBtn.textContent = '✎';
         editBtn.title = 'Bearbeiten';
+        editBtn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>';
         editBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             editingIndex = originalIdx;
@@ -841,7 +825,7 @@ async function executeRecipe(recipe, options, cardEl, tab) {
     if (cardEl) {
         cardEl.style.opacity = '0.7';
         const playHint = cardEl.querySelector('.play-hint-icon');
-        if (playHint) playHint.textContent = '⏳';
+        if (playHint) playHint.innerHTML = '<span class="pd-spinner-sm"></span>';
     }
 
     try {
@@ -867,7 +851,7 @@ async function executeRecipe(recipe, options, cardEl, tab) {
                 cardEl.style.borderColor = "#107c10";
                 cardEl.style.backgroundColor = "rgba(16, 124, 16, 0.15)";
                 const playHint = cardEl.querySelector('.play-hint-icon');
-                if (playHint) playHint.textContent = '✓';
+                if (playHint) playHint.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
             }
             setTimeout(() => {
                 try { window.close(); } catch (e) {}
@@ -880,7 +864,7 @@ async function executeRecipe(recipe, options, cardEl, tab) {
             if (cardEl) {
                 cardEl.style.borderColor = "#d2691e";
                 const playHint = cardEl.querySelector('.play-hint-icon');
-                if (playHint) playHint.textContent = '📋';
+                if (playHint) playHint.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
             }
         }
     } catch (err) {
@@ -900,7 +884,7 @@ async function runPrompt(content, cardEl) {
         if (cardEl) {
             cardEl.style.opacity = '0.7';
             const playHint = cardEl.querySelector('.play-hint-icon');
-            if (playHint) playHint.textContent = '⏳';
+            if (playHint) playHint.innerHTML = '<span class="pd-spinner-sm"></span>';
         }
         
         try {
@@ -925,7 +909,7 @@ async function runPrompt(content, cardEl) {
                     cardEl.style.borderColor = "#107c10";
                     cardEl.style.backgroundColor = "rgba(16, 124, 16, 0.15)";
                     const playHint = cardEl.querySelector('.play-hint-icon');
-                    if (playHint) playHint.textContent = '✓';
+                    if (playHint) playHint.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
                 }
                 setTimeout(() => {
                     try {
@@ -938,7 +922,7 @@ async function runPrompt(content, cardEl) {
                     if (cardEl) {
                         cardEl.style.borderColor = "#d2691e";
                         const playHint = cardEl.querySelector('.play-hint-icon');
-                        if (playHint) playHint.textContent = '📋';
+                        if (playHint) playHint.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
                     }
                 } catch (e) {
                     console.error("Clipboard write failed:", e);

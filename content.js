@@ -895,9 +895,9 @@ ${finalContexts.join('\n\n---\n\n')}`;
                         
                         const btn = document.createElement('button');
                         btn.className = 'copilot-show-diff-btn';
-                        btn.innerText = '🔍 View Diff';
+                        btn.innerText = 'View Diff';
                         btn.addEventListener('click', () => {
-                            const newText = latestMessage.innerText.replace('🔍 View Diff', '').trim();
+                            const newText = latestMessage.innerText.replace('View Diff', '').trim();
                             renderWordDiff(originalClean, newText, diffContent);
                             diffModal.style.display = 'flex';
                         });
@@ -1230,9 +1230,9 @@ function renderRailUI() {
         const isCheckpoint = RecipeState.status === 'checkpoint';
         const isCompleted = RecipeState.status === 'completed';
         leftInfo.innerHTML = `
-            <span class="pd-min-badge">⚡ ${recipe.name}</span>
+            <span class="pd-min-badge">${recipe.name}</span>
             <span class="pd-min-text">${
-                isCompleted ? 'Workflow abgeschlossen! 🎉' :
+                isCompleted ? 'Workflow abgeschlossen!' :
                 isCheckpoint ? `Bereit für Schritt ${currentIdx + 1}: <strong>${recipe.turns[currentIdx].title}</strong>` :
                 `Schritt ${currentIdx + 1} von ${totalTurns} läuft...`
             }</span>
@@ -1287,7 +1287,7 @@ function renderRailUI() {
 
     const titleDiv = document.createElement('div');
     titleDiv.className = 'pd-hud-title';
-    titleDiv.innerHTML = `<span class="pd-hud-icon">⚡</span> <span class="pd-hud-name">${recipe.name}</span>`;
+    titleDiv.innerHTML = `<span class="pd-hud-name">${recipe.name}</span>`;
     header.appendChild(titleDiv);
 
     const stepsList = document.createElement('div');
@@ -1446,7 +1446,7 @@ function renderRailUI() {
 
         const doneMsg = document.createElement('div');
         doneMsg.className = 'pd-done-message';
-        doneMsg.innerHTML = `🎉 <strong>Workflow abgeschlossen!</strong> Alle ${totalTurns} Schritte ausgeführt.`;
+        doneMsg.innerHTML = `<strong>Workflow abgeschlossen!</strong> Alle ${totalTurns} Schritte ausgeführt.`;
         body.appendChild(doneMsg);
 
         const actionsRow = document.createElement('div');
