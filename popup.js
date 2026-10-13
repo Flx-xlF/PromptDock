@@ -622,7 +622,8 @@ async function renderPrompts() {
     filteredPrompts.forEach(({ prompt, originalIdx }) => {
         const div = document.createElement('div');
         div.className = 'prompt-item';
-        div.setAttribute('draggable', 'true');
+        const isFiltered = currentSearchQuery !== '' || currentCategoryFilter !== 'all';
+        div.setAttribute('draggable', isFiltered ? 'false' : 'true');
         div.setAttribute('data-index', originalIdx);
         const matchedRecipe = findMatchingRecipe(prompt);
         if (matchedRecipe && matchedRecipe.turns && matchedRecipe.turns.length > 0) {
@@ -647,8 +648,12 @@ async function renderPrompts() {
         
         const dragSpan = document.createElement('span');
         dragSpan.className = 'drag-handle';
-        dragSpan.title = 'Ziehen zum Sortieren';
-        dragSpan.textContent = '≡';
+        if (isFiltered) {
+            dragSpan.style.display = 'none';
+        } else {
+            dragSpan.title = 'Ziehen zum Sortieren';
+            dragSpan.textContent = '≡';
+        }
         leftDiv.appendChild(dragSpan);
 
         const nameSpan = document.createElement('span');
@@ -749,6 +754,8 @@ function isSupportedTabUrl(url) {
             'outlook.office365.com',
             'outlook.live.com',
             'outlook.com',
+            'copilot.microsoft.com',
+            'copilot.cloud.microsoft',
             'gemini.google.com',
             'chatgpt.com',
             'chat.openai.com',
@@ -946,6 +953,10 @@ let draggedItem = null;
 let dragStartIndex = -1;
 
 document.getElementById('prompts-list').addEventListener('dragstart', (e) => {
+    if (currentSearchQuery !== '' || currentCategoryFilter !== 'all') {
+        e.preventDefault();
+        return;
+    }
     if (e.target.className.includes('prompt-item')) {
         draggedItem = e.target;
         dragStartIndex = parseInt(draggedItem.getAttribute('data-index'));
@@ -960,6 +971,7 @@ document.getElementById('prompts-list').addEventListener('dragend', async (e) =>
 
 document.getElementById('prompts-list').addEventListener('dragover', (e) => {
     e.preventDefault();
+    if (currentSearchQuery !== '' || currentCategoryFilter !== 'all') return;
     const list = document.getElementById('prompts-list');
     const afterElement = getDragAfterElement(list, e.clientY);
     const currentDrag = document.querySelector('.dragging');
@@ -972,7 +984,7 @@ document.getElementById('prompts-list').addEventListener('dragover', (e) => {
 
 document.getElementById('prompts-list').addEventListener('drop', async (e) => {
     e.preventDefault();
-    if (dragStartIndex === -1) return;
+    if (dragStartIndex === -1 || currentSearchQuery !== '' || currentCategoryFilter !== 'all') return;
     
     // Calculate new order
     const currentItems = [...document.getElementById('prompts-list').querySelectorAll('.prompt-item')];

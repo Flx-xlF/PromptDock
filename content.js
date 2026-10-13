@@ -19,7 +19,7 @@ const ID_PREFIX = 'uap-' + Math.random().toString(36).substring(2, 9) + '-';
 
 const PLATFORM_CONFIGS = {
     copilot: {
-        isMatch: () => window.name.includes("embedded-page-container") || !!document.querySelector('.fai-EditorInput__input') || !!document.getElementById('m365-chat-input-shared-wrapper'),
+        isMatch: () => window.location.hostname.includes("copilot") || window.name.includes("embedded-page-container") || !!document.querySelector('.fai-EditorInput__input') || !!document.getElementById('m365-chat-input-shared-wrapper'),
         selectors: {
             input: '#m365-chat-input-shared-wrapper [contenteditable="true"], #m365-chat-input-shared-wrapper textarea, .fai-ExpandableChatInput__inputWrapper [contenteditable="true"], .fai-ChatInput__inputWrapper [contenteditable="true"], .fai-EditorInput__input, [contenteditable="true"][aria-label*="Copilot" i], textarea[aria-label*="Copilot" i]',
             sendBtn: 'button.fai-SendButton, button.fai-ChatInput__send, button[aria-label*="Senden" i], button[aria-label*="Send" i], button[title*="Senden" i], button[title*="Send" i]',
@@ -27,7 +27,7 @@ const PLATFORM_CONFIGS = {
             chatContainer: '.fai-ChatMessages__list',
             messageSelector: '.fai-Message, .fai-ChatMessage, [role="listitem"]'
         },
-        urlPatterns: ['outlook.cloud.microsoft', 'm365.cloud.microsoft', 'teams.microsoft.com', 'outlook.office.com', 'outlook.office365.com', 'outlook.live.com', 'outlook.com'],
+        urlPatterns: ['outlook.cloud.microsoft', 'm365.cloud.microsoft', 'teams.microsoft.com', 'outlook.office.com', 'outlook.office365.com', 'outlook.live.com', 'outlook.com', 'copilot.microsoft.com', 'copilot.cloud.microsoft'],
         quickActions: ['sachlicher', 'einkürzen', 'positiv formulieren', 'empathischer', 'verständlicher'],
         requiresIframe: false, // Changed to false: Copilot UI might be in the main frame now
         name: "Outlook Copilot"
@@ -236,13 +236,21 @@ window.injectCopilotPrompt = function(promptText, autoSend) {
     }
     
     if (autoSend) {
-        setTimeout(() => {
-            const sendBtn = document.querySelector(PLATFORM.selectors.sendBtn);
-            if (sendBtn && !sendBtn.disabled && sendBtn.getAttribute('aria-disabled') !== 'true') {
-                sendBtn.click();
-                console.log(`[PromptDock] Auto-send clicked for ${PLATFORM.name}.`);
-            }
-        }, 500);
+        const attempts = [250, 500, 800, 1200];
+        const trySend = (attemptIdx) => {
+            if (attemptIdx >= attempts.length) return;
+            const delay = attemptIdx === 0 ? attempts[0] : (attempts[attemptIdx] - attempts[attemptIdx - 1]);
+            setTimeout(() => {
+                const sendBtn = document.querySelector(PLATFORM.selectors.sendBtn);
+                if (sendBtn && !sendBtn.disabled && sendBtn.getAttribute('aria-disabled') !== 'true') {
+                    sendBtn.click();
+                    console.log(`[PromptDock] Auto-send clicked for ${PLATFORM.name} on attempt ${attemptIdx + 1}.`);
+                } else {
+                    trySend(attemptIdx + 1);
+                }
+            }, delay);
+        };
+        trySend(0);
     }
     
     return true;
@@ -1087,7 +1095,13 @@ function getOrCreateShadowRoot() {
     return shadowRoot;
 }
 
+let activeManualStopListener = null;
+
 function cancelWorkflow() {
+    if (activeManualStopListener) {
+        document.removeEventListener('click', activeManualStopListener, true);
+        activeManualStopListener = null;
+    }
     if (RecipeState.streamCheckInterval) {
         clearInterval(RecipeState.streamCheckInterval);
         RecipeState.streamCheckInterval = null;
@@ -1107,6 +1121,10 @@ function observeTurnCompletion(onComplete) {
         clearInterval(RecipeState.streamCheckInterval);
         RecipeState.streamCheckInterval = null;
     }
+    if (activeManualStopListener) {
+        document.removeEventListener('click', activeManualStopListener, true);
+        activeManualStopListener = null;
+    }
 
     let isStreaming = false;
     let streamSawStart = false;
@@ -1124,6 +1142,7 @@ function observeTurnCompletion(onComplete) {
         if (isStopBtn) {
             console.log('[PromptDock] Detected manual chat stop by user.');
             document.removeEventListener('click', onManualStopClicked, true);
+            activeManualStopListener = null;
             if (RecipeState.streamCheckInterval) {
                 clearInterval(RecipeState.streamCheckInterval);
                 RecipeState.streamCheckInterval = null;
@@ -1136,10 +1155,12 @@ function observeTurnCompletion(onComplete) {
         }
     };
     document.addEventListener('click', onManualStopClicked, true);
+    activeManualStopListener = onManualStopClicked;
 
     const checkGenerationState = () => {
         if (RecipeState.status !== 'running_turn') {
             document.removeEventListener('click', onManualStopClicked, true);
+            activeManualStopListener = null;
             clearInterval(RecipeState.streamCheckInterval);
             RecipeState.streamCheckInterval = null;
             return;
@@ -1481,19 +1502,27 @@ function renderRailUI() {
 
     const titleDiv = document.createElement('div');
     titleDiv.className = 'pd-hud-title';
-    titleDiv.innerHTML = `
-        <span class="pd-drag-handle" title="Ziehen zum Verschieben (Doppelklick zum Zurücksetzen)">
-            <svg width="7" height="11" viewBox="0 0 8 12" fill="currentColor">
-                <circle cx="2" cy="2" r="1.2"/>
-                <circle cx="6" cy="2" r="1.2"/>
-                <circle cx="2" cy="6" r="1.2"/>
-                <circle cx="6" cy="6" r="1.2"/>
-                <circle cx="2" cy="10" r="1.2"/>
-                <circle cx="6" cy="10" r="1.2"/>
-            </svg>
-        </span>
-        <span class="pd-hud-name">${recipe.name}</span>
+
+    const handleSpan = document.createElement('span');
+    handleSpan.className = 'pd-drag-handle';
+    handleSpan.title = 'Ziehen zum Verschieben (Doppelklick zum Zurücksetzen)';
+    handleSpan.innerHTML = `
+        <svg width="7" height="11" viewBox="0 0 8 12" fill="currentColor">
+            <circle cx="2" cy="2" r="1.2"/>
+            <circle cx="6" cy="2" r="1.2"/>
+            <circle cx="2" cy="6" r="1.2"/>
+            <circle cx="6" cy="6" r="1.2"/>
+            <circle cx="2" cy="10" r="1.2"/>
+            <circle cx="6" cy="10" r="1.2"/>
+        </svg>
     `;
+    titleDiv.appendChild(handleSpan);
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'pd-hud-name';
+    nameSpan.textContent = recipe.name;
+    titleDiv.appendChild(nameSpan);
+
     header.appendChild(titleDiv);
 
     const stepsList = document.createElement('div');

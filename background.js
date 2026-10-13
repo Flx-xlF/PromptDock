@@ -56,6 +56,8 @@ ext.commands.onCommand.addListener(async (command) => {
                 'outlook.office365.com',
                 'outlook.live.com',
                 'outlook.com',
+                'copilot.microsoft.com',
+                'copilot.cloud.microsoft',
                 'gemini.google.com',
                 'chatgpt.com',
                 'chat.openai.com',
@@ -79,12 +81,13 @@ ext.commands.onCommand.addListener(async (command) => {
                 const results = await ext.scripting.executeScript({
                     target: { tabId: tab.id, allFrames: true },
                     func: (promptData) => {
-                        if (promptData.recipeId && window.startPromptDockRecipe) {
-                            return window.startPromptDockRecipe(promptData.recipeId, { mode: 'guided' });
+                        const targetId = promptData.recipeId || promptData.name;
+                        if (targetId && window.startPromptDockRecipe) {
+                            return window.startPromptDockRecipe(targetId, { mode: 'guided' });
                         }
                         return window.injectCopilotPrompt && window.injectCopilotPrompt(promptData.content, promptData.autoSend);
                     },
-                    args: [{ recipeId: prompt.recipeId, content: prompt.content, autoSend }]
+                    args: [{ recipeId: prompt.recipeId, name: prompt.name, content: prompt.content, autoSend }]
                 });
                 
                 const success = results && results.some(r => r.result === true);
