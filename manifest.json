@@ -12,8 +12,8 @@
     }
   },
   "name": "PromptDock",
-  "version": "1.0.0",
-  "description": "One-click prompt injection, inline commenting, and rewriting for AI assistants (Copilot, Gemini, ChatGPT, Claude).",
+  "version": "2.0.0",
+  "description": "One-click prompt injection, multi-turn AI workflows with in-chat rail, inline commenting, and rewriting for Copilot, Gemini, ChatGPT, and Claude.",
   "icons": {
     "16": "icons/icon-16.png",
     "32": "icons/icon-32.png",
@@ -79,6 +79,7 @@
         "content.css"
       ],
       "js": [
+        "shared/recipe-catalog.js",
         "content.js"
       ],
       "all_frames": true
@@ -98,7 +99,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "content.css"
+        "content.css",
+        "shared/recipe-catalog.js"
       ],
       "matches": [
         "*://*.microsoft.com/*",

@@ -380,3 +380,240 @@
     from { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
     to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
+
+/* ==========================================================================
+   PromptDock — In-Chat Progress Rail & Checkpoint Card
+   ========================================================================== */
+
+#promptdock-rail-container {
+    position: fixed;
+    bottom: 96px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(720px, calc(100vw - 32px));
+    z-index: 10002;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    pointer-events: auto;
+}
+
+.pd-rail-bar {
+    background: rgba(24, 24, 27, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+.pd-rail-badge {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(255, 255, 255, 0.08);
+    color: #a1a1aa;
+    padding: 4px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+.pd-rail-steps {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 0 8px;
+}
+
+.pd-rail-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #71717a;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.pd-rail-step.active {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.pd-rail-step.done {
+    color: #10b981;
+}
+
+.pd-step-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.pd-rail-step.active .pd-step-circle {
+    background: #6366f1;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
+}
+
+.pd-rail-step.done .pd-step-circle {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.pd-step-line {
+    width: 24px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.pd-step-line.done {
+    background: #10b981;
+}
+
+.pd-rail-close {
+    background: transparent;
+    border: none;
+    color: #71717a;
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.pd-rail-close:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Checkpoint Card */
+.pd-checkpoint-card {
+    background: rgba(28, 28, 32, 0.96);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+    animation: pd-slide-up 0.2s ease;
+}
+
+.pd-cp-header {
+    font-size: 13px;
+    color: #e4e4e7;
+}
+
+.pd-chips-container {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.pd-chip {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #d4d4d8;
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.pd-chip:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.pd-note-input {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #ffffff;
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.pd-note-input:focus {
+    border-color: #6366f1;
+}
+
+.pd-cp-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+    gap: 8px;
+}
+
+.pd-fork-select {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    color: #a1a1aa;
+    font-size: 11px;
+    padding: 7px 10px;
+    outline: none;
+    cursor: pointer;
+}
+
+.pd-fork-select:hover {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.pd-primary-btn {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+    margin-left: auto;
+}
+
+.pd-primary-btn:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+}
+
+.pd-shortcut {
+    font-size: 10px;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 2px 4px;
+    border-radius: 4px;
+    color: #c7d2fe;
+}
+
+@keyframes pd-slide-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+

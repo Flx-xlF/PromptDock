@@ -11,44 +11,25 @@
 
 import { ext, StorageAdapter, PROMPT_KEY_PREFIX, ORDER_KEY } from './shared/browser-compat.js';
 
-const DEFAULT_PROMPTS = [
-  {
-    "id": "1",
-    "name": "TL;DR & Kernpunkte",
-    "content": "Analysiere den folgenden Text und fasse die wichtigsten Erkenntnisse in 3 prägnanten Bulletpoints zusammen. Hebe konkrete Handlungsfelder und Entscheidungsbedarfe hervor.",
-    "autoSend": false
-  },
-  {
-    "id": "2",
-    "name": "E-Mail beantworten",
-    "content": "Formuliere eine professionelle, klare und wertschätzende Antwort auf die vorliegende Nachricht. Beantworte alle Kernfragen direkt und schlage konkrete nächste Schritte vor.",
-    "autoSend": false
-  },
-  {
-    "id": "3",
-    "name": "Meeting Action Items",
-    "content": "Extrahiere aus diesem Verlauf:\n1. Getroffene Beschlüsse\n2. Konkrete Action Items (Wer macht was bis wann?)\n3. Noch offene Fragen oder Risiken.",
-    "autoSend": false
-  },
-  {
-    "id": "4",
-    "name": "Text optimieren (Prägnanz)",
-    "content": "Überarbeite den folgenden Entwurf: Entferne Füllwörter und Phrasen, stärke die Argumentation und mache die Sätze maximal prägnant. Behalte einen sachlichen Ton bei.",
-    "autoSend": false
-  },
-  {
-    "id": "5",
-    "name": "Kritischer Sparringspartner",
-    "content": "Nimm die Rolle eines anspruchsvollen Kritikers ein. Prüfe die vorliegende Argumentation auf logische Lücken, unausgesprochene Annahmen und potenzielle Risiken.",
-    "autoSend": false
-  },
-  {
-    "id": "6",
-    "name": "Executive Summary",
-    "content": "Erstelle ein 1-minütiges Briefing für das Management: Was ist das Thema? Warum ist es jetzt relevant? Welche Handlungsempfehlung gibst du ab?",
-    "autoSend": false
-  }
-];
+const Catalog = globalThis.PromptDockCatalog;
+
+const DEFAULT_PROMPTS = (Catalog && Catalog.RECIPES && Catalog.RECIPES.length > 0)
+  ? Catalog.RECIPES.map((r, i) => ({
+      id: (i + 1).toString(),
+      name: r.name,
+      recipeId: r.id,
+      content: Catalog.compileExpress(r),
+      autoSend: false
+    }))
+  : [
+      {
+        "id": "1",
+        "name": "Medienanfrage",
+        "recipeId": "recipe-medienanfrage",
+        "content": "MEDIENANFRAGE: ANALYSE\n\nTASK 1: INHALTS-ANALYSE...",
+        "autoSend": false
+      }
+    ];
 
 const PromptStorage = {
     /** Load prompts, migrating from legacy formats if needed. */
@@ -447,6 +428,38 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // Recipe Variable Modal Event Listeners
+    const varModal = document.getElementById('recipe-var-modal');
+    const cancelVarBtn = document.getElementById('cancel-var-btn');
+    if (cancelVarBtn) {
+        cancelVarBtn.addEventListener('click', () => {
+            if (varModal) varModal.classList.add('hidden');
+            currentPendingRecipeExecution = null;
+        });
+    }
+
+    const startVarBtn = document.getElementById('start-var-btn');
+    if (startVarBtn) {
+        startVarBtn.addEventListener('click', () => {
+            if (!currentPendingRecipeExecution) return;
+            const { recipe, buttonEl, tab } = currentPendingRecipeExecution;
+            const varFields = document.getElementById('var-modal-fields');
+            const mode = document.getElementById('var-modal-mode').value;
+
+            const variableValues = {};
+            varFields.querySelectorAll('.var-input-field').forEach(input => {
+                const key = input.dataset.varKey;
+                if (key) {
+                    variableValues[key] = input.value.trim() || input.placeholder;
+                }
+            });
+
+            if (varModal) varModal.classList.add('hidden');
+            executeRecipe(recipe, { mode, variableValues }, buttonEl, tab);
+            currentPendingRecipeExecution = null;
+        });
+    }
+
     // Ensure external links open cleanly in a new browser tab from the popup
     document.body.addEventListener('click', (e) => {
         const link = e.target.closest('a[href^="http"]');
@@ -458,6 +471,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 let shortcutMap = {};
+let currentPendingRecipeExecution = null;
 
 /** Update the global storage usage bar in the footer. */
 function updateGlobalStorage() {
@@ -514,6 +528,15 @@ async function renderPrompts() {
         nameSpan.className = 'prompt-name';
         nameSpan.textContent = prompt.name;
         leftDiv.appendChild(nameSpan);
+
+        const matchedRecipe = Catalog?.RECIPES?.find(r => r.id === prompt.recipeId || r.name.toLowerCase() === prompt.name.toLowerCase());
+        if (matchedRecipe && matchedRecipe.turns && matchedRecipe.turns.length > 0) {
+            const turnBadge = document.createElement('span');
+            turnBadge.className = 'recipe-turn-badge';
+            turnBadge.title = `${matchedRecipe.turns.length}-Schritte Workflow mit Rail & Checkpoints`;
+            turnBadge.textContent = `${matchedRecipe.turns.length} Turns`;
+            leftDiv.appendChild(turnBadge);
+        }
         
         if (shortcutMap[index]) {
             const shortcutSpan = document.createElement('span');
@@ -570,8 +593,8 @@ async function renderPrompts() {
     // Add event listeners to the new buttons
     document.querySelectorAll('.run-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            const index = e.target.getAttribute('data-index');
-            runPrompt(prompts[index].content, e.target);
+            const index = parseInt(e.target.getAttribute('data-index'));
+            handlePromptRun(index, e.target);
         });
     });
     
@@ -605,13 +628,10 @@ async function renderPrompts() {
     });
 }
 
-async function runPrompt(content, buttonEl) {
-    // Get active tab
-    const [tab] = await ext.tabs.query({ active: true, currentWindow: true });
-    
-    let isSupported = false;
+function isSupportedTabUrl(url) {
+    if (!url) return false;
     try {
-        const urlObj = new URL(tab.url);
+        const urlObj = new URL(url);
         const validHosts = [
             'outlook.cloud.microsoft',
             'm365.cloud.microsoft',
@@ -625,21 +645,133 @@ async function runPrompt(content, buttonEl) {
             'chat.openai.com',
             'claude.ai'
         ];
-        isSupported = validHosts.some(h => urlObj.hostname === h || urlObj.hostname.endsWith('.' + h));
+        return validHosts.some(h => urlObj.hostname === h || urlObj.hostname.endsWith('.' + h));
     } catch (e) {
-        // Invalid URL
+        return false;
     }
+}
+
+async function handlePromptRun(index, buttonEl) {
+    const prompt = prompts[index];
+    if (!prompt) return;
+
+    const [tab] = await ext.tabs.query({ active: true, currentWindow: true });
+    if (!tab || !isSupportedTabUrl(tab.url)) {
+        alert("Bitte öffne einen unterstützten KI-Chat (Copilot, Gemini, ChatGPT oder Claude) im aktuellen Tab, um einen Prompt auszuführen.");
+        return;
+    }
+
+    const matchedRecipe = Catalog?.RECIPES?.find(r => r.id === prompt.recipeId || r.name.toLowerCase() === prompt.name.toLowerCase());
+
+    if (matchedRecipe && matchedRecipe.variables && matchedRecipe.variables.length > 0) {
+        openVariableModal(matchedRecipe, prompt, buttonEl, tab);
+    } else if (matchedRecipe) {
+        executeRecipe(matchedRecipe, { mode: 'guided', variableValues: {} }, buttonEl, tab);
+    } else {
+        runPrompt(prompt.content, buttonEl);
+    }
+}
+
+function openVariableModal(recipe, prompt, buttonEl, tab) {
+    const varModal = document.getElementById('recipe-var-modal');
+    const varTitle = document.getElementById('var-modal-title');
+    const varFields = document.getElementById('var-modal-fields');
+    const varMode = document.getElementById('var-modal-mode');
+
+    varTitle.textContent = `${recipe.name} konfigurieren`;
+    varFields.replaceChildren();
+    varMode.value = 'guided';
+
+    recipe.variables.forEach(v => {
+        const group = document.createElement('div');
+        group.style.cssText = 'display:flex; flex-direction:column; gap:4px;';
+
+        const label = document.createElement('label');
+        label.style.cssText = 'font-size:11px; font-weight:600; color:var(--text-secondary);';
+        label.textContent = v.name + (v.description ? ` (${v.description})` : '');
+        group.appendChild(label);
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'var-input-field';
+        input.dataset.varKey = v.name;
+        input.placeholder = v.placeholder || v.default || '';
+        if (v.default) input.value = v.default;
+        group.appendChild(input);
+
+        varFields.appendChild(group);
+    });
+
+    currentPendingRecipeExecution = { recipe, buttonEl, tab };
+    varModal.classList.remove('hidden');
+
+    const firstInput = varFields.querySelector('input');
+    if (firstInput) setTimeout(() => firstInput.focus(), 50);
+}
+
+async function executeRecipe(recipe, options, buttonEl, tab) {
+    if (!tab) {
+        const tabs = await ext.tabs.query({ active: true, currentWindow: true });
+        tab = tabs[0];
+    }
+    if (!tab) return;
+
+    const oldText = buttonEl.innerText;
+    buttonEl.innerText = "Startet...";
+
+    try {
+        await ext.scripting.executeScript({
+            target: { tabId: tab.id, allFrames: true },
+            files: ['shared/recipe-catalog.js', 'content.js']
+        });
+
+        const results = await ext.scripting.executeScript({
+            target: { tabId: tab.id, allFrames: true },
+            func: (recId, opts) => {
+                if (window.startPromptDockRecipe) {
+                    return window.startPromptDockRecipe(recId, opts);
+                }
+                return false;
+            },
+            args: [recipe.id, options]
+        });
+
+        const success = results && results.some(r => r.result === true);
+        if (success) {
+            buttonEl.innerText = "Gestartet ✓";
+            buttonEl.style.backgroundColor = "#107c10";
+            setTimeout(() => {
+                try { window.close(); } catch (e) {}
+            }, 1000);
+        } else {
+            const fallbackText = (options.mode === 'express')
+                ? Catalog.compileExpress(recipe, options.variableValues)
+                : Catalog.compileTurn(recipe, 0, { variableValues: options.variableValues });
+            await navigator.clipboard.writeText(fallbackText);
+            buttonEl.innerText = "In Zwischenablage kopiert ✓";
+            buttonEl.style.backgroundColor = "#d2691e";
+        }
+    } catch (err) {
+        console.error("[PromptDock] Recipe execution failed:", err);
+        buttonEl.innerText = "Fehler";
+        setTimeout(() => { buttonEl.innerText = oldText; }, 2000);
+    }
+}
+
+async function runPrompt(content, buttonEl) {
+    // Get active tab
+    const [tab] = await ext.tabs.query({ active: true, currentWindow: true });
     
-    if (isSupported) {
+    if (tab && isSupportedTabUrl(tab.url)) {
         // Change button to show loading state
         const oldText = buttonEl.innerText;
         buttonEl.innerText = "Läuft...";
         
         try {
-            // Inject the content.js file first
+            // Inject recipe catalog and content.js
             await ext.scripting.executeScript({
                 target: { tabId: tab.id, allFrames: true },
-                files: ['content.js']
+                files: ['shared/recipe-catalog.js', 'content.js']
             });
             
             // Execute the injected function across ALL frames in the tab

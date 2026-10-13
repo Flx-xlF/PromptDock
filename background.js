@@ -69,17 +69,22 @@ ext.commands.onCommand.addListener(async (command) => {
         // --- 3. Execute Script & Attempt Injection ---
         if (isSupported) {
             try {
-                // Ensure content script is present in all frames (e.g. iframes in Copilot)
+                // Ensure recipe catalog and content script are present in all frames (e.g. iframes in Copilot)
                 await ext.scripting.executeScript({
                     target: { tabId: tab.id, allFrames: true },
-                    files: ['content.js']
+                    files: ['shared/recipe-catalog.js', 'content.js']
                 });
                 
-                // Call injection function across frames
+                // Call injection function or start recipe across frames
                 const results = await ext.scripting.executeScript({
                     target: { tabId: tab.id, allFrames: true },
-                    func: (text, send) => window.injectCopilotPrompt && window.injectCopilotPrompt(text, send),
-                    args: [prompt.content, autoSend]
+                    func: (promptData) => {
+                        if (promptData.recipeId && window.startPromptDockRecipe) {
+                            return window.startPromptDockRecipe(promptData.recipeId, { mode: 'guided' });
+                        }
+                        return window.injectCopilotPrompt && window.injectCopilotPrompt(promptData.content, promptData.autoSend);
+                    },
+                    args: [{ recipeId: prompt.recipeId, content: prompt.content, autoSend }]
                 });
                 
                 const success = results && results.some(r => r.result === true);

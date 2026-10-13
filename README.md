@@ -2,7 +2,7 @@
 
 > **Built with care (and a bit of madness) by [schema/f](https://github.com/Flx-xlF)**
 
-### *Are you using Microsoft Copilot, Google Gemini, ChatGPT, or Claude on the web? This lightweight extension delivers one-click prompt injection, inline contextual commenting, and effortless prompt library management.*
+### *Transform Microsoft Copilot, Google Gemini, ChatGPT, and Claude with interactive multi-turn workflows, an in-chat steering rail, contextual inline commenting, and one-click prompt management.*
 
 [![Manifest V3](https://img.shields.io/badge/Chrome%20Extension-Manifest%20V3-blue?logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/intro/)
 [![Microsoft Copilot](https://img.shields.io/badge/Microsoft%20Copilot-Web%20App-0078D4?logo=microsoft&logoColor=white)](https://copilot.microsoft.com)
@@ -14,43 +14,82 @@
 
 ---
 
-### The Problem Nobody at Big Tech Wanted to Fix
+### What's New in PromptDock 2.0 🚀
 
-If your company runs on Microsoft 365 or you work daily with Google Gemini, ChatGPT, or Claude, you have likely noticed a maddening omission:
+PromptDock 2.0 evolves from a fast prompt launcher into an **interactive AI workflow cockpit** — right inside your browser:
 
-Unless your organization pays premium enterprise tiers for custom Copilot Studio add-ons or custom enterprise portals, **there is simply no organic way to save, organize, or reuse prompts.** 
-
-Instead, thousands of professionals spend their workdays copy-pasting multi-step instructions from OneNote, sticky notes, and text files. And when an AI response needs tweaking, you are forced to retype instructions from scratch because you cannot easily comment on or refine specific paragraphs inline.
-
-**PromptDock** is the missing local-first productivity layer built right into your browser.
+- 🚊 **In-Chat Rail UX ("Rail, Checkpoint, Fork")**  
+  Complex corporate communication, audit, and strategic tasks are split into discrete cognitive turns (*Turn 1: Research/Lagebild* ➔ *Turn 2: Strategy/Audit* ➔ *Turn 3: Output*). A floating stepper rail sits directly above the chat input, showing your current step and workflow progress.
+- 🛑 **Smart Checkpoint Cards & Streaming Detection**  
+  As soon as the LLM finishes streaming its response, PromptDock activates a Checkpoint Card with instant steering chips (*"✓ Direkt weiter"*, *"Fakten korrigieren"*, *"Tiefer recherchieren"*, *"Haltung vorgeben"*) and a free-text input for fast corrections.
+- 🔀 **Dynamic Forking**  
+  Branch out at completion points: turn an analysis into a press reply, a Q&A defense document, an editorial planning entry, or a strategic briefing with one click.
+- ⚡ **Muscle Memory Turn Advancement (`⌥⇧→` / `Alt+Shift+Right`)**  
+  Advance through multi-turn workflows without leaving your keyboard.
+- 📋 **Variable Sheet Modal**  
+  Fill in dynamic variables (e.g. `ZEITRAUM`, `PERSON`, `THEMA`, `SUCHBEGRIFF`) before launching, and choose your preferred execution mode (*Guided*, *Autopilot*, or *Express One-Shot*).
 
 ---
 
-### What It Does
+### 📦 Classic Edition (v1.0 Single-Paste)
 
-- ⚡ **One-Click Prompt Injection**  
-  Keep your high-leverage prompts (email replies, executive briefings, logic audits, proofreading) organized in a lightweight popup dock. One click injects them directly into the active AI chat.
+Prefer the pure, ultra-minimalist single-paste prompt list without the in-chat workflow rail?
+
+- 📌 **Git Branch:** [`v1-classic`](https://github.com/Flx-xlF/PromptDock/tree/v1-classic)
+- 💾 **Release Archive:** [PromptDock v1.0.0-classic Release](https://github.com/Flx-xlF/PromptDock/releases/tag/v1.0.0-classic)
+
+Both editions share the same local-first, zero-telemetry architecture. PromptDock 2.0 also retains 100% backwards compatibility: any single-turn prompt in your list continues to execute as an instantaneous direct paste!
+
+---
+
+### Key Features
+
+- ⚡ **One-Click Prompt & Workflow Injection**  
+  Keep high-leverage prompts and multi-turn recipes organized in a lightweight popup dock. One click injects them into the active chat.
 - ⌨️ **Muscle Memory Hotkeys**  
-  Trigger your top 3 prompts with global keyboard shortcuts (`Alt+Shift+1`, `Alt+Shift+2`, `Alt+Shift+3`) without reaching for the mouse.
+  Trigger your top 3 prompts with global keyboard shortcuts (`Alt+Shift+1`, `Alt+Shift+2`, `Alt+Shift+3`) and advance turns with `Alt+Shift+ArrowRight`.
 - 💬 **Contextual Inline Commenting & Rewrites**  
   Highlight any generated text inside Copilot, Gemini, ChatGPT, or Claude to trigger a floating action bar. Run quick one-click adjustments (*"sachlicher"*, *"einkürzen"*, *"positiv formulieren"*, *"empathischer"*) or leave custom instructions with a side-by-side visual diff comparison.
 - 🔄 **Smart Clipboard Fallback**  
-  If an input field is obscured, inside a nested iframe, or momentarily unreachable, your prompt is copied to your clipboard instantly with an unobtrusive toast notification.
+  If an input field is obscured, inside a nested iframe, or momentarily unreachable, your prompt or turn step is copied to your clipboard instantly with an unobtrusive toast notification.
 - 📱 **Mobile & iOS Shortcut Sync**  
-  Sync your prompt library directly to your iPhone via a private, secret GitHub Gist—accessible natively via Apple Shortcuts without third-party cloud intermediaries.
+  Sync your prompt library directly to your iPhone via a private GitHub Gist—accessible natively via Apple Shortcuts without third-party cloud intermediaries.
 - 🔒 **Zero Telemetry & 100% Local-First**  
-  No telemetry, no tracking pixels, no remote analytics, and no accounts required. Prompts are stored in your browser's chunked sync storage (`chrome.storage.sync` / `chrome.storage.local`).
+  No telemetry, no tracking pixels, no remote analytics, and no accounts required. Prompts are stored strictly in your browser's chunked sync storage (`chrome.storage.sync` / `chrome.storage.local`).
+
+---
+
+### Built-In Strategic Recipe Suite
+
+PromptDock 2.0 includes a vendor-agnostic Corporate Communications & Intelligence recipe suite:
+
+1. **Medienanfrage** (3 Turns: Lagebild ➔ Strategie ➔ Medienantwort)
+2. **Interview-Vorbereitung** (3 Turns: Briefing ➔ Haltung ➔ Antwortentwurf)
+3. **Wording & Sprachregelung** (2 Turns: Kernanalyse ➔ Leitbotschaften & FAQ)
+4. **Strategischer Sparringspartner** (Herausforderndes Sparring)
+5. **Kommunikationsstrategie** (3 Turns: Lagebild ➔ Positionierung ➔ Massnahmenplan)
+6. **E-Mail & Stakeholder-Antwort** (2 Turns: Analyse ➔ Antwortentwurf)
+7. **Meeting-Vorbereitung & Protokoll** (Agenda/Protokoll ➔ Briefing)
+8. **Themenanalyse & Issue-Monitoring** (Recherche ➔ Risikobewertung)
+9. **Proofreading & Redigat** (Textanalyse ➔ Optimierter Text)
+10. **Freigabe-Audit & Governance** (Lagebild ➔ 3-fach Audit ➔ Freigabeentscheid)
+11. **Themen- & Redaktionsplanung** (Analyse ➔ Themenboard-Eintrag)
+12. **Artikel & Storytelling** (Recherche ➔ Storyline ➔ Artikelentwurf)
+13. **Wochenstart Briefing** (Executive Activity Scan & Delta)
+14. **Projekt- & Status-Update** (Kompaktes Reporting)
+15. **Tiefenrecherche & Intelligence** (Quellen- & Fakten-Dossier)
+16. **Standort- & Stakeholder-Austausch** (Kompakteinträge)
 
 ---
 
 ### Supported AI Platforms
 
-| Platform | Environments Supported | Injection & Inline Commenting |
-| :--- | :--- | :---: |
-| **Microsoft Copilot** | Outlook on the Web, Teams Web, M365 Portal | ✅ |
-| **Google Gemini** | gemini.google.com | ✅ |
-| **ChatGPT** | chatgpt.com, chat.openai.com | ✅ |
-| **Claude** | claude.ai | ✅ |
+| Platform | Environments Supported | Injection & Inline Commenting | Workflow Rail |
+| :--- | :--- | :---: | :---: |
+| **Microsoft Copilot** | Outlook on the Web, Teams Web, M365 Portal | ✅ | ✅ |
+| **Google Gemini** | gemini.google.com | ✅ | ✅ |
+| **ChatGPT** | chatgpt.com, chat.openai.com | ✅ | ✅ |
+| **Claude** | claude.ai | ✅ | ✅ |
 
 ---
 
@@ -65,7 +104,7 @@ Instead, thousands of professionals spend their workdays copy-pasting multi-step
 #### Option B: Load as Developer Extension (Unpacked)
 1. Clone or download this repository:
    ```bash
-   git clone https://github.com/Flx-xlF/prompt-dock.git
+   git clone https://github.com/Flx-xlF/PromptDock.git
    ```
 2. Open your Chromium browser and go to `chrome://extensions` (or `edge://extensions`).
 3. Enable **Developer mode** (toggle in top-right corner).
@@ -78,9 +117,10 @@ Instead, thousands of professionals spend their workdays copy-pasting multi-step
 
 | Shortcut | Action |
 | :--- | :--- |
-| `Alt + Shift + 1` | Inject Prompt 1 (or copy to clipboard fallback) |
+| `Alt + Shift + 1` | Inject Prompt 1 (or launch guided workflow) |
 | `Alt + Shift + 2` | Inject Prompt 2 |
 | `Alt + Shift + 3` | Inject Prompt 3 |
+| `Alt + Shift + →` | Advance to next turn at workflow checkpoint |
 
 *Customizable anytime via `chrome://extensions/shortcuts`.*
 
@@ -102,7 +142,7 @@ To validate syntax and create a store-compliant, clean ZIP package:
 ```bash
 python3 build_release.py
 ```
-Outputs: `release/promptdock-v1.0.0.zip`
+Outputs: `release/promptdock-v2.0.0.zip`
 
 ---
 

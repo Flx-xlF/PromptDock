@@ -153,9 +153,29 @@ window.injectCopilotPrompt = function(promptText, autoSend) {
         
         let inserted = false;
         try {
-            inserted = document.execCommand && document.execCommand('insertText', false, promptText);
+            // Industry-standard approach: Dispatch a synthetic paste event with text/plain data.
+            // Rich text editors (ProseMirror in Claude/Copilot, Quill, Draft.js, Lexical) listen to 'paste'
+            // and parse multiline plaintext into proper paragraphs/break tags instead of stripping newlines.
+            const dt = new DataTransfer();
+            dt.setData('text/plain', promptText);
+            const pasteEvt = new ClipboardEvent('paste', {
+                bubbles: true,
+                cancelable: true,
+                clipboardData: dt
+            });
+            inputField.dispatchEvent(pasteEvt);
+            // If the editor handled the paste event and modified content, consider it inserted
+            inserted = !pasteEvt.defaultPrevented;
         } catch (e) {
             inserted = false;
+        }
+        
+        if (!inserted) {
+            try {
+                inserted = document.execCommand && document.execCommand('insertText', false, promptText);
+            } catch (e) {
+                inserted = false;
+            }
         }
         
         if (!inserted) {
@@ -163,7 +183,16 @@ window.injectCopilotPrompt = function(promptText, autoSend) {
                 const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : document.createRange();
                 range.selectNodeContents(inputField);
                 range.deleteContents();
-                range.insertNode(document.createTextNode(promptText));
+                // Split by newline and insert text nodes with <br> elements so contenteditable preserves breaks
+                const lines = promptText.split('\n');
+                const fragment = document.createDocumentFragment();
+                lines.forEach((line, index) => {
+                    fragment.appendChild(document.createTextNode(line));
+                    if (index < lines.length - 1) {
+                        fragment.appendChild(document.createElement('br'));
+                    }
+                });
+                range.insertNode(fragment);
             } catch (e) {}
             // Dispatch input event so the app's framework picks up the change
             inputField.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText', data: promptText }));
@@ -217,6 +246,7 @@ function initInlineComments() {
     document.body.appendChild(shadowHost);
     
     const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
+    window._uapShadowRoot = shadowRoot;
     
     // Inject the CSS into the ShadowRoot
     const cssLink = document.createElement('link');
@@ -996,4 +1026,441 @@ function renderWordDiff(oldStr, newStr, container) {
         }
     }
 }
+
+// ==========================================================================
+// PromptDock — Modular Recipe & In-Chat Rail Engine
+// ==========================================================================
+
+const RecipeState = {
+    activeRecipe: null,
+    currentTurnIndex: 0,
+    variableValues: {},
+    mode: 'guided', // 'guided' | 'autopilot' | 'express'
+    status: 'idle', // 'idle' | 'running_turn' | 'checkpoint' | 'completed'
+    streamCheckInterval: null
+};
+
+function getOrCreateShadowRoot() {
+    if (window._uapShadowRoot) return window._uapShadowRoot;
+    let shadowHost = document.getElementById(ID_PREFIX + 'uap-extension-root');
+    if (!shadowHost) {
+        shadowHost = document.createElement('div');
+        shadowHost.id = ID_PREFIX + 'uap-extension-root';
+        document.body.appendChild(shadowHost);
+    }
+    const shadowRoot = shadowHost.shadowRoot || shadowHost.attachShadow({ mode: 'open' });
+    if (!shadowRoot.querySelector('link[rel="stylesheet"]')) {
+        const cssLink = document.createElement('link');
+        cssLink.rel = 'stylesheet';
+        const ext = typeof browser !== 'undefined' ? browser : chrome;
+        cssLink.href = ext.runtime.getURL('content.css');
+        shadowRoot.appendChild(cssLink);
+    }
+    window._uapShadowRoot = shadowRoot;
+    return shadowRoot;
 }
+
+/**
+ * Cross-Platform Generation Completion Detector (Copilot, Gemini, ChatGPT, Claude)
+ * Listens for active streaming indicators and triggers onComplete when finished.
+ */
+function observeTurnCompletion(onComplete) {
+    if (RecipeState.streamCheckInterval) {
+        clearInterval(RecipeState.streamCheckInterval);
+        RecipeState.streamCheckInterval = null;
+    }
+
+    let isStreaming = false;
+    let streamSawStart = false;
+
+    const checkGenerationState = () => {
+        let currentlyStreaming = false;
+
+        if (PLATFORM === PLATFORM_CONFIGS.chatgpt) {
+            currentlyStreaming = !!document.querySelector('button[data-testid="stop-button"], button[aria-label="Stop streaming"], button[aria-label="Stop generating"]');
+        } else if (PLATFORM === PLATFORM_CONFIGS.claude) {
+            currentlyStreaming = !!document.querySelector('button[aria-label="Stop Response"], button[data-testid="stop-button"]');
+        } else if (PLATFORM === PLATFORM_CONFIGS.gemini) {
+            currentlyStreaming = !!document.querySelector('.stop-button, button[aria-label*="Stoppen" i], button[aria-label*="Stop" i]');
+        } else if (PLATFORM === PLATFORM_CONFIGS.copilot) {
+            currentlyStreaming = !!document.querySelector('.fai-StopButton, button[aria-label*="Stop" i]');
+        }
+
+        if (currentlyStreaming) {
+            isStreaming = true;
+            streamSawStart = true;
+        } else if (isStreaming && !currentlyStreaming) {
+            // Transitioned from streaming to complete!
+            isStreaming = false;
+            clearInterval(RecipeState.streamCheckInterval);
+            RecipeState.streamCheckInterval = null;
+            setTimeout(onComplete, 700);
+        }
+    };
+
+    // Check every 350ms
+    RecipeState.streamCheckInterval = setInterval(checkGenerationState, 350);
+
+    // Timeout safety fallback: if no generation started within 8s, or runs for > 3 minutes
+    setTimeout(() => {
+        if (!streamSawStart && RecipeState.status === 'running_turn') {
+            // Assume single-turn completed or fast answer
+            clearInterval(RecipeState.streamCheckInterval);
+            RecipeState.streamCheckInterval = null;
+            onComplete();
+        }
+    }, 10000);
+
+    setTimeout(() => {
+        if (RecipeState.streamCheckInterval) {
+            clearInterval(RecipeState.streamCheckInterval);
+            RecipeState.streamCheckInterval = null;
+            if (RecipeState.status === 'running_turn') onComplete();
+        }
+    }, 180000);
+}
+
+function handleTurnCompletion() {
+    if (!RecipeState.activeRecipe) return;
+    const recipe = RecipeState.activeRecipe;
+    const currentIdx = RecipeState.currentTurnIndex;
+
+    if (currentIdx < recipe.turns.length - 1) {
+        RecipeState.currentTurnIndex++;
+        if (RecipeState.mode === 'autopilot') {
+            // In autopilot mode, automatically trigger next turn after brief pause
+            RecipeState.status = 'running_turn';
+            renderRailUI();
+            setTimeout(() => {
+                executeNextTurn('');
+            }, 1200);
+        } else {
+            // Guided mode: pause at checkpoint
+            RecipeState.status = 'checkpoint';
+            renderRailUI();
+        }
+    } else {
+        // All turns completed
+        RecipeState.status = 'completed';
+        renderRailUI();
+    }
+}
+
+function executeNextTurn(userSteeringNote) {
+    if (!RecipeState.activeRecipe) return;
+    const recipe = RecipeState.activeRecipe;
+    const nextIdx = RecipeState.currentTurnIndex;
+    const prevTurnTitle = recipe.turns[nextIdx - 1]?.title;
+
+    const catalog = window.PromptDockCatalog;
+    if (!catalog) return;
+
+    const turnPrompt = catalog.compileTurn(recipe, nextIdx, {
+        variableValues: RecipeState.variableValues,
+        userSteeringNote: userSteeringNote || '',
+        previousTurnTitle: prevTurnTitle
+    });
+
+    RecipeState.status = 'running_turn';
+    renderRailUI();
+
+    window.injectCopilotPrompt(turnPrompt, true);
+    observeTurnCompletion(() => handleTurnCompletion());
+}
+
+function executeFork(outputChunkId, userSteeringNote) {
+    if (!RecipeState.activeRecipe) return;
+    const catalog = window.PromptDockCatalog;
+    if (!catalog) return;
+
+    const chunkDef = catalog.CHUNKS[outputChunkId];
+    if (!chunkDef) return;
+
+    const chunkText = typeof chunkDef.compile === 'function' ? chunkDef.compile({}) : chunkDef.text;
+    const promptParts = [
+        `FORK-OUTPUT: ${chunkDef.title.toUpperCase()}`,
+        `BASIS:\nVorangegangene Recherche und Analyse in diesem Chat.`
+    ];
+    if (userSteeringNote && userSteeringNote.trim()) {
+        promptParts.push(`STEUERUNG DURCH NUTZER:\n${userSteeringNote.trim()}`);
+    }
+    promptParts.push(chunkText);
+
+    const fullPrompt = promptParts.join('\n\n');
+    RecipeState.status = 'running_turn';
+    renderRailUI();
+
+    window.injectCopilotPrompt(fullPrompt, true);
+    observeTurnCompletion(() => {
+        RecipeState.status = 'completed';
+        renderRailUI();
+    });
+}
+
+function renderRailUI() {
+    const shadowRoot = getOrCreateShadowRoot();
+    let railContainer = shadowRoot.querySelector('#promptdock-rail-container');
+    if (!railContainer) {
+        railContainer = document.createElement('div');
+        railContainer.id = 'promptdock-rail-container';
+        shadowRoot.appendChild(railContainer);
+    }
+
+    if (!RecipeState.activeRecipe || RecipeState.status === 'idle') {
+        railContainer.style.display = 'none';
+        return;
+    }
+
+    railContainer.style.display = 'flex';
+    railContainer.replaceChildren();
+
+    const recipe = RecipeState.activeRecipe;
+    const currentIdx = RecipeState.currentTurnIndex;
+    const totalTurns = recipe.turns.length;
+
+    // 1. Progress Steps Bar
+    const railBar = document.createElement('div');
+    railBar.className = 'pd-rail-bar';
+
+    const recipeBadge = document.createElement('div');
+    recipeBadge.className = 'pd-rail-badge';
+    recipeBadge.textContent = recipe.name;
+    railBar.appendChild(recipeBadge);
+
+    const stepsList = document.createElement('div');
+    stepsList.className = 'pd-rail-steps';
+
+    recipe.turns.forEach((turn, idx) => {
+        const step = document.createElement('div');
+        const isDone = idx < currentIdx || (RecipeState.status === 'completed' && idx === currentIdx);
+        const isActive = idx === currentIdx && RecipeState.status !== 'completed';
+        step.className = `pd-rail-step ${isDone ? 'done' : isActive ? 'active' : 'pending'}`;
+
+        const circle = document.createElement('span');
+        circle.className = 'pd-step-circle';
+        circle.textContent = isDone ? '✓' : (idx + 1);
+
+        const title = document.createElement('span');
+        title.className = 'pd-step-title';
+        title.textContent = turn.title;
+
+        step.appendChild(circle);
+        step.appendChild(title);
+        stepsList.appendChild(step);
+
+        if (idx < totalTurns - 1) {
+            const line = document.createElement('div');
+            line.className = `pd-step-line ${idx < currentIdx ? 'done' : ''}`;
+            stepsList.appendChild(line);
+        }
+    });
+
+    railBar.appendChild(stepsList);
+
+    // Close button
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'pd-rail-close';
+    closeBtn.textContent = '×';
+    closeBtn.title = 'Workflow beenden';
+    closeBtn.addEventListener('click', () => {
+        RecipeState.status = 'idle';
+        RecipeState.activeRecipe = null;
+        renderRailUI();
+    });
+    railBar.appendChild(closeBtn);
+    railContainer.appendChild(railBar);
+
+    // 2. Checkpoint Card (Visible when paused between turns)
+    if (RecipeState.status === 'checkpoint') {
+        const cpCard = document.createElement('div');
+        cpCard.className = 'pd-checkpoint-card';
+
+        const cpHeader = document.createElement('div');
+        cpHeader.className = 'pd-cp-header';
+        cpHeader.innerHTML = `<strong>Schritt ${currentIdx} fertig.</strong> Bereit für <em>${recipe.turns[currentIdx].title}</em>:`;
+        cpCard.appendChild(cpHeader);
+
+        // Steering Chips
+        const chipsContainer = document.createElement('div');
+        chipsContainer.className = 'pd-chips-container';
+
+        const chips = [
+            { label: '✓ Direkt weiter', note: '' },
+            { label: 'Fakten korrigieren', note: 'Bitte korrigiere folgende Fakten: ' },
+            { label: 'Tiefer recherchieren', note: 'Recherchiere noch tiefer zu: ' },
+            { label: 'Haltung vorgeben', note: 'Empfohlene Haltung soll lauten: ' }
+        ];
+
+        const noteInput = document.createElement('input');
+        noteInput.type = 'text';
+        noteInput.className = 'pd-note-input';
+        noteInput.placeholder = 'Optionale Steuerungsnotiz für nächsten Schritt...';
+
+        chips.forEach(c => {
+            const chipBtn = document.createElement('button');
+            chipBtn.className = 'pd-chip';
+            chipBtn.textContent = c.label;
+            chipBtn.addEventListener('click', () => {
+                if (c.note) {
+                    noteInput.value = c.note;
+                    noteInput.focus();
+                } else {
+                    executeNextTurn(noteInput.value);
+                }
+            });
+            chipsContainer.appendChild(chipBtn);
+        });
+
+        cpCard.appendChild(chipsContainer);
+        cpCard.appendChild(noteInput);
+
+        // Actions Row (Fork menu + Send button)
+        const actionsRow = document.createElement('div');
+        actionsRow.className = 'pd-cp-actions';
+
+        // Fork Dropdown (if forks exist)
+        if (recipe.forks && recipe.forks.length > 0) {
+            const forkSelect = document.createElement('select');
+            forkSelect.className = 'pd-fork-select';
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = '';
+            defaultOpt.textContent = 'Anderen Output wählen...';
+            forkSelect.appendChild(defaultOpt);
+
+            const catalog = window.PromptDockCatalog;
+            recipe.forks.forEach(fId => {
+                const opt = document.createElement('option');
+                opt.value = fId;
+                opt.textContent = `➔ ${catalog?.CHUNKS[fId]?.title || fId}`;
+                forkSelect.appendChild(opt);
+            });
+
+            forkSelect.addEventListener('change', (e) => {
+                if (e.target.value) {
+                    executeFork(e.target.value, noteInput.value);
+                }
+            });
+            actionsRow.appendChild(forkSelect);
+        }
+
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'pd-primary-btn';
+        nextBtn.innerHTML = `Schritt ${currentIdx + 1} senden <span class="pd-shortcut">⌥⇧→</span>`;
+        nextBtn.addEventListener('click', () => executeNextTurn(noteInput.value));
+
+        actionsRow.appendChild(nextBtn);
+        cpCard.appendChild(actionsRow);
+        railContainer.appendChild(cpCard);
+    } else if (RecipeState.status === 'completed') {
+        // 3. Completed State Card with Fork Options
+        const doneCard = document.createElement('div');
+        doneCard.className = 'pd-checkpoint-card';
+
+        const doneHeader = document.createElement('div');
+        doneHeader.className = 'pd-cp-header';
+        doneHeader.innerHTML = `<strong>Workflow abgeschlossen! 🎉</strong> Alle ${totalTurns} Schritte ausgeführt.`;
+        doneCard.appendChild(doneHeader);
+
+        const actionsRow = document.createElement('div');
+        actionsRow.className = 'pd-cp-actions';
+
+        if (recipe.forks && recipe.forks.length > 0) {
+            const forkSelect = document.createElement('select');
+            forkSelect.className = 'pd-fork-select';
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = '';
+            defaultOpt.textContent = 'Weiteren Output generieren (Fork)...';
+            forkSelect.appendChild(defaultOpt);
+
+            const catalog = window.PromptDockCatalog;
+            recipe.forks.forEach(fId => {
+                const opt = document.createElement('option');
+                opt.value = fId;
+                opt.textContent = `➔ ${catalog?.CHUNKS[fId]?.title || fId}`;
+                forkSelect.appendChild(opt);
+            });
+
+            forkSelect.addEventListener('change', (e) => {
+                if (e.target.value) {
+                    executeFork(e.target.value, '');
+                }
+            });
+            actionsRow.appendChild(forkSelect);
+        }
+
+        const finishBtn = document.createElement('button');
+        finishBtn.className = 'pd-primary-btn';
+        finishBtn.textContent = 'Schliessen ✓';
+        finishBtn.addEventListener('click', () => {
+            RecipeState.status = 'idle';
+            RecipeState.activeRecipe = null;
+            renderRailUI();
+        });
+        actionsRow.appendChild(finishBtn);
+
+        doneCard.appendChild(actionsRow);
+        railContainer.appendChild(doneCard);
+    }
+}
+
+window.startPromptDockRecipe = function(recipeIdOrName, options) {
+    options = options || {};
+    const catalog = window.PromptDockCatalog;
+    if (!catalog) {
+        console.error('[PromptDock] Recipe catalog not loaded!');
+        return false;
+    }
+    const recipe = catalog.RECIPES.find(r => r.id === recipeIdOrName || r.name.toLowerCase() === (recipeIdOrName || '').toLowerCase());
+    if (!recipe) {
+        console.error(`[PromptDock] Recipe ${recipeIdOrName} not found.`);
+        return false;
+    }
+
+    const mode = options.mode || 'guided';
+    const variableValues = options.variableValues || {};
+
+    if (mode === 'express') {
+        const expressPrompt = catalog.compileExpress(recipe, variableValues);
+        return window.injectCopilotPrompt(expressPrompt, false);
+    }
+
+    RecipeState.activeRecipe = recipe;
+    RecipeState.currentTurnIndex = 0;
+    RecipeState.variableValues = variableValues;
+    RecipeState.mode = mode;
+    RecipeState.status = 'running_turn';
+
+    const turnPrompt = catalog.compileTurn(recipe, 0, { variableValues });
+    const injected = window.injectCopilotPrompt(turnPrompt, true);
+
+    renderRailUI();
+    observeTurnCompletion(() => handleTurnCompletion());
+
+    return injected;
+};
+
+// Global Shortcut Listener: Alt+Shift+ArrowRight (⌥⇧→) to advance turn
+document.addEventListener('keydown', (e) => {
+    if (e.altKey && e.shiftKey && (e.key === 'ArrowRight' || e.code === 'ArrowRight')) {
+        if (RecipeState.status === 'checkpoint') {
+            e.preventDefault();
+            const shadowRoot = getOrCreateShadowRoot();
+            const noteInput = shadowRoot.querySelector('.pd-note-input');
+            const noteVal = noteInput ? noteInput.value : '';
+            executeNextTurn(noteVal);
+        }
+    }
+});
+
+// Runtime Message Listener
+const extRuntime = typeof browser !== 'undefined' ? browser.runtime : (typeof chrome !== 'undefined' ? chrome.runtime : null);
+if (extRuntime && extRuntime.onMessage) {
+    extRuntime.onMessage.addListener((msg, sender, sendResponse) => {
+        if (msg && msg.type === 'START_RECIPE') {
+            const success = window.startPromptDockRecipe(msg.recipeId, msg.options);
+            sendResponse({ success });
+        }
+    });
+}
+}
+

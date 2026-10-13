@@ -443,3 +443,34 @@ button:disabled {
     text-decoration-color: var(--text-secondary);
 }
 
+/* --- Recipe Badges & Variable Modal -------------------------------------- */
+.recipe-turn-badge {
+    font-size: 10px;
+    font-weight: 500;
+    color: #818cf8;
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    white-space: nowrap;
+}
+
+.var-input-field {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 12px;
+    outline: none;
+    font-family: inherit;
+}
+
+.var-input-field:focus {
+    border-color: var(--accent);
+}
+
+

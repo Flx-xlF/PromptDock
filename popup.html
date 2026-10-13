@@ -66,6 +66,28 @@
         </div>
     </div>
     
+    <!-- Recipe Variable Sheet Modal -->
+    <div id="recipe-var-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 id="var-modal-title">Variablen festlegen</h3>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Bitte die erforderlichen Angaben für diesen Prompt angeben:</p>
+            <div id="var-modal-fields" style="display:flex; flex-direction:column; gap:10px;"></div>
+            <div style="margin-top: 12px;">
+                <label style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Ausführungsmodus:</label>
+                <select id="var-modal-mode" style="width: 100%; box-sizing: border-box; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); border-radius: 6px; padding: 6px; font-size: 12px;">
+                    <option value="guided">Guided (Empfohlen: Stoppt an Checkpoints)</option>
+                    <option value="autopilot">Autopilot (Führt alle Schritte automatisch aus)</option>
+                    <option value="express">Express (Einzeleingabe / Alle Schritte kombiniert)</option>
+                </select>
+            </div>
+            <div class="actions" style="margin-top: 16px;">
+                <button id="cancel-var-btn" class="text-btn">Abbrechen</button>
+                <button id="start-var-btn" class="primary-btn">Starten ➔</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="shared/recipe-catalog.js"></script>
     <script type="module" src="popup.js"></script>
 </body>
 </html>
