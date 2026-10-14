@@ -440,24 +440,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const startVarBtn = document.getElementById('start-var-btn');
     if (startVarBtn) {
-        startVarBtn.addEventListener('click', () => {
-            if (!currentPendingRecipeExecution) return;
-            const { recipe, buttonEl, tab } = currentPendingRecipeExecution;
-            const varFields = document.getElementById('var-modal-fields');
-            const mode = document.getElementById('var-modal-mode').value;
-
-            const variableValues = {};
-            varFields.querySelectorAll('.var-input-field').forEach(input => {
-                const key = input.dataset.varKey;
-                if (key) {
-                    variableValues[key] = input.value.trim() || input.placeholder;
-                }
-            });
-
-            if (varModal) varModal.classList.add('hidden');
-            executeRecipe(recipe, { mode, variableValues }, buttonEl, tab);
-            currentPendingRecipeExecution = null;
-        });
+        startVarBtn.addEventListener('click', submitVariableModal);
     }
 
     // Search input listener
@@ -472,17 +455,31 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderPrompts();
         });
 
-        // Global hotkey: Cmd+K / Ctrl+K to jump to search
+        // Global hotkey: Cmd+K / Ctrl+K to jump to search, Escape to dismiss modals/search
         window.addEventListener('keydown', (e) => {
             if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
                 e.preventDefault();
                 searchInput.focus();
                 searchInput.select();
-            } else if (e.key === 'Escape' && document.activeElement === searchInput) {
-                searchInput.value = '';
-                currentSearchQuery = '';
-                if (searchClearBtn) searchClearBtn.classList.add('hidden');
-                renderPrompts();
+            } else if (e.key === 'Escape') {
+                if (varModal && !varModal.classList.contains('hidden')) {
+                    e.preventDefault();
+                    varModal.classList.add('hidden');
+                    currentPendingRecipeExecution = null;
+                    return;
+                }
+                const syncModal = document.getElementById('sync-modal');
+                if (syncModal && !syncModal.classList.contains('hidden')) {
+                    e.preventDefault();
+                    syncModal.classList.add('hidden');
+                    return;
+                }
+                if (document.activeElement === searchInput) {
+                    searchInput.value = '';
+                    currentSearchQuery = '';
+                    if (searchClearBtn) searchClearBtn.classList.add('hidden');
+                    renderPrompts();
+                }
             }
         });
     }
@@ -788,33 +785,184 @@ async function handlePromptRun(index, buttonEl) {
     }
 }
 
+const KNOWN_VARIABLE_METADATA = {
+    SUCHBEGRIFF: {
+        label: 'Suchbegriff / Recherche-Thema',
+        description: 'Thema, Fragestellung oder Dossiertitel für die Tiefenrecherche',
+        placeholder: 'z.B. KI-Assistenten im Kundenservice, Projekt Rollout 2026...',
+        default: '',
+        required: true
+    },
+    ZEITRAUM: {
+        label: 'Zeitraum / Scan-Fenster',
+        description: 'Relevantes Zeitfenster für den Scan oder das Update',
+        placeholder: 'z.B. Letzte Woche bis heute, Letzte 7 Tage...',
+        default: 'Letzte Woche bis heute',
+        required: false
+    },
+    PERSON: {
+        label: 'Empfänger / Zielgruppe',
+        description: 'Für wen ist das Briefing oder Update bestimmt?',
+        placeholder: 'z.B. Geschäftsleitung, Leitung Kommunikation, Team...',
+        default: 'Geschäftsleitung',
+        required: false
+    },
+    THEMA: {
+        label: 'Thema / Projekt',
+        description: 'Spezifisches Thema oder Projekt für das Status-Update',
+        placeholder: 'z.B. IT-Modernisierung, Medienanfrage, Kampagne...',
+        default: '',
+        required: true
+    }
+};
+
+function normalizeVariableDef(v) {
+    if (typeof v === 'string') {
+        const meta = KNOWN_VARIABLE_METADATA[v.toUpperCase()] || {};
+        return {
+            key: v,
+            name: v,
+            label: meta.label || v,
+            description: meta.description || '',
+            placeholder: meta.placeholder || `Wert für ${v} eingeben...`,
+            default: meta.default || '',
+            required: meta.required !== undefined ? meta.required : false
+        };
+    }
+    const key = v.key || v.name || v.id || 'VARIABLE';
+    const meta = KNOWN_VARIABLE_METADATA[key.toUpperCase()] || {};
+    return {
+        key: key,
+        name: key,
+        label: v.label || meta.label || key,
+        description: v.description || meta.description || '',
+        placeholder: v.placeholder || meta.placeholder || `Wert für ${key} eingeben...`,
+        default: v.default !== undefined ? v.default : (meta.default || ''),
+        required: v.required !== undefined ? v.required : (meta.required || false)
+    };
+}
+
+function submitVariableModal() {
+    if (!currentPendingRecipeExecution) return;
+    const { recipe, buttonEl, tab } = currentPendingRecipeExecution;
+    const varModal = document.getElementById('recipe-var-modal');
+    const varFields = document.getElementById('var-modal-fields');
+    const varMode = document.getElementById('var-modal-mode');
+    const mode = varMode ? varMode.value : 'guided';
+
+    const variableValues = {};
+    let hasValidationError = false;
+    let firstErrorInput = null;
+
+    varFields.querySelectorAll('.var-input-field').forEach(input => {
+        const key = input.dataset.varKey;
+        if (!key) return;
+        const val = input.value.trim();
+        const defaultVal = input.dataset.varDefault || '';
+        const isRequired = input.dataset.varRequired === 'true';
+
+        if (isRequired && !val && !defaultVal) {
+            input.classList.add('input-error');
+            hasValidationError = true;
+            if (!firstErrorInput) firstErrorInput = input;
+        } else {
+            variableValues[key] = val || defaultVal;
+        }
+    });
+
+    if (hasValidationError) {
+        if (firstErrorInput) {
+            firstErrorInput.focus();
+            // Re-trigger shake animation if already added
+            firstErrorInput.classList.remove('input-error');
+            void firstErrorInput.offsetWidth;
+            firstErrorInput.classList.add('input-error');
+        }
+        return;
+    }
+
+    if (varModal) varModal.classList.add('hidden');
+    executeRecipe(recipe, { mode, variableValues }, buttonEl, tab);
+    currentPendingRecipeExecution = null;
+}
+
 function openVariableModal(recipe, prompt, buttonEl, tab) {
     const varModal = document.getElementById('recipe-var-modal');
     const varTitle = document.getElementById('var-modal-title');
+    const varDesc = document.getElementById('var-modal-desc');
     const varFields = document.getElementById('var-modal-fields');
     const varMode = document.getElementById('var-modal-mode');
+    const modeHint = document.getElementById('var-modal-mode-hint');
 
     varTitle.textContent = `${recipe.name} konfigurieren`;
+    if (varDesc) {
+        varDesc.textContent = `Parameter für den mehrstufigen Workflow «${recipe.name}» festlegen:`;
+    }
     varFields.replaceChildren();
     varMode.value = 'guided';
 
-    recipe.variables.forEach(v => {
+    const updateModeHint = () => {
+        if (!modeHint) return;
+        if (varMode.value === 'guided') {
+            modeHint.textContent = 'Empfohlen: Stoppt nach jedem Teilschritt für Zwischenprüfungen & Notizen.';
+        } else if (varMode.value === 'autopilot') {
+            modeHint.textContent = 'Führt alle Workflow-Schritte automatisch nacheinander aus.';
+        } else {
+            modeHint.textContent = 'Fasst alle Teilschritte in eine einzige Eingabe zusammen (Express-Prompt).';
+        }
+    };
+    varMode.onchange = updateModeHint;
+    updateModeHint();
+
+    recipe.variables.forEach(rawV => {
+        const v = normalizeVariableDef(rawV);
+
         const group = document.createElement('div');
-        group.style.cssText = 'display:flex; flex-direction:column; gap:4px;';
+        group.className = 'var-group';
+
+        const labelRow = document.createElement('div');
+        labelRow.className = 'var-label-row';
 
         const label = document.createElement('label');
-        label.style.cssText = 'font-size:11px; font-weight:600; color:var(--text-secondary);';
-        label.textContent = v.name + (v.description ? ` (${v.description})` : '');
-        group.appendChild(label);
+        label.className = 'var-label';
+        label.textContent = v.label;
+        labelRow.appendChild(label);
+
+        const badge = document.createElement('span');
+        badge.className = v.required ? 'var-badge-req' : 'var-badge-opt';
+        badge.textContent = v.required ? 'Erforderlich' : 'Optional';
+        labelRow.appendChild(badge);
+
+        group.appendChild(labelRow);
+
+        if (v.description) {
+            const desc = document.createElement('div');
+            desc.className = 'var-desc';
+            desc.textContent = v.description;
+            group.appendChild(desc);
+        }
 
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'var-input-field';
-        input.dataset.varKey = v.name;
-        input.placeholder = v.placeholder || v.default || '';
+        input.dataset.varKey = v.key;
+        input.dataset.varDefault = v.default || '';
+        input.dataset.varRequired = v.required ? 'true' : 'false';
+        input.placeholder = v.placeholder || '';
         if (v.default) input.value = v.default;
-        group.appendChild(input);
 
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                submitVariableModal();
+            }
+        });
+
+        input.addEventListener('input', () => {
+            input.classList.remove('input-error');
+        });
+
+        group.appendChild(input);
         varFields.appendChild(group);
     });
 
@@ -822,7 +970,14 @@ function openVariableModal(recipe, prompt, buttonEl, tab) {
     varModal.classList.remove('hidden');
 
     const firstInput = varFields.querySelector('input');
-    if (firstInput) setTimeout(() => firstInput.focus(), 50);
+    if (firstInput) {
+        setTimeout(() => {
+            firstInput.focus();
+            if (firstInput.value) {
+                firstInput.select();
+            }
+        }, 60);
+    }
 }
 
 async function executeRecipe(recipe, options, cardEl, tab) {

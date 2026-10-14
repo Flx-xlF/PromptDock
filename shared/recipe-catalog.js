@@ -724,7 +724,17 @@ Qualitätskriterien:
             id: 'recipe-wochenstart',
             name: 'Wochenstart Briefing',
             family: 'temporal',
-            variables: ['ZEITRAUM'],
+            variables: [
+                {
+                    key: 'ZEITRAUM',
+                    name: 'ZEITRAUM',
+                    label: 'Zeitraum / Scan-Fenster',
+                    description: 'Zu analysierendes Zeitfenster für den Rückblick',
+                    placeholder: 'z.B. Letzte Woche bis heute, 1.–14. Oktober...',
+                    default: 'Letzte Woche bis heute',
+                    required: false
+                }
+            ],
             turns: [
                 {
                     title: 'AKTIVITÄTS-SCAN',
@@ -744,7 +754,35 @@ Qualitätskriterien:
             id: 'recipe-update',
             name: 'Update',
             family: 'temporal',
-            variables: ['PERSON', 'ZEITRAUM', 'THEMA'],
+            variables: [
+                {
+                    key: 'THEMA',
+                    name: 'THEMA',
+                    label: 'Thema / Projekt',
+                    description: 'Worüber soll das Status-Update erstellt werden?',
+                    placeholder: 'z.B. IT-Modernisierung, Medienanfrage, Kampagne...',
+                    default: '',
+                    required: true
+                },
+                {
+                    key: 'PERSON',
+                    name: 'PERSON',
+                    label: 'Empfänger / Zielgruppe',
+                    description: 'Für wen ist das Briefing oder Update bestimmt?',
+                    placeholder: 'z.B. Geschäftsleitung, Leitung Kommunikation, Team...',
+                    default: 'Geschäftsleitung',
+                    required: false
+                },
+                {
+                    key: 'ZEITRAUM',
+                    name: 'ZEITRAUM',
+                    label: 'Zeitraum',
+                    description: 'Relevanter Zeitraum der Änderungen',
+                    placeholder: 'z.B. Letzte 7 Tage, Letzte 48 Stunden...',
+                    default: 'Letzte 7 Tage',
+                    required: false
+                }
+            ],
             turns: [
                 {
                     title: 'KONTEXT & RECHERCHE',
@@ -764,7 +802,17 @@ Qualitätskriterien:
             id: 'recipe-recherche',
             name: 'Recherche',
             family: 'respond',
-            variables: ['SUCHBEGRIFF'],
+            variables: [
+                {
+                    key: 'SUCHBEGRIFF',
+                    name: 'SUCHBEGRIFF',
+                    label: 'Suchbegriff / Recherche-Thema',
+                    description: 'Thema, Fragestellung oder Schlagwort für das Dossier',
+                    placeholder: 'z.B. KI-Assistenten im Kundenservice, Projekt Rollout 2026...',
+                    default: '',
+                    required: true
+                }
+            ],
             turns: [
                 {
                     title: 'LAGEBILD',
