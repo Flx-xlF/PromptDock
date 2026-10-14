@@ -17,15 +17,14 @@ def make_png(width, height, rgba_data):
     iend = chunk(b'IEND', b'')
     return header + ihdr + idat + iend
 
-def blend_pixel(bg, fg, alpha):
-    # fg and bg are (r, g, b)
-    a = max(0.0, min(1.0, alpha))
-    return (
-        int(bg[0] * (1 - a) + fg[0] * a),
-        int(bg[1] * (1 - a) + fg[1] * a),
-        int(bg[2] * (1 - a) + fg[2] * a),
-        255
-    )
+def dist_to_segment(px, py, x1, y1, x2, y2):
+    dx = x2 - x1
+    dy = y2 - y1
+    len_sq = dx * dx + dy * dy
+    if len_sq == 0:
+        return math.hypot(px - x1, py - y1)
+    t = max(0.0, min(1.0, ((px - x1) * dx + (py - y1) * dy) / len_sq))
+    return math.hypot(px - (x1 + t * dx), py - (y1 + t * dy))
 
 def render_icon(size):
     buf = bytearray(size * size * 4)
@@ -33,7 +32,6 @@ def render_icon(size):
     corner_radius = 24.0 * scale
     pad = 5.0 * scale
     
-    # Pre-render grid
     for y in range(size):
         for x in range(size):
             idx = (y * size + x) * 4
@@ -46,24 +44,22 @@ def render_icon(size):
             inside = (x >= pad and x <= size - pad and y >= pad and y <= size - pad)
             
             if dist > corner_radius + 1.0 and not inside:
-                # Fully transparent background
                 buf[idx:idx+4] = [0, 0, 0, 0]
                 continue
                 
-            # Base background color: subtle dark slate gradient (#1e2430 -> #11141a)
+            # Base background: Deep cosmic obsidian-violet gradient (#1f1432 -> #0d0818)
             t_grad = (y / size)
-            bg_r = int(30 * (1 - t_grad) + 16 * t_grad)
-            bg_g = int(36 * (1 - t_grad) + 19 * t_grad)
-            bg_b = int(48 * (1 - t_grad) + 26 * t_grad)
+            bg_r = int(31 * (1 - t_grad) + 13 * t_grad)
+            bg_g = int(20 * (1 - t_grad) + 8 * t_grad)
+            bg_b = int(50 * (1 - t_grad) + 24 * t_grad)
             
             # Anti-aliasing at outer border
             alpha = 1.0
             if dist > corner_radius - 1.0:
                 alpha = max(0.0, min(1.0, (corner_radius + 0.8 - dist) / 1.6))
             
-            # Accent border detection (border width ~ 2.5 * scale)
+            # Accent border detection: Vibrant Electric Violet -> Neon Fuchsia
             border_w = max(1.0, 2.8 * scale)
-            border_dist = abs(dist - corner_radius)
             is_border = False
             if dist <= corner_radius and dist >= corner_radius - border_w:
                 is_border = True
@@ -72,56 +68,82 @@ def render_icon(size):
 
             r, g, b = bg_r, bg_g, bg_b
             if is_border:
-                # Electric blue border #3b82f6 -> #60a5fa
-                r, g, b = 74, 158, 255
+                # Gradient: #a855f7 (168, 85, 247) to #ec4899 (236, 72, 153)
+                tb = (x + y) / (2.0 * size)
+                r = int(168 * (1 - tb) + 236 * tb)
+                g = int(85 * (1 - tb) + 72 * tb)
+                b = int(247 * (1 - tb) + 153 * tb)
 
-            # Render Prompt Symbol: '>' Chevron and '_' Cursor
             nx = (x / scale) # 0 to 128 space
             ny = (y / scale)
             
-            # Chevron lines:
-            # Segment 1: (32, 42) -> (56, 64)
-            # Segment 2: (56, 64) -> (32, 86)
             line_w = 4.2
             
-            # Distance to segment 1
-            # parametric t
-            dx1, dy1 = 24.0, 22.0
-            len1_sq = dx1*dx1 + dy1*dy1
-            t1 = max(0.0, min(1.0, ((nx - 32)*dx1 + (ny - 42)*dy1) / len1_sq))
-            dist1 = math.hypot(nx - (32 + t1*dx1), ny - (42 + t1*dy1))
-
-            # Distance to segment 2
-            dx2, dy2 = -24.0, 22.0
-            len2_sq = dx2*dx2 + dy2*dy2
-            t2 = max(0.0, min(1.0, ((nx - 56)*dx2 + (ny - 64)*dy2) / len2_sq))
-            dist2 = math.hypot(nx - (56 + t2*dx2), ny - (64 + t2*dy2))
+            # --- 1. CHEVRON 1 (Turn 1 / Left Chevron in Violet) ---
+            # Segment 1a: (22, 42) -> (44, 64)
+            # Segment 1b: (44, 64) -> (22, 86)
+            d1a = dist_to_segment(nx, ny, 22.0, 42.0, 44.0, 64.0)
+            d1b = dist_to_segment(nx, ny, 44.0, 64.0, 22.0, 86.0)
+            chev1_dist = min(d1a, d1b)
             
-            chevron_dist = min(dist1, dist2)
-            if chevron_dist < line_w + 1.2:
-                cov = max(0.0, min(1.0, (line_w + 0.8 - chevron_dist) / 1.6))
-                r = int(r * (1 - cov) + 96 * cov)
-                g = int(g * (1 - cov) + 165 * cov)
-                b = int(b * (1 - cov) + 250 * cov)
+            if chev1_dist < line_w + 1.2:
+                cov = max(0.0, min(1.0, (line_w + 0.8 - chev1_dist) / 1.6))
+                # Glowing Light Violet (#c084fc)
+                r = int(r * (1 - cov) + 192 * cov)
+                g = int(g * (1 - cov) + 132 * cov)
+                b = int(b * (1 - cov) + 252 * cov)
 
-            # Cursor line '_' at (62, 86) to (94, 86), width 4.0
-            if 60 <= nx <= 96 and abs(ny - 86) < line_w + 0.8:
-                cov = max(0.0, min(1.0, (line_w + 0.8 - abs(ny - 86)) / 1.6))
-                r = int(r * (1 - cov) + 74 * cov)
-                g = int(g * (1 - cov) + 158 * cov)
-                b = int(b * (1 - cov) + 255 * cov)
+            # --- 2. CHEVRON 2 (Turn 2 / Right Chevron in Fuchsia) ---
+            # Segment 2a: (46, 42) -> (68, 64)
+            # Segment 2b: (68, 64) -> (46, 86)
+            d2a = dist_to_segment(nx, ny, 46.0, 42.0, 68.0, 64.0)
+            d2b = dist_to_segment(nx, ny, 68.0, 64.0, 46.0, 86.0)
+            chev2_dist = min(d2a, d2b)
+            
+            if chev2_dist < line_w + 1.2:
+                cov = max(0.0, min(1.0, (line_w + 0.8 - chev2_dist) / 1.6))
+                # Glowing Neon Fuchsia (#f472b6 -> #ec4899)
+                r = int(r * (1 - cov) + 244 * cov)
+                g = int(g * (1 - cov) + 114 * cov)
+                b = int(b * (1 - cov) + 182 * cov)
 
-            # AI Sparkle star centered at (82, 50)
-            # 4-point star: |nx - 82|^0.5 + |ny - 50|^0.5 < radius^0.5
-            sx = abs(nx - 82)
-            sy = abs(ny - 48)
+            # --- 3. AI Sparkle Star centered at (90, 44) ---
+            sx = abs(nx - 90)
+            sy = abs(ny - 44)
             sparkle_metric = math.sqrt(sx) + math.sqrt(sy)
-            sparkle_r = math.sqrt(16.0) # size
+            sparkle_r = math.sqrt(15.0)
             if sparkle_metric < sparkle_r:
-                cov = max(0.0, min(1.0, (sparkle_r - sparkle_metric) * 1.5))
-                r = int(r * (1 - cov) + 180 * cov)
-                g = int(g * (1 - cov) + 220 * cov)
+                cov = max(0.0, min(1.0, (sparkle_r - sparkle_metric) * 1.6))
+                # White-pink glow
+                r = int(r * (1 - cov) + 255 * cov)
+                g = int(g * (1 - cov) + 240 * cov)
                 b = int(b * (1 - cov) + 255 * cov)
+
+            # --- 4. "v2" / Workflow Mark in Bottom Right ---
+            # At small toolbar sizes (16x16), draw a bold cursor underline: (72, 86) -> (100, 86)
+            # At medium/large sizes (>= 32), render a crisp '2' mark!
+            if size <= 16:
+                # Underline cursor
+                if 72 <= nx <= 100 and abs(ny - 86) < line_w + 0.8:
+                    cov = max(0.0, min(1.0, (line_w + 0.8 - abs(ny - 86)) / 1.6))
+                    r = int(r * (1 - cov) + 244 * cov)
+                    g = int(g * (1 - cov) + 114 * cov)
+                    b = int(b * (1 - cov) + 182 * cov)
+            else:
+                # Draw digit '2'
+                d_2_top = dist_to_segment(nx, ny, 77.0, 70.0, 95.0, 70.0)
+                d_2_right = dist_to_segment(nx, ny, 95.0, 70.0, 95.0, 77.0)
+                d_2_diag = dist_to_segment(nx, ny, 95.0, 77.0, 77.0, 88.0)
+                d_2_bot = dist_to_segment(nx, ny, 76.0, 88.0, 98.0, 88.0)
+                d_2 = min(d_2_top, d_2_right, d_2_diag, d_2_bot)
+                
+                w_2 = 3.6
+                if d_2 < w_2 + 1.2:
+                    cov = max(0.0, min(1.0, (w_2 + 0.8 - d_2) / 1.6))
+                    # Vibrant neon pink-fuchsia
+                    r = int(r * (1 - cov) + 244 * cov)
+                    g = int(g * (1 - cov) + 114 * cov)
+                    b = int(b * (1 - cov) + 182 * cov)
 
             final_a = int(alpha * 255)
             buf[idx:idx+4] = [r, g, b, final_a]

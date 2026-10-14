@@ -60,11 +60,35 @@ body {
     flex-shrink: 0;
 }
 
+.logo.v2-logo {
+    color: #f472b6;
+    border-color: #ec4899;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(236, 72, 153, 0.15));
+    box-shadow: 0 0 10px rgba(236, 72, 153, 0.25);
+}
+
+.version-badge.v2-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.22), rgba(236, 72, 153, 0.22));
+    border: 1px solid rgba(236, 72, 153, 0.45);
+    color: #f472b6;
+    margin-left: 8px;
+    vertical-align: middle;
+    text-transform: uppercase;
+}
+
 h2 {
     margin: 0;
     font-size: 14px;
     font-weight: 600;
     letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
 }
 
 /* --- Search & Category Filters (2026 Command Palette) -------------------- */
