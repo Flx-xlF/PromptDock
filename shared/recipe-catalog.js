@@ -240,7 +240,7 @@ Zeige mögliche Optionen auf (z.B. Freigabe ohne Auflagen, Freigabe mit Anpassun
             title: 'Strategieabgleich',
             text: `TASK: STRATEGIEABGLEICH
 Analysiere die strategische Relevanz des Vorhabens:
-- Konkreter Beitrag zur Gesamtstrategie (unter Einbezug der zuständigen Division),
+- Konkreter Beitrag zur Gesamtstrategie (unter Einbezug der zuständigen Organisationseinheiten / Fachbereiche),
 - Relevanz für die übergeordnete Positionierung,
 - Chancen und Zielkonflikte für Reputation und Stakeholder.`
         },
