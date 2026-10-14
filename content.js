@@ -1099,7 +1099,7 @@ function getOrCreateShadowRoot() {
 
 let activeManualStopListener = null;
 
-function cancelWorkflow() {
+function cancelWorkflow(triggerEl) {
     if (activeManualStopListener) {
         document.removeEventListener('click', activeManualStopListener, true);
         activeManualStopListener = null;
@@ -1120,19 +1120,36 @@ function cancelWorkflow() {
     RecipeState.activeRecipe = null;
     RecipeState.isMinimized = false;
 
+    // Immediately hide and disable interactions
     const shadowRoot = getOrCreateShadowRoot();
-    const railContainer = shadowRoot.querySelector('#promptdock-rail-container');
+    const railContainer = shadowRoot ? shadowRoot.querySelector('#promptdock-rail-container') : null;
     if (railContainer) {
-        railContainer.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
-        railContainer.style.opacity = '0';
-        railContainer.style.transform = 'translateY(8px)';
-        setTimeout(() => {
-            railContainer.style.display = 'none';
-            railContainer.replaceChildren();
-            railContainer.style.opacity = '1';
-            railContainer.style.transform = 'none';
-        }, 200);
+        railContainer.style.pointerEvents = 'none';
+        railContainer.style.display = 'none';
+        railContainer.replaceChildren();
+        railContainer.style.opacity = '1';
+        railContainer.style.pointerEvents = 'auto';
     }
+
+    if (triggerEl) {
+        const directRail = triggerEl.closest ? triggerEl.closest('#promptdock-rail-container') : null;
+        if (directRail) {
+            directRail.style.pointerEvents = 'none';
+            directRail.style.display = 'none';
+            directRail.replaceChildren();
+        }
+    }
+}
+
+/** Helper to reliably attach mouse and click actions without interference from drag handlers */
+function bindAction(btn, fn) {
+    btn.addEventListener('mousedown', (e) => e.stopPropagation());
+    btn.addEventListener('pointerdown', (e) => e.stopPropagation());
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        fn(btn);
+    });
 }
 
 /**
@@ -1156,26 +1173,30 @@ function observeTurnCompletion(onComplete) {
     let lastObservedText = '';
     let stableTextCount = 0;
 
-    // Helper: Is any stop button actually visible and active on screen?
+    // Helper: Is any dedicated LLM generation stop button actually visible and active on screen?
     function isStopButtonActive() {
         const stopSelectors = [
             '.fai-StopButton',
-            'button[aria-label*="Stop" i]',
-            'button[aria-label*="Stopp" i]',
-            'button[aria-label*="Beenden" i]',
-            'button[aria-label*="anhalten" i]',
-            'button[aria-label*="abbrechen" i]',
-            'button[title*="Stop" i]',
-            'button[title*="Stopp" i]',
-            'button[data-testid="stop-button"]',
-            'button[aria-label="Stop Response"]',
-            'button[aria-label="Stop streaming"]',
-            'button[aria-label="Stop generating"]',
-            '.stop-button'
+            '[data-testid="stop-button"]',
+            '.stop-button',
+            'button[aria-label*="stop generating" i]',
+            'button[aria-label*="stop response" i]',
+            'button[aria-label*="stop streaming" i]',
+            'button[aria-label*="generierung anhalten" i]',
+            'button[aria-label*="generierung stoppen" i]',
+            'button[aria-label*="generierung beenden" i]',
+            'button[aria-label*="antwort anhalten" i]',
+            'button[aria-label*="antwort stoppen" i]',
+            'button[title*="generierung anhalten" i]',
+            'button[title*="generierung stoppen" i]',
+            'button[title*="antwort stoppen" i]',
+            'button[title*="antwort anhalten" i]'
         ];
         const els = document.querySelectorAll(stopSelectors.join(', '));
         for (const el of els) {
-            if (el.disabled || el.getAttribute('aria-hidden') === 'true') continue;
+            // Ignore PromptDock's own UI elements
+            if (el.closest('#promptdock-rail-container') || el.closest('[id*="uap-extension-root"]')) continue;
+            if (el.disabled || el.getAttribute('aria-hidden') === 'true' || el.getAttribute('aria-disabled') === 'true') continue;
             const style = window.getComputedStyle(el);
             if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') continue;
             if (el.offsetWidth > 0 || el.offsetHeight > 0 || el.getClientRects().length > 0) {
@@ -1185,24 +1206,23 @@ function observeTurnCompletion(onComplete) {
         return false;
     }
 
-    // Helper: Is the chat Send button visible and enabled?
-    function isSendButtonReady() {
-        const sendSelectors = [
-            'button.fai-SendButton',
-            'button.fai-ChatInput__send',
-            'button[data-testid="send-button"]',
-            'button[aria-label="Send message"]',
-            'button[aria-label="Send prompt"]',
-            'button[aria-label="Submit message"]',
-            'button[aria-label*="Senden" i]',
-            'button[aria-label*="Send" i]'
+    // Helper: Check for AI completion cues (e.g. Copilot follow-up suggestions)
+    function hasCompletionIndicators() {
+        const suggestionSelectors = [
+            '.fai-SuggestedPrompts',
+            '.fai-SuggestedQuestions',
+            '.fai-SuggestionItem',
+            '.fai-SuggestionButton',
+            'button[data-testid*="suggestion" i]',
+            'button[aria-label*="Vorschlag" i]',
+            'button[title*="Vorschlag" i]',
+            '.fai-FollowUpQuestions'
         ];
-        const els = document.querySelectorAll(sendSelectors.join(', '));
+        const els = document.querySelectorAll(suggestionSelectors.join(', '));
         for (const el of els) {
-            if (el.disabled || el.getAttribute('aria-disabled') === 'true') continue;
-            const style = window.getComputedStyle(el);
-            if (style.display === 'none' || style.visibility === 'hidden') continue;
-            if (el.offsetWidth > 0 || el.offsetHeight > 0) return true;
+            if (el.offsetWidth > 0 && el.offsetHeight > 0) {
+                return true;
+            }
         }
         return false;
     }
@@ -1232,11 +1252,14 @@ function observeTurnCompletion(onComplete) {
     const onManualStopClicked = (e) => {
         const btn = e.target.closest('button');
         if (!btn) return;
+        if (btn.closest('#promptdock-rail-container') || btn.closest('[id*="uap-extension-root"]')) return;
+
         const aria = (btn.getAttribute('aria-label') || '').toLowerCase();
         const title = (btn.getAttribute('title') || '').toLowerCase();
         const isStopBtn = btn.matches('.fai-StopButton, [data-testid="stop-button"], .stop-button') ||
-            aria.includes('stop') || aria.includes('stopp') || aria.includes('beenden') || aria.includes('anhalten') || aria.includes('abbrechen') ||
-            title.includes('stop') || title.includes('stopp') || title.includes('beenden') || title.includes('anhalten');
+            aria.includes('generierung anhalten') || aria.includes('generierung stoppen') || aria.includes('generierung beenden') ||
+            aria.includes('stop generating') || aria.includes('stop response') || aria.includes('stop streaming') ||
+            title.includes('generierung anhalten') || title.includes('generierung stoppen');
 
         if (isStopBtn) {
             console.log('[PromptDock] Detected manual chat stop by user.');
@@ -1245,7 +1268,7 @@ function observeTurnCompletion(onComplete) {
                 if (RecipeState.status === 'running_turn') {
                     onComplete();
                 }
-            }, 500);
+            }, 300);
         }
     };
     document.addEventListener('click', onManualStopClicked, true);
@@ -1258,8 +1281,8 @@ function observeTurnCompletion(onComplete) {
         }
 
         const stopActive = isStopButtonActive();
-        const sendReady = isSendButtonReady();
         const currentText = getLatestAssistantText();
+        const hasSuggestions = hasCompletionIndicators();
 
         if (stopActive) {
             isStreaming = true;
@@ -1270,17 +1293,26 @@ function observeTurnCompletion(onComplete) {
             // Definite transition: stop button disappeared!
             isStreaming = false;
             cleanup();
-            setTimeout(onComplete, 500);
+            setTimeout(onComplete, 350);
+            return;
+        }
+
+        // Completion indicator: Copilot follow-up suggestions appeared!
+        if (hasSuggestions && (streamSawStart || (Date.now() - turnStartTime > 2000))) {
+            cleanup();
+            setTimeout(onComplete, 250);
             return;
         }
 
         // Secondary detection: text stabilization
         if (currentText && currentText === lastObservedText) {
             stableTextCount++;
-            // If text has been stable for 4 cycles (~1.2s), stop button is NOT active, and send button is ready or 3s have passed since start
-            if (stableTextCount >= 4 && !stopActive && (sendReady || (Date.now() - turnStartTime > 3000))) {
+            // If text has been stable for 4 cycles (~1.2s) without stop button active,
+            // OR stable for 6 cycles (~1.8s) regardless
+            if ((stableTextCount >= 4 && !stopActive && (streamSawStart || (Date.now() - turnStartTime > 2500))) ||
+                (stableTextCount >= 6 && (streamSawStart || (Date.now() - turnStartTime > 3500)))) {
                 cleanup();
-                setTimeout(onComplete, 400);
+                setTimeout(onComplete, 300);
                 return;
             }
         } else {
@@ -1295,21 +1327,21 @@ function observeTurnCompletion(onComplete) {
     // Check every 300ms
     RecipeState.streamCheckInterval = setInterval(checkGenerationState, 300);
 
-    // Timeout safety fallback 1: if no streaming started within 6s
+    // Timeout safety fallback 1: if no streaming started within 5s
     setTimeout(() => {
         if (!streamSawStart && RecipeState.status === 'running_turn') {
             cleanup();
             onComplete();
         }
-    }, 6000);
+    }, 5000);
 
-    // Timeout safety fallback 2: absolute max timeout 45s (not 180s!)
+    // Timeout safety fallback 2: absolute max timeout 30s
     setTimeout(() => {
         if (RecipeState.streamCheckInterval && RecipeState.status === 'running_turn') {
             cleanup();
             onComplete();
         }
-    }, 45000);
+    }, 30000);
 }
 
 function handleTurnCompletion() {
@@ -1546,12 +1578,7 @@ function renderRailUI() {
             const sendBtn = document.createElement('button');
             sendBtn.className = 'pd-primary-btn pd-min-send';
             sendBtn.innerHTML = `Weiter ➔ <span class="pd-shortcut">⌥⇧→</span>`;
-            sendBtn.addEventListener('mousedown', (e) => e.stopPropagation());
-            sendBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                executeNextTurn('');
-            });
+            bindAction(sendBtn, () => executeNextTurn(''));
             rightActions.appendChild(sendBtn);
         } else if (RecipeState.status === 'running_turn') {
             const isLastTurn = currentIdx >= totalTurns - 1;
@@ -1559,16 +1586,13 @@ function renderRailUI() {
             unlockBtn.className = 'pd-skip-btn pd-min-send';
             unlockBtn.textContent = isLastTurn ? 'Fertig ✓' : 'Fertig ➔';
             unlockBtn.title = isLastTurn ? 'Workflow beenden und Fenster schliessen' : 'Zum nächsten Schritt wechseln';
-            unlockBtn.addEventListener('mousedown', (e) => e.stopPropagation());
-            unlockBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                e.preventDefault();
+            bindAction(unlockBtn, (btn) => {
                 if (RecipeState.streamCheckInterval) {
                     clearInterval(RecipeState.streamCheckInterval);
                     RecipeState.streamCheckInterval = null;
                 }
                 if (isLastTurn) {
-                    cancelWorkflow();
+                    cancelWorkflow(btn);
                 } else {
                     handleTurnCompletion();
                 }
@@ -1580,10 +1604,7 @@ function renderRailUI() {
         expandBtn.className = 'pd-ctrl-btn';
         expandBtn.textContent = '↗';
         expandBtn.title = 'Erweitern (Steuerung öffnen)';
-        expandBtn.addEventListener('mousedown', (e) => e.stopPropagation());
-        expandBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
+        bindAction(expandBtn, () => {
             RecipeState.isMinimized = false;
             renderRailUI();
         });
@@ -1593,12 +1614,7 @@ function renderRailUI() {
         closeBtn.className = 'pd-ctrl-btn';
         closeBtn.textContent = '×';
         closeBtn.title = 'Workflow beenden (×)';
-        closeBtn.addEventListener('mousedown', (e) => e.stopPropagation());
-        closeBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            cancelWorkflow();
-        });
+        bindAction(closeBtn, (btn) => cancelWorkflow(btn));
         rightActions.appendChild(closeBtn);
 
         minDock.appendChild(rightActions);
@@ -1675,10 +1691,7 @@ function renderRailUI() {
     minBtn.className = 'pd-ctrl-btn';
     minBtn.textContent = '—';
     minBtn.title = 'Minimieren (Chat lesen)';
-    minBtn.addEventListener('mousedown', (e) => e.stopPropagation());
-    minBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
+    bindAction(minBtn, () => {
         RecipeState.isMinimized = true;
         renderRailUI();
     });
@@ -1688,12 +1701,7 @@ function renderRailUI() {
     closeBtn.className = 'pd-ctrl-btn';
     closeBtn.textContent = '×';
     closeBtn.title = 'Workflow beenden (×)';
-    closeBtn.addEventListener('mousedown', (e) => e.stopPropagation());
-    closeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        cancelWorkflow();
-    });
+    bindAction(closeBtn, (btn) => cancelWorkflow(btn));
     controls.appendChild(closeBtn);
 
     header.appendChild(controls);
@@ -1728,9 +1736,7 @@ function renderRailUI() {
             const chip = document.createElement('button');
             chip.className = 'pd-mod-tag';
             chip.textContent = c.label;
-            chip.addEventListener('mousedown', (e) => e.stopPropagation());
-            chip.addEventListener('click', (e) => {
-                e.stopPropagation();
+            bindAction(chip, () => {
                 noteInput.value = c.note;
                 noteInput.focus();
             });
@@ -1753,24 +1759,14 @@ function renderRailUI() {
         const nextBtn = document.createElement('button');
         nextBtn.className = 'pd-primary-btn';
         nextBtn.innerHTML = `Weiter ➔ <span class="pd-shortcut">⌥⇧→</span>`;
-        nextBtn.addEventListener('mousedown', (e) => e.stopPropagation());
-        nextBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            executeNextTurn(noteInput.value);
-        });
+        bindAction(nextBtn, () => executeNextTurn(noteInput.value));
         actionRow.appendChild(nextBtn);
 
         const cancelBtn = document.createElement('button');
         cancelBtn.className = 'pd-cancel-btn';
         cancelBtn.textContent = 'Abbrechen';
         cancelBtn.title = 'Workflow komplett beenden';
-        cancelBtn.addEventListener('mousedown', (e) => e.stopPropagation());
-        cancelBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            cancelWorkflow();
-        });
+        bindAction(cancelBtn, (btn) => cancelWorkflow(btn));
         actionRow.appendChild(cancelBtn);
 
         body.appendChild(actionRow);
@@ -1859,21 +1855,18 @@ function renderRailUI() {
         finishBtn.className = 'pd-primary-btn pd-finish-btn';
         finishBtn.textContent = 'Schliessen ✓';
         finishBtn.title = 'Workflow beenden und Fenster schliessen';
-        finishBtn.addEventListener('mousedown', (e) => e.stopPropagation());
-        finishBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            cancelWorkflow();
-        });
+        bindAction(finishBtn, (btn) => cancelWorkflow(btn));
         actionsRow.appendChild(finishBtn);
 
         body.appendChild(actionsRow);
 
-        // Auto-close countdown indicator
+        // Auto-close countdown indicator (clickable for instant dismissal)
         const autoCloseRow = document.createElement('div');
         autoCloseRow.className = 'pd-autoclose-indicator';
-        let countdownSec = (recipe.forks && recipe.forks.length > 0) ? 6 : 3;
-        autoCloseRow.textContent = `Schliesst automatisch in ${countdownSec}s...`;
+        let countdownSec = (recipe.forks && recipe.forks.length > 0) ? 5 : 2;
+        autoCloseRow.textContent = `Schliesst automatisch in ${countdownSec}s (oder hier klicken)...`;
+        autoCloseRow.title = 'Klicken zum sofortigen Schliessen';
+        bindAction(autoCloseRow, (el) => cancelWorkflow(el));
         body.appendChild(autoCloseRow);
 
         // Clear any previous auto-close timer
@@ -1883,18 +1876,18 @@ function renderRailUI() {
         let isHovered = false;
         hud.addEventListener('mouseenter', () => {
             isHovered = true;
-            autoCloseRow.textContent = 'Auto-Schliessen pausiert';
+            autoCloseRow.textContent = 'Auto-Schliessen pausiert (Klicken zum Schliessen)';
         });
         hud.addEventListener('mouseleave', () => {
             isHovered = false;
-            autoCloseRow.textContent = `Schliesst automatisch in ${countdownSec}s...`;
+            autoCloseRow.textContent = `Schliesst automatisch in ${countdownSec}s (oder hier klicken)...`;
         });
 
         RecipeState.autoCloseInterval = setInterval(() => {
             if (isHovered) return;
             countdownSec--;
             if (countdownSec > 0) {
-                autoCloseRow.textContent = `Schliesst automatisch in ${countdownSec}s...`;
+                autoCloseRow.textContent = `Schliesst automatisch in ${countdownSec}s (oder hier klicken)...`;
             } else {
                 clearInterval(RecipeState.autoCloseInterval);
                 RecipeState.autoCloseInterval = null;
@@ -1924,22 +1917,19 @@ function renderRailUI() {
         unlockBtn.title = isLastTurn 
             ? 'Workflow beenden und Fenster schliessen' 
             : 'Zum nächsten Schritt wechseln';
-        unlockBtn.addEventListener('mousedown', (e) => e.stopPropagation());
-        unlockBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
+        bindAction(unlockBtn, (btn) => {
             if (RecipeState.streamCheckInterval) {
                 clearInterval(RecipeState.streamCheckInterval);
                 RecipeState.streamCheckInterval = null;
             }
             if (isLastTurn) {
                 // Instantly complete and dismiss the modal!
-                unlockBtn.innerHTML = '<span>Fertig ✓</span>';
-                unlockBtn.style.borderColor = '#10b981';
-                unlockBtn.style.color = '#10b981';
+                btn.innerHTML = '<span>Fertig ✓</span>';
+                btn.style.borderColor = '#10b981';
+                btn.style.color = '#10b981';
                 setTimeout(() => {
-                    cancelWorkflow();
-                }, 350);
+                    cancelWorkflow(btn);
+                }, 120);
             } else {
                 handleTurnCompletion();
             }
@@ -1950,12 +1940,7 @@ function renderRailUI() {
         cancelBtn.className = 'pd-cancel-btn';
         cancelBtn.textContent = 'Abbrechen';
         cancelBtn.title = 'Workflow sofort komplett abbrechen';
-        cancelBtn.addEventListener('mousedown', (e) => e.stopPropagation());
-        cancelBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            cancelWorkflow();
-        });
+        bindAction(cancelBtn, (btn) => cancelWorkflow(btn));
         actions.appendChild(cancelBtn);
 
         body.appendChild(actions);
@@ -2008,18 +1993,28 @@ window.startPromptDockRecipe = function(recipeIdOrName, options) {
     return true;
 };
 
-// Global Shortcut Listener: Alt+Shift+ArrowRight (⌥⇧→) to advance turn
+// Global Shortcut Listeners: Alt+Shift+ArrowRight (⌥⇧→) to advance turn, Escape to dismiss
 document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && RecipeState.status !== 'idle') {
+        const shadowRoot = getOrCreateShadowRoot();
+        const rail = shadowRoot ? shadowRoot.querySelector('#promptdock-rail-container') : null;
+        if (rail && rail.style.display !== 'none') {
+            e.preventDefault();
+            e.stopPropagation();
+            cancelWorkflow();
+            return;
+        }
+    }
     if (e.altKey && e.shiftKey && (e.key === 'ArrowRight' || e.code === 'ArrowRight')) {
         if (RecipeState.status === 'checkpoint') {
             e.preventDefault();
             const shadowRoot = getOrCreateShadowRoot();
-            const noteInput = shadowRoot.querySelector('.pd-note-input');
+            const noteInput = shadowRoot ? shadowRoot.querySelector('.pd-note-input') : null;
             const noteVal = noteInput ? noteInput.value : '';
             executeNextTurn(noteVal);
         }
     }
-});
+}, true);
 
 // Runtime Message Listener
 const extRuntime = typeof browser !== 'undefined' ? browser.runtime : (typeof chrome !== 'undefined' ? chrome.runtime : null);
