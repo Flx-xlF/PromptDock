@@ -30,15 +30,20 @@
         'I-MEDIA': {
             id: 'I-MEDIA',
             title: 'Inhalts-Analyse (Medien/Fragen)',
-            text: `TASK 1: INHALTS-ANALYSE
+            text: `TASK 1: INHALTS-ANALYSE & FRAGENKATALOG
 Analysiere den Inhalt der Medienanfrage bzw. des Fragenkatalogs im Mailtext sowie allfälliger verlinkter oder angehängter Dateien.
 Isoliere:
-- die eigentliche Kernfrage,
-- die relevanten Teilfragen,
-- die enthaltenen Thesen,
-- das übergeordnete Thema,
-- den erkennbaren journalistischen Fokus und die Stossrichtung,
-- allfällige Fristen oder Deadlines.`
+- die eigentliche Kernfrage und das übergeordnete Thema,
+- alle expliziten und impliziten Teilfragen (vollständig nummeriert erfassen),
+- die enthaltenen Thesen, Unterstellungen oder Vorannahmen,
+- den erkennbaren journalistischen Fokus, die vermutete Storyline und Stossrichtung,
+- allfällige Fristen oder Deadlines.
+
+FRAGENKATALOG-TYPOLOGIE:
+Beurteile die Struktur und Absicht der gestellten Fragen:
+- Liegen voneinander unabhängige, rein sachlich-faktische Einzelfragen vor?
+- Oder handelt es sich um kaskadierende, suggestive oder manipulative Fragen, die eine bestimmte Problem- oder Schuldthese stützen sollen?
+- Welche Fragen bauen aufeinander auf oder zerlegen einen zusammenhängenden Sachverhalt künstlich in Einzelschritte?`
         },
         'I-MAIL': {
             id: 'I-MAIL',
@@ -200,11 +205,30 @@ Qualitätsmassstab:
             title: 'Strategie-Abwägung & Haltung',
             compile: (params) => {
                 const framings = params?.framings || 'proaktiv, defensiv, rein sachlich, einordnend, kontextualisierend, reputationsorientiert';
+                const includeFormatAnalysis = params?.includeFormatAnalysis !== false;
+                const formatBlock = includeFormatAnalysis ? `
+
+TASK: FRAGENKATALOG- & FORMAT-ABWÄGUNG (BEANTWORTUNGS-ARCHITEKTUR)
+Falls mehrere Fragen oder ein Fragenkatalog vorliegen: Wäge systematisch ab, welche Beantwortungsform die grösste Themenhoheit, mediale Belastbarkeit und Glaubwürdigkeit sichert:
+1. Option A: Punkt-für-Punkt-Beantwortung (1:1 Frage für Frage)
+   - Eignung: Bei rein sachlichen, voneinander unabhängigen Informationsfragen (Zahlen, Termine, Prozessabläufe).
+   - Risiko: Übernahme des gegnerischen/journalistischen Framings; Gefahr, sich in suggestiven Teilfragen zu verfangen oder Fangfragen zu legitimieren.
+2. Option B: Summarische Antwort (Zusammenhängendes Statement)
+   - Eignung: Wenn Einzelfragen auf falschen Vorannahmen beruhen, rhetorisch/suggestiv sind oder das Thema als Gesamtnarrativ kontextualisiert werden muss (Themenhoheit).
+   - Risiko: Vorwurf des Ausweichens («Medienstelle beantwortet konkrete Fragen nicht»).
+3. Option C: Hybrider Ansatz / Thematische Clusterung
+   - Eignung: Wenn die Fragen teils strategische Einordnung und teils konkrete, berechtigte Fakten/Zahlen erfordern.
+   - Mechanik: Zusammenfassendes Haltungs-Statement zur Einordnung + gezielte Beantwortung sachlicher Kernpunkte oder Gruppierung in 2–3 Themenblöcke.
+
+ENTSCHEIDUNG & BEGRÜNDUNG:
+- Lege fest: Welches Format (Punkt-für-Punkt, Summarisch oder Hybrid/Geclustert) wird für diese Anfrage gewählt?
+- Begründe kurz die strategische Wahl und wie das Risiko (z.B. Ausweichvorwurf vs. Framing-Falle) neutralisiert wird.` : '';
+
                 return `TASK: STRATEGIE-ABWÄGUNG
 Wäge verschiedene Antwortstrategien und Framings gegeneinander ab:
 - Mögliche Framings: ${framings}.
 - Beurteile Chancen und Risiken jeder Option aus medialer, politischer und reputationsbezogener Sicht.
-- Frage dich bei jeder Strategie: Was würde ein kritischer Journalist oder politischer Gegner dagegen vorbringen?
+- Frage dich bei jeder Strategie: Was würde ein kritischer Journalist oder politischer Gegner dagegen vorbringen?${formatBlock}
 
 TASK: EMPFOHLENE HALTUNG
 Lege dich auf die belastbarste Strategie fest und formuliere die empfohlene Grundhaltung in genau einem prägnanten Satz.
@@ -275,12 +299,18 @@ Vergleiche den Stand zu Beginn des Zeitfensters mit dem aktuellen Status:
             id: 'O-MEDIA',
             title: 'Medienantwort',
             text: `TASK: MEDIENANTWORT
-Formuliere auf Basis der festgelegten Strategie und Storyline den finalen Entwurf der Medienantwort.
-Die Antwort soll:
-- faktisch belastbar,
-- verständlich und medientauglich,
-- konsistent mit der definierten Haltung
-sein. Keine Floskeln.`
+Formuliere auf Basis der festgelegten Strategie, Storyline und gewählten Beantwortungs-Architektur den finalen Entwurf der Medienantwort.
+
+FORMAT-VORGABE:
+- Setze die in der Strategie-Phase gewählte Beantwortungsform konsequent um:
+  * Bei summarischer Antwort: Ein zusammenhängendes, druckreifes Statement mit klaren Kernbotschaften, das den Gesamtsachverhalt souverän einordnet.
+  * Bei hybridem/geclustertem Ansatz: Ein einleitendes Kernstatement gefolgt von thematisch gebündelten Sachantworten zu den berechtigten Informationsfragen.
+  * Bei Punkt-für-Punkt: Präzise, nummerierte Antworten auf jede Einzelfrage ohne Rechtfertigungston.
+
+QUALITÄTSKRITERIEN & EVASION-CHECK:
+- Faktisch belastbar, verständlich, medientauglich, frei von PR-Floskeln.
+- Konsistent mit der definierten Haltung.
+- Abdeckungs-Check: Wurden alle berechtigten Informationsbedürfnisse der Medienanfrage substanziell adressiert, sodass kein Vorwurf des Ausweichens («Fragen blieben unbeantwortet») erhoben werden kann?`
         },
         'O-REPLY': {
             id: 'O-REPLY',
