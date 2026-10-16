@@ -35,16 +35,24 @@
 
     <div class="add-section">
         <button id="toggle-add-btn" class="secondary-btn">+ Neuer Prompt</button>
-        <div id="add-form" class="hidden">
+    </div>
+    
+    <!-- Prompt Editor Slide-Up Sheet Modal -->
+    <div id="prompt-modal" class="prompt-sheet-overlay hidden">
+        <div id="add-form" class="prompt-editor-sheet">
+            <div class="sheet-handle-pill"></div>
+            <div class="sheet-title-row">
+                <h3 id="editor-sheet-title" class="sheet-title">Prompt bearbeiten</h3>
+            </div>
             <input type="text" id="prompt-name" placeholder="Name (z.B. Medienanfrage)">
             <textarea id="prompt-content" placeholder="Prompt Text..."></textarea>
             <div id="char-counter" class="byte-counter">0 / 8192 Bytes verfügbar</div>
-            <label class="checkbox-label" style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: var(--text-secondary); font-size: 13px; cursor: pointer;">
+            <label class="auto-send-row checkbox-label">
                 <input type="checkbox" id="prompt-auto-send">
-                Automatisch absenden
+                <span>Automatisch absenden</span>
             </label>
             <div class="actions">
-                <button id="cancel-add-btn" class="text-btn">Abbrechen</button>
+                <button id="cancel-add-btn" class="editor-cancel-btn text-btn">Abbrechen</button>
                 <button id="save-btn" class="primary-btn">Speichern</button>
             </div>
         </div>

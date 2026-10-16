@@ -429,17 +429,84 @@ h2 {
     to { transform: rotate(360deg); }
 }
 
-/* --- Add Form ------------------------------------------------------------ */
+/* --- Add Section & Prompt Editor Sheet ----------------------------------- */
 
 .add-section {
-    margin-top: 16px;
+    margin-top: 14px;
 }
 
 .hidden {
     display: none !important;
 }
 
-input, textarea {
+/* Slide-Up Sheet Modal Presentation */
+#prompt-modal,
+.prompt-sheet-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(14, 14, 18, 0.82);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    transition: opacity 0.22s ease;
+}
+
+#prompt-modal.hidden,
+.prompt-sheet-overlay.hidden {
+    display: none !important;
+}
+
+.prompt-editor-sheet {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    border-radius: 16px 16px 0 0;
+    padding: 14px 18px 18px;
+    box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+    width: 100%;
+    animation: sheetSlideUp 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sheet-handle-pill {
+    width: 36px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 0 auto 10px;
+}
+
+.sheet-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.sheet-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+@keyframes sheetSlideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0.8;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Explicit input scoping: exclude checkboxes & radios */
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
     width: 100%;
     box-sizing: border-box;
     background-color: var(--bg-surface);
@@ -453,16 +520,80 @@ input, textarea {
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-input:focus, textarea:focus {
+input:not([type="checkbox"]):not([type="radio"]):focus,
+textarea:focus,
+select:focus {
     outline: none;
     border-color: var(--border-focus);
-    box-shadow: 0 0 0 2px var(--accent-subtle);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
 }
 
 textarea {
     resize: vertical;
-    min-height: 80px;
+    min-height: 84px;
     line-height: 1.5;
+    border-radius: var(--radius-md);
+}
+
+/* Apple HIG Control Row & Toggle Switch */
+.auto-send-row,
+.checkbox-label,
+label:has(input[type="checkbox"]) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    width: auto;
+    cursor: pointer;
+    user-select: none;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    margin-top: 4px;
+    margin-bottom: 14px;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 32px !important;
+    height: 18px !important;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 9999px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+    margin: 0;
+}
+
+input[type="checkbox"]::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+input[type="checkbox"]:checked::after {
+    transform: translateX(14px);
+}
+
+input[type="checkbox"]:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--accent-subtle);
 }
 
 .actions {
@@ -475,18 +606,39 @@ textarea {
     background-color: var(--accent);
     color: #ffffff;
     border: none;
-    border-radius: var(--radius-sm);
-    padding: 8px 20px;
+    border-radius: 8px;
+    padding: 7px 16px;
     cursor: pointer;
     font-family: inherit;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
     transition: background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .primary-btn:hover {
     background-color: var(--accent-hover);
     box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+}
+
+.editor-cancel-btn,
+.actions .text-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 12px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+.editor-cancel-btn:hover,
+.actions .text-btn:hover {
+    background: rgba(255, 255, 255, 0.09);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.15);
 }
 
 .secondary-btn {

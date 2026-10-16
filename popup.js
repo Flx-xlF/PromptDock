@@ -222,21 +222,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     nameInput.addEventListener('input', updateCharCounter);
 
     document.getElementById('toggle-add-btn').addEventListener('click', () => {
-        document.getElementById('add-form').classList.remove('hidden');
-        document.getElementById('toggle-add-btn').classList.add('hidden');
+        document.getElementById('prompt-modal')?.classList.remove('hidden');
+        document.getElementById('add-form')?.classList.remove('hidden');
+        document.getElementById('toggle-add-btn')?.classList.add('hidden');
+        const sheetTitle = document.getElementById('editor-sheet-title');
+        if (sheetTitle) sheetTitle.textContent = 'Neuer Prompt';
         document.getElementById('save-btn').innerText = 'Speichern';
         updateCharCounter();
     });
     
     document.getElementById('cancel-add-btn').addEventListener('click', () => {
-        document.getElementById('add-form').classList.add('hidden');
-        document.getElementById('toggle-add-btn').classList.remove('hidden');
+        document.getElementById('prompt-modal')?.classList.add('hidden');
+        document.getElementById('add-form')?.classList.add('hidden');
+        document.getElementById('toggle-add-btn')?.classList.remove('hidden');
         document.getElementById('prompt-name').value = '';
         document.getElementById('prompt-content').value = '';
         document.getElementById('prompt-auto-send').checked = false;
         editingIndex = -1;
         document.getElementById('save-btn').innerText = 'Speichern';
         updateCharCounter();
+    });
+
+    document.getElementById('prompt-modal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'prompt-modal') {
+            document.getElementById('cancel-add-btn').click();
+        }
     });
     
     document.getElementById('save-btn').addEventListener('click', async () => {
@@ -705,9 +715,11 @@ async function renderPrompts() {
             editingIndex = originalIdx;
             document.getElementById('prompt-name').value = prompt.name;
             document.getElementById('prompt-content').value = prompt.content;
-            document.getElementById('prompt-auto-send').checked = !!prompt.autoSend;
-            document.getElementById('add-form').classList.remove('hidden');
-            document.getElementById('toggle-add-btn').classList.add('hidden');
+            document.getElementById('prompt-modal')?.classList.remove('hidden');
+            document.getElementById('add-form')?.classList.remove('hidden');
+            document.getElementById('toggle-add-btn')?.classList.add('hidden');
+            const sheetTitle = document.getElementById('editor-sheet-title');
+            if (sheetTitle) sheetTitle.textContent = 'Prompt bearbeiten';
             document.getElementById('save-btn').innerText = 'Aktualisieren';
             updateCharCounter();
         });
