@@ -107,7 +107,7 @@ PromptDock 2.1 includes a vendor-agnostic Corporate Communications & Intelligenc
 14. **Projekt- & Status-Update** (Kompaktes Reporting)
 15. **Tiefenrecherche & Intelligence** (Quellen- & Fakten-Dossier)
 16. **Standort- & Stakeholder-Austausch** (Kompakteinträge)
-17. **Präsentation & Storyboard** (3 Turns: Lagebild & Dramaturgie-Check ➔ Strategie & Quick-Fix vs. Redesign ➔ Folien-Storyboard & Sprechernotizen)
+17. **Präsentation & Storyboard** (3 Turns: Lagebild & Dramaturgie-Check ➔ Strategie & Quick-Fix vs. Redesign ➔ Folien-Storyboard & Struktur)
 
 ---
 

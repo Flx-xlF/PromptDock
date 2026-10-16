@@ -535,7 +535,7 @@ Qualitätskriterien:
         },
         'O-PPT-STORYBOARD': {
             id: 'O-PPT-STORYBOARD',
-            title: 'Folien-Storyboard & Sprechernotizen',
+            title: 'Folien-Storyboard & Struktur',
             text: `TASK: FOLIEN-STORYBOARD (MASTER-STRUKTUR)
 Erstelle auf Basis der gewählten Strategie und Dramaturgie das vollständige, sofort umsetzbare Folien-Storyboard.
 
@@ -547,8 +547,6 @@ Gliedere jede Folie exakt nach folgendem Standard:
 - **FOLIENAUFBAU & VISUALISIERUNG:**
   * Layout-Vorschlag: [z.B. 3 Spalten mit Icons, Vorher-Nachher-Matrix, horizontaler 4-Schritte-Zeitstrahl, 1 grosse Zahl links + 2 prägnante Kernaussagen rechts]
   * Inhalt: [Maximal 3 bis 4 präzise formulierte Stichpunkte ohne Füllwörter]
-- **SPRECHERNOTIZEN (Was wird gesagt?):**
-  * «[Ausformulierter, mündlich überzeugender Sprechtext in 2 bis 3 Sätzen. Erklärt das "Warum" und leitet logisch zur nächsten Folie über.]»
 - **QUICK-FIX TIPP:** [Ein konkreter Hinweis für minimal-invasive Anpassung, falls eine existierende Folie beibehalten wird.]
 ---
 
@@ -963,7 +961,7 @@ ROHDATEN:`
                     chunks: ['S-PPT-STRATEGY', { chunkId: 'S-MESSAGES', params: { count: 'drei' } }]
                 },
                 {
-                    title: 'FOLIEN-STORYBOARD & SPRECHERNOTIZEN',
+                    title: 'FOLIEN-STORYBOARD & STRUKTUR',
                     role: 'Du bist ein meisterhafter Präsentations-Autor und Dramaturg.',
                     chunks: ['O-PPT-STORYBOARD']
                 }
