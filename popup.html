@@ -44,23 +44,34 @@
             <div class="sheet-title-row">
                 <h3 id="editor-sheet-title" class="sheet-title">Prompt bearbeiten</h3>
             </div>
-            <div class="editor-mode-selector">
-                <label class="mode-toggle-label" for="mode-toggle-checkbox">
-                    <div class="mode-toggle-info">
-                        <span class="mode-toggle-title">Workflow-Typ</span>
-                        <span id="mode-toggle-desc" class="mode-toggle-desc">Single-Shot (1-Turn Prompt)</span>
-                    </div>
-                    <input type="checkbox" id="mode-toggle-checkbox">
-                </label>
+            <div class="segmented-control" role="tablist">
+                <button type="button" id="mode-btn-single" class="segment-btn active" role="tab" aria-selected="true">Single-Shot</button>
+                <button type="button" id="mode-btn-multi" class="segment-btn" role="tab" aria-selected="false">Multi-Turn</button>
             </div>
+            <input type="checkbox" id="mode-toggle-checkbox" class="hidden" style="display:none;" aria-hidden="true">
+
             <input type="text" id="prompt-name" placeholder="Name (z.B. Medienanfrage)">
             <div id="recipe-turns-inspector" class="recipe-inspector hidden"></div>
-            <div id="recipe-turns-editor" class="recipe-turns-editor hidden">
-                <div class="turns-editor-header">
-                    <span class="turns-editor-title">Workflow Turns</span>
-                    <button type="button" id="add-turn-btn" class="add-turn-btn secondary-btn">+ Turn</button>
+
+            <!-- Dynamic Turn Builder Step Bar & Active Turn Canvas -->
+            <div id="turn-builder-bar" class="turn-builder-bar hidden">
+                <div class="turn-builder-pills-scroll" id="turn-builder-pills"></div>
+                <button type="button" id="add-turn-pill-btn" class="turn-pill-add-btn" title="Weiteren Turn hinzufügen">
+                    <span>+</span>
+                </button>
+            </div>
+
+            <div id="active-turn-canvas" class="active-turn-canvas hidden">
+                <div class="turn-canvas-header">
+                    <span id="turn-index-indicator" class="turn-index-badge">Turn 1</span>
+                    <input type="text" id="turn-title" class="turn-title-field" placeholder="Titel des Schritts (z.B. Lagebild)...">
+                    <button type="button" id="delete-turn-btn" class="turn-delete-icon-btn" title="Diesen Turn entfernen">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </button>
                 </div>
-                <div id="active-turns-container" class="active-turns-container"></div>
+                <textarea id="turn-content" class="turn-content-field" placeholder="Prompt & Anweisungen für diesen Schritt..."></textarea>
             </div>
             <label id="prompt-content-label" class="field-label hidden" for="prompt-content" style="font-size: 11px; color: #a5b4fc; font-weight: 600; margin-bottom: 4px; display: block;">Express-Modus / Direkt-Prompt (1-Turn Fallback)</label>
             <textarea id="prompt-content" placeholder="Prompt Text..."></textarea>

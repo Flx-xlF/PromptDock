@@ -66,7 +66,8 @@ function calcTotalBytes(promptsList) {
 
 let prompts = [];
 let editingIndex = -1;
-let activeTurnsState = [];
+let currentWorkflowTurns = [];
+let selectedTurnIndex = 0;
 
 function createDefaultTurns() {
     return [
@@ -75,122 +76,216 @@ function createDefaultTurns() {
     ];
 }
 
-function syncTurnsFromDOM() {
-    const container = document.getElementById('active-turns-container');
-    if (!container) return;
-    const cards = container.querySelectorAll('.turn-editor-card');
-    const turns = [];
-    cards.forEach((card, idx) => {
-        const titleInput = card.querySelector('.turn-title-input');
-        const contentInput = card.querySelector('.turn-content-textarea');
-        turns.push({
-            id: `turn-${idx + 1}`,
-            title: titleInput ? (titleInput.value.trim() || `Schritt ${idx + 1}`) : `Schritt ${idx + 1}`,
-            role: '',
-            content: contentInput ? contentInput.value.trim() : ''
-        });
-    });
-    activeTurnsState = turns;
+function syncActiveCanvasToMemory() {
+    if (!Array.isArray(currentWorkflowTurns) || currentWorkflowTurns.length === 0) return;
+    if (selectedTurnIndex < 0 || selectedTurnIndex >= currentWorkflowTurns.length) return;
+
+    const titleInput = document.getElementById('turn-title');
+    const contentInput = document.getElementById('turn-content');
+
+    if (titleInput) {
+        currentWorkflowTurns[selectedTurnIndex].title = titleInput.value;
+    }
+    if (contentInput) {
+        currentWorkflowTurns[selectedTurnIndex].content = contentInput.value;
+    }
+
+    updateTurnPillLabel(selectedTurnIndex);
 }
 
-function renderActiveTurns() {
-    const container = document.getElementById('active-turns-container');
+function updateTurnPillLabel(idx) {
+    const pillsContainer = document.getElementById('turn-builder-pills');
+    if (!pillsContainer) return;
+    const pill = pillsContainer.children[idx];
+    if (!pill) return;
+    const turn = currentWorkflowTurns[idx];
+    if (!turn) return;
+
+    const labelSpan = pill.querySelector('.pill-title');
+    if (labelSpan) {
+        const rawTitle = (turn.title || '').trim();
+        labelSpan.textContent = rawTitle.length > 18 ? rawTitle.slice(0, 16) + '…' : (rawTitle || `Turn ${idx + 1}`);
+    }
+}
+
+function renderTurnBuilderBar() {
+    const container = document.getElementById('turn-builder-pills');
     if (!container) return;
     container.replaceChildren();
 
-    if (!Array.isArray(activeTurnsState) || activeTurnsState.length === 0) {
-        activeTurnsState = createDefaultTurns();
+    if (!Array.isArray(currentWorkflowTurns) || currentWorkflowTurns.length === 0) {
+        currentWorkflowTurns = createDefaultTurns();
+        selectedTurnIndex = 0;
     }
 
-    activeTurnsState.forEach((turn, idx) => {
-        const card = document.createElement('div');
-        card.className = 'turn-editor-card';
+    currentWorkflowTurns.forEach((turn, idx) => {
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = `turn-builder-pill ${idx === selectedTurnIndex ? 'active' : ''}`;
+        pill.setAttribute('data-turn-idx', idx.toString());
 
-        const header = document.createElement('div');
-        header.className = 'turn-card-header';
+        const numSpan = document.createElement('span');
+        numSpan.className = 'pill-num';
+        numSpan.textContent = `${idx + 1}.`;
+        pill.appendChild(numSpan);
 
-        const badge = document.createElement('span');
-        badge.className = 'turn-card-badge';
-        badge.textContent = `Turn ${idx + 1}`;
-        header.appendChild(badge);
+        const titleSpan = document.createElement('span');
+        titleSpan.className = 'pill-title';
+        const rawTitle = (turn.title || '').trim();
+        titleSpan.textContent = rawTitle.length > 18 ? rawTitle.slice(0, 16) + '…' : (rawTitle || `Turn ${idx + 1}`);
+        pill.appendChild(titleSpan);
 
-        const titleInput = document.createElement('input');
-        titleInput.type = 'text';
-        titleInput.className = 'turn-title-input';
-        titleInput.placeholder = `Titel (z.B. Schritt ${idx + 1}: Lagebild)`;
-        titleInput.value = turn.title || '';
-        titleInput.addEventListener('input', () => {
-            turn.title = titleInput.value;
+        pill.addEventListener('click', () => {
+            if (idx === selectedTurnIndex) return;
+            syncActiveCanvasToMemory();
+            loadTurnIntoCanvas(idx);
         });
-        header.appendChild(titleInput);
 
-        if (activeTurnsState.length > 1) {
-            const delBtn = document.createElement('button');
-            delBtn.type = 'button';
-            delBtn.className = 'turn-delete-btn';
-            delBtn.textContent = '×';
-            delBtn.title = 'Turn entfernen';
-            delBtn.addEventListener('click', () => {
-                syncTurnsFromDOM();
-                activeTurnsState.splice(idx, 1);
-                renderActiveTurns();
-                const charCounter = document.getElementById('char-counter');
-                if (charCounter) {
-                    charCounter.textContent = `${activeTurnsState.length} Turns definiert (Storage: local)`;
-                }
-            });
-            header.appendChild(delBtn);
-        }
-
-        card.appendChild(header);
-
-        const contentArea = document.createElement('textarea');
-        contentArea.className = 'turn-content-textarea';
-        contentArea.placeholder = `Prompt / Anweisung für Turn ${idx + 1}...`;
-        contentArea.value = turn.content || '';
-        contentArea.addEventListener('input', () => {
-            turn.content = contentArea.value;
-        });
-        card.appendChild(contentArea);
-
-        container.appendChild(card);
+        container.appendChild(pill);
     });
+
+    const activePill = container.children[selectedTurnIndex];
+    if (activePill && typeof activePill.scrollIntoView === 'function') {
+        activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    }
+}
+
+function loadTurnIntoCanvas(index) {
+    if (!Array.isArray(currentWorkflowTurns) || currentWorkflowTurns.length === 0) {
+        currentWorkflowTurns = createDefaultTurns();
+        index = 0;
+    }
+
+    selectedTurnIndex = Math.max(0, Math.min(index, currentWorkflowTurns.length - 1));
+    const turn = currentWorkflowTurns[selectedTurnIndex];
+
+    const indicator = document.getElementById('turn-index-indicator');
+    if (indicator) {
+        indicator.textContent = `Turn ${selectedTurnIndex + 1}`;
+    }
+
+    const titleInput = document.getElementById('turn-title');
+    if (titleInput) {
+        titleInput.value = turn.title || '';
+    }
+
+    const contentInput = document.getElementById('turn-content');
+    if (contentInput) {
+        contentInput.value = turn.content || '';
+    }
+
+    const deleteBtn = document.getElementById('delete-turn-btn');
+    if (deleteBtn) {
+        deleteBtn.disabled = currentWorkflowTurns.length <= 1;
+    }
+
+    const container = document.getElementById('turn-builder-pills');
+    if (container) {
+        Array.from(container.children).forEach((pill, idx) => {
+            pill.classList.toggle('active', idx === selectedTurnIndex);
+        });
+    }
+
+    const charCounter = document.getElementById('char-counter');
+    if (charCounter) {
+        charCounter.textContent = `${currentWorkflowTurns.length} Turns konfiguriert (Storage: local)`;
+        charCounter.classList.remove('over-limit');
+    }
+}
+
+function appendNewTurn() {
+    syncActiveCanvasToMemory();
+    const newIdx = currentWorkflowTurns.length;
+    currentWorkflowTurns.push({
+        id: `turn-${Date.now()}-${newIdx + 1}`,
+        title: `Schritt ${newIdx + 1}`,
+        role: '',
+        content: ''
+    });
+    selectedTurnIndex = newIdx;
+    renderTurnBuilderBar();
+    loadTurnIntoCanvas(newIdx);
+
+    const titleInput = document.getElementById('turn-title');
+    if (titleInput) {
+        titleInput.focus();
+        titleInput.select();
+    }
+}
+
+function deleteCurrentTurn() {
+    if (currentWorkflowTurns.length <= 1) return;
+    currentWorkflowTurns.splice(selectedTurnIndex, 1);
+    if (selectedTurnIndex >= currentWorkflowTurns.length) {
+        selectedTurnIndex = currentWorkflowTurns.length - 1;
+    }
+    renderTurnBuilderBar();
+    loadTurnIntoCanvas(selectedTurnIndex);
 }
 
 function setEditorMode(isMultiTurn) {
     const modeCheckbox = document.getElementById('mode-toggle-checkbox');
     if (modeCheckbox) modeCheckbox.checked = isMultiTurn;
 
-    const descEl = document.getElementById('mode-toggle-desc');
-    if (descEl) {
-        descEl.textContent = isMultiTurn
-            ? 'Multi-Turn Workflow (Sequenz)'
-            : 'Single-Shot (1-Turn Prompt)';
+    const btnSingle = document.getElementById('mode-btn-single');
+    const btnMulti = document.getElementById('mode-btn-multi');
+    if (btnSingle && btnMulti) {
+        btnSingle.classList.toggle('active', !isMultiTurn);
+        btnSingle.setAttribute('aria-selected', (!isMultiTurn).toString());
+        btnMulti.classList.toggle('active', isMultiTurn);
+        btnMulti.setAttribute('aria-selected', isMultiTurn.toString());
     }
 
-    const turnsEditor = document.getElementById('recipe-turns-editor');
+    const turnBuilderBar = document.getElementById('turn-builder-bar');
+    const activeCanvas = document.getElementById('active-turn-canvas');
     const contentArea = document.getElementById('prompt-content');
     const contentLabel = document.getElementById('prompt-content-label');
-    const charCounter = document.getElementById('char-counter');
     const sheetTitle = document.getElementById('editor-sheet-title');
     const inspector = document.getElementById('recipe-turns-inspector');
 
     if (isMultiTurn) {
-        turnsEditor?.classList.remove('hidden');
+        turnBuilderBar?.classList.remove('hidden');
+        activeCanvas?.classList.remove('hidden');
         contentArea?.classList.add('hidden');
         contentLabel?.classList.add('hidden');
         inspector?.classList.add('hidden');
-        if (charCounter) {
-            charCounter.textContent = `${activeTurnsState.length} Turns definiert (Storage: local)`;
-            charCounter.classList.remove('over-limit');
-        }
         if (sheetTitle) {
             sheetTitle.textContent = (editingIndex >= 0) ? 'Workflow bearbeiten' : 'Neuer Multi-Turn Workflow';
         }
         document.getElementById('save-btn').disabled = false;
-        renderActiveTurns();
+
+        if (!Array.isArray(currentWorkflowTurns) || currentWorkflowTurns.length === 0) {
+            if (editingIndex >= 0 && prompts[editingIndex]) {
+                const matched = findMatchingRecipe(prompts[editingIndex]);
+                if (matched && Array.isArray(matched.turns) && matched.turns.length > 0) {
+                    currentWorkflowTurns = matched.turns.map((t, idx) => ({
+                        id: t.id || `turn-${idx + 1}`,
+                        title: t.title || `Schritt ${idx + 1}`,
+                        role: t.role || '',
+                        content: t.content || (t.chunks && t.chunks[0]?.text) || ''
+                    }));
+                }
+            }
+            if (!currentWorkflowTurns || currentWorkflowTurns.length === 0) {
+                const currentContent = contentArea?.value.trim() || '';
+                if (currentContent) {
+                    currentWorkflowTurns = [
+                        { id: 'turn-1', title: 'Schritt 1: Prompt', role: '', content: currentContent },
+                        { id: 'turn-2', title: 'Schritt 2: Vertiefung', role: '', content: '' }
+                    ];
+                } else {
+                    currentWorkflowTurns = createDefaultTurns();
+                }
+            }
+            selectedTurnIndex = 0;
+        }
+
+        renderTurnBuilderBar();
+        loadTurnIntoCanvas(selectedTurnIndex);
     } else {
-        turnsEditor?.classList.add('hidden');
+        syncActiveCanvasToMemory();
+        turnBuilderBar?.classList.add('hidden');
+        activeCanvas?.classList.add('hidden');
         contentArea?.classList.remove('hidden');
         if (sheetTitle) {
             sheetTitle.textContent = (editingIndex >= 0) ? 'Prompt bearbeiten' : 'Neuer Prompt';
@@ -219,7 +314,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateCharCounter = function() {
         const isMultiTurn = document.getElementById('mode-toggle-checkbox')?.checked || false;
         if (isMultiTurn) {
-            charCounter.textContent = `${activeTurnsState.length} Turns konfiguriert (Storage: local)`;
+            charCounter.textContent = `${currentWorkflowTurns.length} Turns konfiguriert (Storage: local)`;
             charCounter.classList.remove('over-limit');
             document.getElementById('save-btn').disabled = false;
             return;
@@ -249,39 +344,57 @@ document.addEventListener('DOMContentLoaded', async () => {
     contentInput.addEventListener('input', updateCharCounter);
     nameInput.addEventListener('input', updateCharCounter);
 
-    const modeToggle = document.getElementById('mode-toggle-checkbox');
-    if (modeToggle) {
-        modeToggle.addEventListener('change', () => {
-            if (modeToggle.checked) {
-                const currentContent = document.getElementById('prompt-content').value.trim();
-                if (currentContent && (!activeTurnsState || activeTurnsState.length === 0)) {
-                    activeTurnsState = [
-                        { id: 'turn-1', title: 'Schritt 1: Prompt', role: '', content: currentContent },
-                        { id: 'turn-2', title: 'Schritt 2: Vertiefung', role: '', content: '' }
-                    ];
-                } else if (!activeTurnsState || activeTurnsState.length === 0) {
-                    activeTurnsState = createDefaultTurns();
-                }
-            }
-            setEditorMode(modeToggle.checked);
+    const modeBtnSingle = document.getElementById('mode-btn-single');
+    const modeBtnMulti = document.getElementById('mode-btn-multi');
+    if (modeBtnSingle) {
+        modeBtnSingle.addEventListener('click', () => {
+            setEditorMode(false);
+        });
+    }
+    if (modeBtnMulti) {
+        modeBtnMulti.addEventListener('click', () => {
+            setEditorMode(true);
         });
     }
 
-    const addTurnBtn = document.getElementById('add-turn-btn');
-    if (addTurnBtn) {
-        addTurnBtn.addEventListener('click', () => {
-            syncTurnsFromDOM();
-            activeTurnsState.push({
-                id: `turn-${activeTurnsState.length + 1}`,
-                title: `Schritt ${activeTurnsState.length + 1}`,
-                role: '',
-                content: ''
-            });
-            renderActiveTurns();
-            const counter = document.getElementById('char-counter');
-            if (counter) {
-                counter.textContent = `${activeTurnsState.length} Turns definiert (Storage: local)`;
+    const turnTitleInput = document.getElementById('turn-title');
+    if (turnTitleInput) {
+        turnTitleInput.addEventListener('input', () => {
+            syncActiveCanvasToMemory();
+        });
+        turnTitleInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('turn-content')?.focus();
             }
+        });
+    }
+
+    const turnContentInput = document.getElementById('turn-content');
+    if (turnContentInput) {
+        turnContentInput.addEventListener('input', () => {
+            syncActiveCanvasToMemory();
+        });
+    }
+
+    const addTurnPillBtn = document.getElementById('add-turn-pill-btn');
+    if (addTurnPillBtn) {
+        addTurnPillBtn.addEventListener('click', () => {
+            appendNewTurn();
+        });
+    }
+
+    const deleteTurnBtn = document.getElementById('delete-turn-btn');
+    if (deleteTurnBtn) {
+        deleteTurnBtn.addEventListener('click', () => {
+            deleteCurrentTurn();
+        });
+    }
+
+    const modeToggle = document.getElementById('mode-toggle-checkbox');
+    if (modeToggle) {
+        modeToggle.addEventListener('change', () => {
+            setEditorMode(modeToggle.checked);
         });
     }
 
@@ -293,7 +406,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('prompt-name').value = '';
         document.getElementById('prompt-content').value = '';
         document.getElementById('prompt-auto-send').checked = false;
-        activeTurnsState = createDefaultTurns();
+        currentWorkflowTurns = createDefaultTurns();
+        selectedTurnIndex = 0;
         setEditorMode(false);
         document.getElementById('save-btn').innerText = 'Speichern';
 
@@ -318,7 +432,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('prompt-content').value = '';
         document.getElementById('prompt-auto-send').checked = false;
         editingIndex = -1;
-        activeTurnsState = [];
+        currentWorkflowTurns = [];
+        selectedTurnIndex = 0;
         setEditorMode(false);
         document.getElementById('save-btn').innerText = 'Speichern';
 
@@ -352,8 +467,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (isMultiTurn) {
-            syncTurnsFromDOM();
-            if (!activeTurnsState || activeTurnsState.length === 0) {
+            syncActiveCanvasToMemory();
+            if (!currentWorkflowTurns || currentWorkflowTurns.length === 0) {
                 alert("Ein Multi-Turn Workflow benötigt mindestens einen Turn.");
                 return;
             }
@@ -367,7 +482,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 recipeId = `${RECIPE_KEY_PREFIX}${Date.now()}`;
             }
 
-            const compiledContent = activeTurnsState
+            const compiledContent = currentWorkflowTurns
                 .map((t, idx) => `${t.title || `Turn ${idx + 1}`}:\n${t.content || ''}`)
                 .join('\n\n---\n\n');
 
@@ -375,7 +490,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 id: recipeId,
                 name: name,
                 family: 'custom',
-                turns: activeTurnsState.map((t, idx) => ({
+                turns: currentWorkflowTurns.map((t, idx) => ({
                     id: t.id || `turn-${idx + 1}`,
                     title: t.title || `Schritt ${idx + 1}`,
                     role: t.role || '',
@@ -954,12 +1069,16 @@ async function renderPrompts() {
             const contentLabel = document.getElementById('prompt-content-label');
 
             if (isCustomRecipe) {
-                activeTurnsState = (prompt.turns || []).map(t => ({
-                    id: t.id,
-                    title: t.title,
+                currentWorkflowTurns = (prompt.turns || []).map((t, idx) => ({
+                    id: t.id || `turn-${idx + 1}`,
+                    title: t.title || `Schritt ${idx + 1}`,
                     role: t.role || '',
                     content: t.content || (t.chunks && t.chunks[0]?.text) || ''
                 }));
+                if (currentWorkflowTurns.length === 0) {
+                    currentWorkflowTurns = createDefaultTurns();
+                }
+                selectedTurnIndex = 0;
                 setEditorMode(true);
             } else if (matchedRecipe && matchedRecipe.turns && matchedRecipe.turns.length > 0) {
                 setEditorMode(false);
