@@ -95,8 +95,9 @@ const PromptStorage = {
     
     /** Sync prompts to a Secret GitHub Gist. */
     async syncGist(prompts) {
+        if (!ext?.storage?.local) return;
         const local = await ext.storage.local.get(['github_pat', 'github_gist_id']);
-        const token = local.github_pat;
+        const token = local?.github_pat;
         if (!token) return; // Sync not configured
         
         // Format as a flat dictionary { "Prompt Name": "Prompt Content" } 
@@ -569,7 +570,7 @@ let updateCharCounter = () => {};
 
 async function renderPrompts() {
     // Fetch shortcuts
-    const commands = await ext.commands.getAll();
+    const commands = (ext?.commands?.getAll) ? await ext.commands.getAll() : [];
     commands.forEach(cmd => {
         if (cmd.name.startsWith("run-prompt-") && cmd.shortcut) {
             const idx = parseInt(cmd.name.replace("run-prompt-", ""));
