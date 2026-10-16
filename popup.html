@@ -110,13 +110,60 @@
     <div id="sync-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <h3>GitHub Gist Sync</h3>
-            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Synchronisiere deine Prompts mit deinem iPhone über iOS-Shortcuts und GitHub Gists (kostenlos).</p>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Synchronisiere deine Prompts mit deinem Smartphone über iOS-Shortcuts und GitHub Gists (kostenlos).</p>
             <label style="font-size: 12px; font-weight: 500; display: block; margin-bottom: 4px;">GitHub Personal Access Token (PAT):</label>
             <input type="password" id="github-pat-input" placeholder="ghp_xxxxxxxxxxxx" style="width: 100%; box-sizing: border-box; margin-bottom: 12px; font-family: monospace;">
             <div id="sync-status" class="sync-status hidden"></div>
             <div class="actions" style="margin-top: 16px;">
                 <button id="close-sync-btn" class="text-btn">Schliessen</button>
                 <button id="save-sync-btn" class="primary-btn">Verbinden</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Setup Sheet Modal (v2.1 QR Code & Shortcut Onboarding) -->
+    <div id="mobile-setup-modal" class="modal-overlay hidden">
+        <div class="modal-content modal-content-wide mobile-setup-sheet">
+            <div class="sheet-handle-pill"></div>
+            <div class="mobile-setup-header">
+                <div class="mobile-setup-title-group">
+                    <h3 class="mobile-setup-title">Mobile Sync & Kurzbefehle</h3>
+                    <span class="mobile-version-badge">v2.1 Sync</span>
+                </div>
+                <button type="button" id="close-mobile-setup-icon" class="modal-close-icon-btn" title="Schliessen">×</button>
+            </div>
+            <p class="mobile-setup-desc">Synchronisiere deine Prompts und Multi-Turn Workflows direkt mit deinem mobilen Gerät (iOS Shortcuts / Action Button).</p>
+            
+            <div class="qr-container">
+                <div class="qr-card">
+                    <img id="mobile-qr-code" class="qr-image" src="" alt="Mobile Setup QR-Code" width="150" height="150">
+                </div>
+                <div class="qr-caption">QR-Code mit der Smartphone-Kamera scannen für Endpoint-Link</div>
+            </div>
+
+            <div class="endpoint-display">
+                <label class="endpoint-label" for="gist-endpoint-url">Gist Shortcut Endpoint URL:</label>
+                <div class="endpoint-input-row">
+                    <input type="text" id="gist-endpoint-url" class="endpoint-url-input" readonly>
+                    <button type="button" id="copy-endpoint-btn" class="secondary-btn copy-endpoint-btn" title="Endpoint URL kopieren">Kopieren</button>
+                </div>
+            </div>
+
+            <div class="mobile-instructions-card">
+                <div class="instruction-header">
+                    <span class="instruction-icon">📱</span>
+                    <span class="instruction-title">In 3 Schritten auf dem Smartphone einrichten:</span>
+                </div>
+                <ol class="instruction-list">
+                    <li>Öffne die <strong>Kurzbefehle (Shortcuts)</strong> App auf deinem mobilen Gerät.</li>
+                    <li>Erstelle einen Kurzbefehl mit der Aktion <strong>"Inhalte von URL abrufen"</strong> und füge die obige URL ein (Header: <code>Authorization: Bearer &lt;PAT&gt;</code>).</li>
+                    <li>Wähle aus <code>items</code> deine Prompts oder Workflows direkt in Outlook Copilot oder der Copilot App!</li>
+                </ol>
+            </div>
+
+            <div class="actions mobile-setup-actions">
+                <button type="button" id="edit-sync-token-btn" class="text-btn">Token bearbeiten</button>
+                <button type="button" id="close-mobile-setup-btn" class="primary-btn">Fertig</button>
             </div>
         </div>
     </div>

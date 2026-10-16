@@ -1227,4 +1227,198 @@ button:disabled {
     padding: 2px 2px;
 }
 
+/* --- Mobile Setup Modal & QR Onboarding (v2.1) --- */
+.mobile-setup-sheet {
+    background: rgba(18, 18, 24, 0.95);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 16px 20px 20px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    box-sizing: border-box;
+    width: 100%;
+    animation: sheetSlideUp 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-setup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.mobile-setup-title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mobile-setup-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.mobile-version-badge {
+    font-size: 10px;
+    font-weight: 700;
+    color: #c7d2fe;
+    background: rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    padding: 2px 7px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+}
+
+.modal-close-icon-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-tertiary);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    transition: all 0.15s ease;
+}
+
+.modal-close-icon-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.mobile-setup-desc {
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    margin: 0 0 12px;
+    line-height: 1.4;
+}
+
+.qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 14px;
+}
+
+.qr-card {
+    padding: 8px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-image {
+    display: block;
+    border-radius: 6px;
+    width: 140px;
+    height: 140px;
+    background: #ffffff;
+}
+
+.qr-caption {
+    font-size: 10.5px;
+    color: var(--text-tertiary);
+    text-align: center;
+}
+
+.endpoint-display {
+    margin-bottom: 12px;
+}
+
+.endpoint-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: 5px;
+}
+
+.endpoint-input-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.endpoint-url-input {
+    flex: 1;
+    margin-bottom: 0 !important;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important;
+    font-size: 11px !important;
+    color: #a5b4fc !important;
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid var(--border) !important;
+    padding: 7px 9px !important;
+    text-overflow: ellipsis;
+}
+
+.copy-endpoint-btn {
+    font-size: 11px !important;
+    padding: 7px 12px !important;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-weight: 600 !important;
+}
+
+.mobile-instructions-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    margin-bottom: 12px;
+}
+
+.instruction-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.instruction-title {
+    font-size: 11.5px;
+    font-weight: 600;
+}
+
+.instruction-list {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.45;
+}
+
+.instruction-list li {
+    margin-bottom: 4px;
+}
+
+.instruction-list li:last-child {
+    margin-bottom: 0;
+}
+
+.instruction-list code {
+    font-size: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 1px 4px;
+    border-radius: 3px;
+    color: #e0e7ff;
+    font-family: ui-monospace, monospace;
+}
+
+.mobile-setup-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+}
+
 

@@ -606,109 +606,166 @@ document.addEventListener('DOMContentLoaded', async () => {
         reader.readAsText(file);
     });
 
-    // Mobile Sync Modal Event Listeners
+    // Mobile Sync & Setup Modal Event Listeners (v2.1)
     const syncModal = document.getElementById('sync-modal');
     const patInput = document.getElementById('github-pat-input');
     const syncStatus = document.getElementById('sync-status');
     const saveSyncBtn = document.getElementById('save-sync-btn');
-    
-    document.getElementById('mobile-sync-btn').addEventListener('click', async () => {
-        const local = await ext.storage.local.get(['github_pat', 'github_gist_id']);
-        if (local.github_pat) {
-            patInput.value = local.github_pat;
-        } else {
-            patInput.value = '';
+    const mobileSetupModal = document.getElementById('mobile-setup-modal');
+    const mobileQrCode = document.getElementById('mobile-qr-code');
+    const gistEndpointUrlInput = document.getElementById('gist-endpoint-url');
+    const copyEndpointBtn = document.getElementById('copy-endpoint-btn');
+    const editSyncTokenBtn = document.getElementById('edit-sync-token-btn');
+    const closeMobileSetupBtn = document.getElementById('close-mobile-setup-btn');
+    const closeMobileSetupIcon = document.getElementById('close-mobile-setup-icon');
+
+    function openMobileSetup(gistId) {
+        const gistUrl = `https://api.github.com/gists/${gistId}`;
+        if (gistEndpointUrlInput) gistEndpointUrlInput.value = gistUrl;
+        if (mobileQrCode) {
+            mobileQrCode.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(gistUrl)}`;
         }
-        
-        syncStatus.className = 'sync-status hidden';
-        if (local.github_gist_id) {
+        if (mobileSetupModal) mobileSetupModal.classList.remove('hidden');
+    }
+
+    function openTokenModal(local) {
+        if (patInput) {
+            patInput.value = (local && local.github_pat) ? local.github_pat : '';
+        }
+        if (syncStatus) {
+            syncStatus.className = 'sync-status hidden';
             syncStatus.replaceChildren();
-            const s1 = document.createElement('strong');
-            s1.textContent = 'Status:';
-            syncStatus.appendChild(s1);
-            syncStatus.appendChild(document.createTextNode(' Verbunden'));
-            syncStatus.appendChild(document.createElement('br'));
-            syncStatus.appendChild(document.createElement('br'));
-            const s2 = document.createElement('strong');
-            s2.textContent = 'Shortcut API URL:';
-            syncStatus.appendChild(s2);
-            syncStatus.appendChild(document.createElement('br'));
-            const link = document.createElement('a');
-            link.href = `https://api.github.com/gists/${local.github_gist_id}`;
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            link.style.cssText = 'color:var(--accent);word-break:break-all;';
-            link.textContent = `https://api.github.com/gists/${local.github_gist_id}`;
-            syncStatus.appendChild(link);
-            syncStatus.appendChild(document.createElement('br'));
-            syncStatus.appendChild(document.createElement('br'));
-            const note = document.createElement('span');
-            note.style.cssText = 'font-size:10px;color:var(--text-tertiary);';
-            note.textContent = 'Nutze diese URL im iOS-Shortcut mit der "Inhalte von URL abrufen" Aktion (Header: Authorization = Bearer PAT).';
-            syncStatus.appendChild(note);
-            syncStatus.className = 'sync-status success';
+            if (local && local.github_gist_id) {
+                const s1 = document.createElement('strong');
+                s1.textContent = 'Status:';
+                syncStatus.appendChild(s1);
+                syncStatus.appendChild(document.createTextNode(' Verbunden'));
+                syncStatus.appendChild(document.createElement('br'));
+                syncStatus.appendChild(document.createElement('br'));
+                const s2 = document.createElement('strong');
+                s2.textContent = 'Shortcut API URL:';
+                syncStatus.appendChild(s2);
+                syncStatus.appendChild(document.createElement('br'));
+                const link = document.createElement('a');
+                link.href = `https://api.github.com/gists/${local.github_gist_id}`;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.style.cssText = 'color:var(--accent);word-break:break-all;';
+                link.textContent = `https://api.github.com/gists/${local.github_gist_id}`;
+                syncStatus.appendChild(link);
+                syncStatus.className = 'sync-status success';
+            }
         }
-        
-        syncModal.classList.remove('hidden');
-    });
+        if (syncModal) syncModal.classList.remove('hidden');
+    }
 
-    document.getElementById('close-sync-btn').addEventListener('click', () => {
-        syncModal.classList.add('hidden');
-    });
+    const mobileSyncBtn = document.getElementById('mobile-sync-btn');
+    if (mobileSyncBtn) {
+        mobileSyncBtn.addEventListener('click', async () => {
+            const local = await ext.storage.local.get(['github_pat', 'github_gist_id']);
+            if (local.github_pat && local.github_gist_id) {
+                openMobileSetup(local.github_gist_id);
+            } else {
+                openTokenModal(local);
+            }
+        });
+    }
 
-    saveSyncBtn.addEventListener('click', async () => {
-        const pat = patInput.value.trim();
-        if (!pat) {
-            await ext.storage.local.remove(['github_pat', 'github_gist_id']);
-            syncStatus.textContent = "Sync deaktiviert.";
-            syncStatus.className = 'sync-status';
-            setTimeout(() => syncModal.classList.add('hidden'), 1000);
-            return;
-        }
-        
-        saveSyncBtn.textContent = 'Synchronisiere...';
-        saveSyncBtn.disabled = true;
-        
-        try {
-            const local = await ext.storage.local.get('github_pat');
-            // If token changed, clear gist ID to force a new one
-            if (local.github_pat !== pat) {
-                await ext.storage.local.remove('github_gist_id');
+    if (closeMobileSetupBtn) {
+        closeMobileSetupBtn.addEventListener('click', () => {
+            if (mobileSetupModal) mobileSetupModal.classList.add('hidden');
+        });
+    }
+
+    if (closeMobileSetupIcon) {
+        closeMobileSetupIcon.addEventListener('click', () => {
+            if (mobileSetupModal) mobileSetupModal.classList.add('hidden');
+        });
+    }
+
+    if (editSyncTokenBtn) {
+        editSyncTokenBtn.addEventListener('click', async () => {
+            if (mobileSetupModal) mobileSetupModal.classList.add('hidden');
+            const local = await ext.storage.local.get(['github_pat', 'github_gist_id']);
+            openTokenModal(local);
+        });
+    }
+
+    if (copyEndpointBtn) {
+        copyEndpointBtn.addEventListener('click', async () => {
+            if (!gistEndpointUrlInput || !gistEndpointUrlInput.value) return;
+            try {
+                await navigator.clipboard.writeText(gistEndpointUrlInput.value);
+                const originalText = copyEndpointBtn.textContent;
+                copyEndpointBtn.textContent = 'Kopiert! ✓';
+                setTimeout(() => {
+                    copyEndpointBtn.textContent = originalText;
+                }, 1800);
+            } catch (err) {
+                console.error('Clipboard copy failed:', err);
+            }
+        });
+    }
+
+    const closeSyncBtn = document.getElementById('close-sync-btn');
+    if (closeSyncBtn) {
+        closeSyncBtn.addEventListener('click', () => {
+            if (syncModal) syncModal.classList.add('hidden');
+        });
+    }
+
+    if (saveSyncBtn) {
+        saveSyncBtn.addEventListener('click', async () => {
+            const pat = patInput.value.trim();
+            if (!pat) {
+                await ext.storage.local.remove(['github_pat', 'github_gist_id']);
+                syncStatus.textContent = 'Sync deaktiviert.';
+                syncStatus.className = 'sync-status';
+                setTimeout(() => {
+                    if (syncModal) syncModal.classList.add('hidden');
+                }, 1000);
+                return;
             }
             
-            await ext.storage.local.set({ github_pat: pat });
+            saveSyncBtn.textContent = 'Synchronisiere...';
+            saveSyncBtn.disabled = true;
             
-            // Force a sync right now
-            await PromptStorage.syncGist(prompts);
-            
-            const updatedLocal = await ext.storage.local.get('github_gist_id');
-            syncStatus.replaceChildren();
-            const s1 = document.createElement('strong');
-            s1.textContent = 'Erfolgreich synchronisiert! ✓';
-            syncStatus.appendChild(s1);
-            syncStatus.appendChild(document.createElement('br'));
-            syncStatus.appendChild(document.createElement('br'));
-            const s2 = document.createElement('strong');
-            s2.textContent = 'Shortcut API URL:';
-            syncStatus.appendChild(s2);
-            syncStatus.appendChild(document.createElement('br'));
-            const link = document.createElement('a');
-            link.href = `https://api.github.com/gists/${updatedLocal.github_gist_id}`;
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            link.style.cssText = 'color:var(--accent);word-break:break-all;';
-            link.textContent = `https://api.github.com/gists/${updatedLocal.github_gist_id}`;
-            syncStatus.appendChild(link);
-            syncStatus.className = 'sync-status success';
-        } catch (err) {
-            console.error(err);
-            syncStatus.textContent = "Fehler: " + err.message;
-            syncStatus.className = 'sync-status error';
-        } finally {
-            saveSyncBtn.textContent = 'Verbinden';
-            saveSyncBtn.disabled = false;
-        }
-    });
+            try {
+                const local = await ext.storage.local.get('github_pat');
+                // If token changed, clear gist ID to force a new one
+                if (local.github_pat !== pat) {
+                    await ext.storage.local.remove('github_gist_id');
+                }
+                
+                await ext.storage.local.set({ github_pat: pat });
+                
+                // Force a sync right now
+                await PromptStorage.syncGist(prompts);
+                
+                const updatedLocal = await ext.storage.local.get('github_gist_id');
+                syncStatus.replaceChildren();
+                const s1 = document.createElement('strong');
+                s1.textContent = 'Erfolgreich synchronisiert! ✓';
+                syncStatus.appendChild(s1);
+                syncStatus.className = 'sync-status success';
+
+                // Seamless transition to Mobile Setup Sheet
+                if (updatedLocal.github_gist_id) {
+                    setTimeout(() => {
+                        if (syncModal) syncModal.classList.add('hidden');
+                        openMobileSetup(updatedLocal.github_gist_id);
+                    }, 600);
+                }
+            } catch (err) {
+                console.error(err);
+                syncStatus.textContent = 'Fehler: ' + err.message;
+                syncStatus.className = 'sync-status error';
+            } finally {
+                saveSyncBtn.textContent = 'Verbinden';
+                saveSyncBtn.disabled = false;
+            }
+        });
+    }
 
     // Recipe Variable Modal Event Listeners
     const varModal = document.getElementById('recipe-var-modal');

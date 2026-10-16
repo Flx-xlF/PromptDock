@@ -7,6 +7,20 @@
 
 import { ext, StorageAdapter, PROMPT_KEY_PREFIX, RECIPE_KEY_PREFIX, ORDER_KEY } from './shared/browser-compat.js';
 
+let gistSyncTimer = null;
+
+/**
+ * 1500ms debounced Gist synchronizer to prevent concurrent HTTPS PATCH bursts.
+ */
+export function debouncedSyncGist(items) {
+    if (gistSyncTimer) clearTimeout(gistSyncTimer);
+    gistSyncTimer = setTimeout(() => {
+        PromptStorage.syncGist(items).catch(err => {
+            console.warn('[PromptDock] Background Gist sync failed:', err);
+        });
+    }, 1500);
+}
+
 export { PROMPT_KEY_PREFIX, RECIPE_KEY_PREFIX, ORDER_KEY };
 
 export const PromptStorage = {
@@ -210,8 +224,8 @@ export const PromptStorage = {
             } catch (e) {}
         }
 
-        // Trigger background Gist sync for text prompts
-        this.syncGist(items).catch(console.error);
+        // Trigger debounced background Gist sync (1500ms idle threshold)
+        debouncedSyncGist(items);
     },
 
     /**
@@ -294,7 +308,7 @@ export const PromptStorage = {
     },
 
     /**
-     * Sync prompts to a Secret GitHub Gist.
+     * Sync prompts to a Secret GitHub Gist with rich v2.1 envelope schema.
      */
     async syncGist(items) {
         if (!ext?.storage?.local) return;
@@ -302,14 +316,61 @@ export const PromptStorage = {
         const token = local?.github_pat;
         if (!token) return;
 
-        const mobileFormat = {};
-        items.forEach(p => {
-            mobileFormat[p.name] = p.content || (p.turns ? p.turns.map(t => `${t.title}:\n${t.content || ''}`).join('\n\n') : '');
+        const resolveCategory = (p) => {
+            if (p.category) return p.category;
+            const isCustom = p.isCustomRecipe || (typeof p.id === 'string' && p.id.startsWith(RECIPE_KEY_PREFIX));
+            if (isCustom) return 'Eigene';
+            if (p.family === 'respond') return 'PR & Medien';
+            if (p.family === 'review') return 'Review & Audit';
+            if (p.family === 'plan') return 'Planung & Strategie';
+            if (p.family === 'custom') return 'Eigene';
+            return 'Eigene';
+        };
+
+        const formattedItems = (items || []).map(p => {
+            const isMultiTurn = Boolean((p.turns && p.turns.length > 0) || p.isCustomRecipe || (typeof p.id === 'string' && p.id.startsWith(RECIPE_KEY_PREFIX)));
+
+            let turns = [];
+            if (Array.isArray(p.turns) && p.turns.length > 0) {
+                turns = p.turns.map((t, idx) => ({
+                    step: idx + 1,
+                    title: t.title || `Schritt ${idx + 1}`,
+                    content: t.content || (t.chunks && t.chunks[0]?.text) || ''
+                }));
+            }
+
+            let expressText = '';
+            if (isMultiTurn && turns.length > 0) {
+                expressText = turns
+                    .map(t => `${t.title ? `### ${t.title}\n` : ''}${t.content || ''}`.trim())
+                    .filter(Boolean)
+                    .join('\n\n---\n\n');
+                if (!expressText && p.content) {
+                    expressText = p.content;
+                }
+            } else {
+                expressText = p.content || '';
+            }
+
+            return {
+                id: p.id || '',
+                name: p.name || 'Prompt',
+                category: resolveCategory(p),
+                isMultiTurn,
+                turns,
+                express: expressText
+            };
         });
 
-        const fileContent = JSON.stringify(mobileFormat, null, 2);
+        const v21Payload = {
+            version: "2.1",
+            exportedAt: new Date().toISOString(),
+            items: formattedItems
+        };
+
+        const fileContent = JSON.stringify(v21Payload, null, 2);
         const payload = {
-            description: "PromptDock Prompts Sync",
+            description: "PromptDock Prompts Sync v2.1",
             public: false,
             files: {
                 "prompts": { content: fileContent }
