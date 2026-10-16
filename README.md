@@ -18,6 +18,14 @@
 
 PromptDock 2.0 evolves from a fast prompt launcher into an **interactive AI workflow cockpit** — engineered right inside your browser:
 
+- 🧩 **Segmented Multi-Turn Recipe Composer**  
+  Design and customize your own multi-step workflows directly within the popup editor. Switch between **Single-Shot** and **Multi-Turn** modes via an interactive segmented control. Build sequences step-by-step with horizontal step pills, append subsequent turns with a single click (`+`), and configure each step's title and prompt canvas independently.
+- 💾 **Dual-Tier Resilient Storage Architecture**  
+  A modern hybrid persistence model: single-shot prompts are stored in `chrome.storage.sync` (`p_<id>`) for instant synchronization across devices, while complex multi-turn workflows are saved in `chrome.storage.local` (`r_<id>`), ensuring zero risk of sync quota bottlenecks. Both tiers are merged transparently into a unified catalog with full export and import support.
+- 🌉 **Execution Bridge & Direct Turn Injection**  
+  Custom multi-turn recipes connect directly to the in-chat HUD rail via runtime message passing. Each turn injects directly into the chat input without rigid catalog schemas, preserving user-defined instructions and allowing real-time steering notes at every checkpoint.
+- ⚡ **Express Mode Fallback Integrity**  
+  Launch any multi-turn workflow as an instantaneous single-shot prompt when time is critical: PromptDock automatically compiles all turn instructions with clean markdown dividers (`---`) and injects the composite workflow directly into the composer.
 - 🚊 **In-Chat Rail UX ("Rail, Checkpoint, Fork")**  
   Complex corporate communication, audit, and strategic tasks are split into discrete cognitive turns (*Turn 1: Research / Situation Analysis* ➔ *Turn 2: Strategy / Audit* ➔ *Turn 3: Output Synthesis*). A floating stepper rail sits directly above the chat input, showing your current step and workflow progress.
 - 🎙️ **2-Zone Spotlight Composer**  
@@ -54,6 +62,8 @@ Both editions share the same local-first, zero-telemetry architecture. PromptDoc
 
 - ⚡ **One-Click Prompt & Workflow Injection**  
   Keep high-leverage prompts and multi-turn recipes organized in a minimalist command palette. One click on any item row injects and launches it in the active chat.
+- 🧩 **Custom Multi-Turn Sequence Builder**  
+  Author custom multi-turn workflows with an interactive step builder, dedicated canvas for each phase, and automatic compile fallbacks.
 - 🎛️ **Draggable In-Chat HUD Rail**  
   A floating cockpit that keeps you focused on complex multi-turn workflows without switching tabs. Reposition freely on your screen or double-click to snap back to zero-overlap default docking.
 - ⌨️ **Muscle Memory Hotkeys**  
@@ -64,10 +74,10 @@ Both editions share the same local-first, zero-telemetry architecture. PromptDoc
   Uses synthetic paste events with synchronous editor verification, `insertHTML`, and direct DOM node construction to prevent duplicate injection and preserve paragraph formatting across complex rich text editors (ProseMirror, Lexical, Quill).
 - 🔄 **Smart Clipboard Fallback**  
   If an input field is obscured, inside a nested iframe, or momentarily unreachable, your prompt or turn step is copied to your clipboard instantly with an unobtrusive toast notification.
-- 📱 **Mobile & iOS Shortcut Sync**  
-  Sync your prompt library directly to your mobile device via a private GitHub Gist—accessible natively via iOS shortcuts without third-party cloud intermediaries.
+- 📱 **Mobile Shortcut & Private Gist Sync**  
+  Sync your prompt library directly to your mobile device via a private GitHub Gist—accessible natively via mobile shortcuts without third-party cloud intermediaries.
 - 🔒 **Zero Telemetry & 100% Local-First**  
-  No telemetry, no tracking pixels, no remote analytics, and no accounts required. Prompts are stored strictly in your browser's chunked sync storage (`chrome.storage.sync` / `chrome.storage.local`).
+  No telemetry, no tracking pixels, no remote analytics, and no accounts required. Prompts are stored strictly in your browser's dual-tier storage (`chrome.storage.sync` for single-shot prompts, `chrome.storage.local` for multi-turn recipes).
 
 ---
 
