@@ -418,23 +418,126 @@
     flex-direction: column;
     overflow: hidden;
     animation: pd-hud-appear 0.2s ease forwards;
+    transition: max-width 0.4s cubic-bezier(0.34, 1.15, 0.64, 1),
+                max-height 0.4s cubic-bezier(0.34, 1.15, 0.64, 1),
+                padding 0.4s cubic-bezier(0.34, 1.15, 0.64, 1),
+                border-radius 0.4s cubic-bezier(0.34, 1.15, 0.64, 1),
+                box-shadow 0.3s ease-out,
+                opacity 0.25s ease-out;
+    transform-origin: bottom center;
+    will-change: max-width, max-height, padding, border-radius;
 }
 
+/* --- Dynamic Island 36px Capsule --- */
+.pd-pill-minimized,
 .pd-hud-dock.pd-minimized {
+    display: inline-flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 6px 14px;
-    border-radius: 20px;
-    background: rgba(22, 22, 28, 0.96);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    cursor: grab;
+    gap: 8px;
+    height: 36px;
+    max-height: 36px;
+    max-width: min(92vw, 520px);
+    padding: 0 6px 0 10px;
+    border-radius: 9999px;
+    background: rgba(18, 18, 24, 0.94);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    overflow: hidden;
     user-select: none;
+    box-sizing: border-box;
+    cursor: grab;
 }
 
+.pd-pill-minimized:active,
 .pd-hud-dock.pd-minimized:active,
+.pd-dragging .pd-pill-minimized,
 .pd-dragging .pd-hud-dock.pd-minimized {
     cursor: grabbing;
+}
+
+.pd-pill-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #e2e8f0;
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.pd-pill-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #94a3b8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pd-pill-step strong {
+    color: #f1f5f9;
+    font-weight: 600;
+}
+
+.pd-pill-minimized .pd-btn-next {
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    line-height: 1;
+}
+
+.pd-pill-minimized .pd-ctrl-btn {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    min-height: 22px;
+    padding: 0;
+    font-size: 13px;
+    border-radius: 50%;
+}
+
+/* Pulsing Streaming Dot */
+.pd-pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #f59e0b;
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.7);
+    display: inline-block;
+    animation: pd-pulse 1.4s infinite ease-in-out;
+    flex-shrink: 0;
+}
+
+@keyframes pd-pulse {
+    0%, 100% { transform: scale(0.85); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+/* Inner Content Crossfade */
+.pd-hud-body,
+.pd-hud-header,
+.pd-pill-minimized {
+    animation: pd-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pd-fade-in {
+    0% { 
+        opacity: 0; 
+        transform: scale(0.96) translateY(4px); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: scale(1) translateY(0); 
+    }
 }
 
 .pd-min-left {
@@ -443,6 +546,7 @@
     gap: 8px;
     font-size: 12px;
     color: #e4e4e7;
+    overflow: hidden;
 }
 
 .pd-min-badge {
@@ -452,16 +556,21 @@
     background: rgba(99, 102, 241, 0.15);
     padding: 2px 8px;
     border-radius: 6px;
+    flex-shrink: 0;
 }
 
 .pd-min-text {
     color: #d4d4d8;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .pd-min-actions {
     display: flex;
     align-items: center;
     gap: 6px;
+    flex-shrink: 0;
 }
 
 .pd-min-send {

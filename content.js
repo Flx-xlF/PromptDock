@@ -1071,6 +1071,7 @@ const RecipeState = {
     mode: 'guided', // 'guided' | 'autopilot' | 'express'
     status: 'idle', // 'idle' | 'running_turn' | 'checkpoint' | 'completed'
     isMinimized: false,
+    isAutoMinimized: false,
     customPos: null, // { left: number, top: number } when dragged
     streamCheckInterval: null,
     autoCloseTimer: null,
@@ -1119,6 +1120,7 @@ function cancelWorkflow(triggerEl) {
     RecipeState.status = 'idle';
     RecipeState.activeRecipe = null;
     RecipeState.isMinimized = false;
+    RecipeState.isAutoMinimized = false;
 
     // Immediately hide and disable interactions
     const shadowRoot = getOrCreateShadowRoot();
@@ -1349,10 +1351,18 @@ function handleTurnCompletion() {
     const recipe = RecipeState.activeRecipe;
     const currentIdx = RecipeState.currentTurnIndex;
 
+    // Restore expanded view if it was auto-collapsed during streaming
+    if (RecipeState.isAutoMinimized) {
+        RecipeState.isMinimized = false;
+        RecipeState.isAutoMinimized = false;
+    }
+
     if (currentIdx < recipe.turns.length - 1) {
         RecipeState.currentTurnIndex++;
         if (RecipeState.mode === 'autopilot') {
             RecipeState.status = 'running_turn';
+            RecipeState.isAutoMinimized = true;
+            RecipeState.isMinimized = true;
             renderRailUI();
             setTimeout(() => {
                 executeNextTurn('');
@@ -1389,6 +1399,8 @@ function executeNextTurn(userSteeringNote) {
     }
 
     RecipeState.status = 'running_turn';
+    RecipeState.isAutoMinimized = true;
+    RecipeState.isMinimized = true;
     renderRailUI();
     observeTurnCompletion(() => handleTurnCompletion());
 }
@@ -1416,14 +1428,113 @@ function executeFork(outputChunkId, userSteeringNote) {
     if (!injected) return;
 
     RecipeState.status = 'running_turn';
+    RecipeState.isAutoMinimized = true;
+    RecipeState.isMinimized = true;
     renderRailUI();
     observeTurnCompletion(() => {
         RecipeState.status = 'completed';
+        if (RecipeState.isAutoMinimized) {
+            RecipeState.isMinimized = false;
+            RecipeState.isAutoMinimized = false;
+        }
         renderRailUI();
     });
 }
 
 let isRailDraggingInitialized = false;
+
+function findHostComposerContainer() {
+    const selectors = [
+        // Microsoft Copilot / M365 Chat
+        '[data-testid="composer-container"]',
+        '#m365-chat-input-shared-wrapper',
+        '.fai-ChatInput__inputWrapper',
+        '.fai-EditorInput__input',
+        '.cib-serp-main',
+        // Google Gemini
+        'rich-textarea',
+        '.input-area-container',
+        'div.ql-editor[role="textbox"]',
+        // ChatGPT
+        '#prompt-textarea',
+        'form[class*="stretch"]',
+        // Claude
+        'div.ProseMirror[contenteditable="true"]',
+        'fieldset div[contenteditable="true"]',
+        '[contenteditable="true"]'
+    ];
+    for (const sel of selectors) {
+        const el = document.querySelector(sel);
+        if (el) {
+            return el.closest('form') || el.closest('[data-testid="composer-container"]') || el.parentElement || el;
+        }
+    }
+    return null;
+}
+
+let dockResizeObserver = null;
+let currentObservedComposer = null;
+
+function updateHudDockPosition(railHostElement, isUserDragged) {
+    if (!railHostElement || isUserDragged) return;
+
+    const composer = findHostComposerContainer();
+    if (!composer) {
+        railHostElement.style.position = 'fixed';
+        railHostElement.style.bottom = '96px';
+        railHostElement.style.left = '50%';
+        railHostElement.style.top = 'auto';
+        railHostElement.style.width = RecipeState.isMinimized ? 'auto' : 'min(680px, calc(100vw - 32px))';
+        railHostElement.style.transform = 'translateX(-50%)';
+        railHostElement.style.alignItems = 'center';
+        return;
+    }
+
+    const rect = composer.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    // Position exactly 10px above composer's top edge
+    const bottomOffset = Math.max(16, viewportHeight - rect.top + 10);
+    const centerX = rect.left + rect.width / 2;
+    const maxWidth = Math.min(rect.width, 680);
+
+    railHostElement.style.position = 'fixed';
+    railHostElement.style.bottom = `${bottomOffset}px`;
+    railHostElement.style.top = 'auto';
+    railHostElement.style.left = `${centerX}px`;
+    railHostElement.style.width = RecipeState.isMinimized ? 'auto' : `${maxWidth}px`;
+    railHostElement.style.transform = 'translateX(-50%)';
+    railHostElement.style.zIndex = '2147483646';
+    railHostElement.style.alignItems = 'center';
+
+    // Ensure continuous observation of composer size changes
+    if (typeof ResizeObserver !== 'undefined' && (!dockResizeObserver || currentObservedComposer !== composer)) {
+        if (!dockResizeObserver) {
+            dockResizeObserver = new ResizeObserver(() => {
+                const shadow = getOrCreateShadowRoot();
+                const rail = shadow ? shadow.querySelector('#promptdock-rail-container') : null;
+                if (rail && RecipeState.activeRecipe && RecipeState.status !== 'idle') {
+                    updateHudDockPosition(rail, !!RecipeState.customPos);
+                }
+            });
+            dockResizeObserver.observe(document.body);
+            window.addEventListener('resize', () => {
+                const shadow = getOrCreateShadowRoot();
+                const rail = shadow ? shadow.querySelector('#promptdock-rail-container') : null;
+                if (rail) updateHudDockPosition(rail, !!RecipeState.customPos);
+            });
+            window.addEventListener('scroll', () => {
+                const shadow = getOrCreateShadowRoot();
+                const rail = shadow ? shadow.querySelector('#promptdock-rail-container') : null;
+                if (rail) updateHudDockPosition(rail, !!RecipeState.customPos);
+            }, { passive: true });
+        }
+        if (currentObservedComposer && currentObservedComposer !== composer) {
+            try { dockResizeObserver.unobserve(currentObservedComposer); } catch (e) {}
+        }
+        dockResizeObserver.observe(composer);
+        currentObservedComposer = composer;
+    }
+}
 
 function setupRailDragging(railContainer) {
     if (isRailDraggingInitialized) return;
@@ -1442,7 +1553,7 @@ function setupRailDragging(railContainer) {
         }
 
         const isHeader = !!e.target.closest('.pd-hud-header');
-        const isMin = !!e.target.closest('.pd-hud-dock.pd-minimized');
+        const isMin = !!e.target.closest('.pd-hud-dock.pd-minimized') || !!e.target.closest('.pd-pill-minimized');
         if (!isHeader && !isMin) {
             return;
         }
@@ -1493,14 +1604,11 @@ function setupRailDragging(railContainer) {
         }
     });
 
-    // Double-click on header or pill resets position back to center bottom default
+    // Double-click on header or pill resets position back to zero-overlap default
     railContainer.addEventListener('dblclick', (e) => {
-        if ((e.target.closest('.pd-hud-header') || e.target.closest('.pd-hud-dock.pd-minimized')) && !e.target.closest('button')) {
+        if ((e.target.closest('.pd-hud-header') || e.target.closest('.pd-hud-dock.pd-minimized') || e.target.closest('.pd-pill-minimized')) && !e.target.closest('button')) {
             RecipeState.customPos = null;
-            railContainer.style.left = '50%';
-            railContainer.style.bottom = '84px';
-            railContainer.style.top = 'auto';
-            railContainer.style.transform = 'translateX(-50%)';
+            updateHudDockPosition(railContainer, false);
         }
     });
 }
@@ -1523,7 +1631,7 @@ function renderRailUI() {
     railContainer.style.display = 'flex';
     railContainer.replaceChildren();
 
-    // Preserve custom drag position if moved, otherwise center at bottom
+    // Preserve custom drag position if moved, otherwise anchor dynamically above composer
     if (RecipeState.customPos) {
         const safeLeft = Math.max(12, Math.min(window.innerWidth - 280, RecipeState.customPos.left));
         const safeTop = Math.max(12, Math.min(window.innerHeight - 60, RecipeState.customPos.top));
@@ -1531,61 +1639,78 @@ function renderRailUI() {
         railContainer.style.top = `${safeTop}px`;
         railContainer.style.bottom = 'auto';
         railContainer.style.transform = 'none';
+        railContainer.style.width = RecipeState.isMinimized ? 'auto' : 'min(680px, calc(100vw - 32px))';
     } else {
-        railContainer.style.left = '50%';
-        railContainer.style.bottom = '84px';
-        railContainer.style.top = 'auto';
-        railContainer.style.transform = 'translateX(-50%)';
+        updateHudDockPosition(railContainer, false);
     }
 
     const recipe = RecipeState.activeRecipe;
     const currentIdx = RecipeState.currentTurnIndex;
     const totalTurns = recipe.turns.length;
 
-    // --- State A: Minimized Floating Pill ---
+    // --- State A: Minimized Dynamic Island 36px Capsule ---
     if (RecipeState.isMinimized) {
         const minDock = document.createElement('div');
-        minDock.className = 'pd-hud-dock pd-minimized';
+        minDock.className = 'pd-hud-dock pd-minimized pd-pill-minimized';
 
-        const leftInfo = document.createElement('div');
-        leftInfo.className = 'pd-min-left';
         const isCheckpoint = RecipeState.status === 'checkpoint';
         const isCompleted = RecipeState.status === 'completed';
-        leftInfo.innerHTML = `
-            <span class="pd-drag-handle" title="Ziehen zum Verschieben">
-                <svg width="7" height="11" viewBox="0 0 8 12" fill="currentColor">
-                    <circle cx="2" cy="2" r="1.2"/>
-                    <circle cx="6" cy="2" r="1.2"/>
-                    <circle cx="2" cy="6" r="1.2"/>
-                    <circle cx="6" cy="6" r="1.2"/>
-                    <circle cx="2" cy="10" r="1.2"/>
-                    <circle cx="6" cy="10" r="1.2"/>
-                </svg>
-            </span>
-            <span class="pd-min-badge">${recipe.name}</span>
-            <span class="pd-min-text">${
-                isCompleted ? 'Workflow abgeschlossen!' :
-                isCheckpoint ? `Bereit für Schritt ${currentIdx + 1}: <strong>${recipe.turns[currentIdx].title}</strong>` :
-                `Schritt ${currentIdx + 1} von ${totalTurns} läuft...`
-            }</span>
-        `;
-        minDock.appendChild(leftInfo);
+        const isRunning = RecipeState.status === 'running_turn';
 
+        // 1. Drag Handle
+        const handleSpan = document.createElement('span');
+        handleSpan.className = 'pd-drag-handle';
+        handleSpan.title = 'Ziehen zum Verschieben (Doppelklick zum Zurücksetzen)';
+        handleSpan.innerHTML = `
+            <svg width="7" height="11" viewBox="0 0 8 12" fill="currentColor">
+                <circle cx="2" cy="2" r="1.2"/>
+                <circle cx="6" cy="2" r="1.2"/>
+                <circle cx="2" cy="6" r="1.2"/>
+                <circle cx="6" cy="6" r="1.2"/>
+                <circle cx="2" cy="10" r="1.2"/>
+                <circle cx="6" cy="10" r="1.2"/>
+            </svg>
+        `;
+        minDock.appendChild(handleSpan);
+
+        // 2. Title
+        const titleSpan = document.createElement('span');
+        titleSpan.className = 'pd-pill-title';
+        titleSpan.textContent = recipe.name;
+        titleSpan.title = recipe.name;
+        minDock.appendChild(titleSpan);
+
+        // 3. Step Info / Status
+        const stepSpan = document.createElement('span');
+        stepSpan.className = 'pd-pill-step';
+        if (isRunning) {
+            stepSpan.innerHTML = `<span class="pd-pulse-dot"></span> <span>Generiert Antwort...</span>`;
+        } else if (isCheckpoint) {
+            stepSpan.innerHTML = `<span>Schritt ${currentIdx + 1}: <strong>${recipe.turns[currentIdx].title}</strong></span>`;
+        } else if (isCompleted) {
+            stepSpan.innerHTML = `<span><strong>Abgeschlossen ✓</strong></span>`;
+        } else {
+            stepSpan.innerHTML = `<span>Schritt ${currentIdx + 1}/${totalTurns}</span>`;
+        }
+        minDock.appendChild(stepSpan);
+
+        // 4. Action Group
         const rightActions = document.createElement('div');
         rightActions.className = 'pd-min-actions';
 
         if (isCheckpoint) {
             const sendBtn = document.createElement('button');
-            sendBtn.className = 'pd-primary-btn pd-min-send';
-            sendBtn.innerHTML = `Weiter ➔ <span class="pd-shortcut">⌥⇧→</span>`;
+            sendBtn.className = 'pd-btn-next pd-primary-btn';
+            sendBtn.innerHTML = `Weiter ➔`;
+            sendBtn.title = 'Nächsten Schritt ausführen (⌥⇧→)';
             bindAction(sendBtn, () => executeNextTurn(''));
             rightActions.appendChild(sendBtn);
-        } else if (RecipeState.status === 'running_turn') {
+        } else if (isRunning) {
             const isLastTurn = currentIdx >= totalTurns - 1;
             const unlockBtn = document.createElement('button');
             unlockBtn.className = 'pd-skip-btn pd-min-send';
             unlockBtn.textContent = isLastTurn ? 'Fertig ✓' : 'Fertig ➔';
-            unlockBtn.title = isLastTurn ? 'Workflow beenden und Fenster schliessen' : 'Zum nächsten Schritt wechseln';
+            unlockBtn.title = isLastTurn ? 'Workflow beenden' : 'Zum nächsten Schritt wechseln';
             bindAction(unlockBtn, (btn) => {
                 if (RecipeState.streamCheckInterval) {
                     clearInterval(RecipeState.streamCheckInterval);
@@ -1605,6 +1730,7 @@ function renderRailUI() {
         expandBtn.textContent = '↗';
         expandBtn.title = 'Erweitern (Steuerung öffnen)';
         bindAction(expandBtn, () => {
+            RecipeState.isAutoMinimized = false;
             RecipeState.isMinimized = false;
             renderRailUI();
         });
@@ -1721,6 +1847,7 @@ function renderRailUI() {
     minBtn.textContent = '—';
     minBtn.title = 'Minimieren (Chat lesen)';
     bindAction(minBtn, () => {
+        RecipeState.isAutoMinimized = false;
         RecipeState.isMinimized = true;
         renderRailUI();
     });
@@ -1883,7 +2010,7 @@ function renderRailUI() {
 
         const indicator = document.createElement('div');
         indicator.className = 'pd-running-indicator';
-        indicator.innerHTML = `<span class="pd-spinner"></span> <span>Schritt ${currentIdx + 1} (${recipe.turns[currentIdx].title}) wird generiert...</span>`;
+        indicator.innerHTML = `<span class="pd-spinner"></span> <span class="pd-pulse-dot" style="margin: 0 4px;"></span> <span>Schritt ${currentIdx + 1} (${recipe.turns[currentIdx].title}) wird generiert...</span>`;
         body.appendChild(indicator);
 
         const actions = document.createElement('div');
