@@ -77,27 +77,27 @@ Erfasse:
         },
         'I-PPT': {
             id: 'I-PPT',
-            title: 'Inhalts- & Zielgruppen-Analyse (Präsentation)',
-            text: `TASK 1: INHALTS- & ZIELGRUPPEN-ANALYSE
-Analysiere den vorliegenden Folienentwurf, die Gliederung oder den Themenauftrag.
-Isoliere präzise:
-1. ANLASS & ZIELSETZUNG:
-   - Welcher Anlass liegt vor (z.B. Geschäftsleitungs-Entscheid, Statusbericht, Fachvortrag, Kunden-Pitch, Team-Briefing)?
-   - Welches konkrete Ergebnis soll am Ende stehen (formeller Beschluss, Budgetfreigabe, Information, Einstellungsänderung)?
-2. ZIELPUBLIKUM & ERWARTUNGSHALTUNG:
-   - Wer sitzt im Publikum (Führungskräfte, Fachexperten, gemischtes Publikum, kritische Stakeholder)?
-   - Wie ist das Vorwissen, welche Haltung (wohlwollend, neutral, skeptisch/kritisch) ist zu erwarten?
-   - Was ist die wichtigste Frage aus Sicht des Publikums («What's in it for us / for the company?»)?
-3. STATUS QUO DES MATERIALS:
-   - Liegt bereits ein Entwurf vor (Folienanzahl, Struktur, Textdichte) oder handelt es sich um eine Neukonzeption aus Rohinhalten?
-   - Wo liegen offensichtliche Schwachstellen (Textwüsten, unklare Botschaften, fehlender roter Faden, fehlende Handlungsaufforderung)?
+            title: 'Inhalts- & Zielgruppen-Analyse (Verlinkte Präsentation)',
+            text: `TASK 1: ZUGRIFF & BESTANDSAUFNAHME (VERLINKTE PRÄSENTATION IN OUTLOOK)
+Greife direkt auf die in der vorliegenden E-Mail / Nachricht verlinkte PowerPoint-Präsentation (SharePoint-, OneDrive- oder Web-Link) bzw. allfällige Dateianhänge zu und analysiere den tatsächlichen Folieninhalt.
+
+Erfasse systematisch:
+1. ANLIEGEN & KONTEXT AUS DEM MAILTEXT:
+   - Welches Anliegen, welche Zielgruppe und welche Rahmenbedingungen (Termin, Dringlichkeit) nennt die Kollegin / der Kollege in der begleitenden Nachricht?
+   - Welches konkrete Ergebnis soll die Präsentation erzielen (z.B. formeller Geschäftsleitungs-/Vorstandsbeschluss, Budgetfreigabe, Projektstatus, Kundenüberzeugung)?
+   - Was ist die entscheidende Frage aus Sicht der Adressaten («What's in it for us / for the company?»)?
+
+2. ANALYSE DES VERLINKTEN DECKS (FOLIE FÜR FOLIE):
+   - Folienanzahl, erkennbare Abschnitte und thematischer Aufbau des vorliegenden Decks.
+   - Textdichte & Lesbarkeit: Überladene Folien («Textwüsten»), passive Bulletpoints vs. klare optische Botschaften.
+   - Qualität der aktuellen Folientitel: Rein thematische Stichworte (z.B. «Status», «Hintergrund») vs. aussagekräftige Botschaften.
 
 TASK 2: DRAMATURGIE-CHECK (PYRAMIDEN-PRINZIP & SCQA)
-Hinterfrage den Aufbau nach dem Pyramiden-Prinzip:
-- SITUATION: Ist die Ausgangslage für alle Beteiligten unstrittig und knapp beschrieben?
-- KOMPLIKATION: Was ist die treibende Veränderung, das Problem oder die Chance, die jetzt Handeln erfordert?
-- KERNFRAGE: Welche zentrale Frage muss diese Präsentation beantworten?
-- ANTWORT (GOVERNING THOUGHT): Was ist die übergeordnete Kernhypothese bzw. Lösungsempfehlung?`
+Gleiche das verlinkte Foliendeck mit dem Pyramiden-Prinzip ab:
+- SITUATION: Ist die Ausgangslage für die Zielgruppe unstrittig und auf das Wesentliche verdichtet?
+- KOMPLIKATION: Wird sofort spürbar, warum JETZT Handlungsbedarf besteht (Problem, Risiko, veränderte Marktlage, strategische Chance)?
+- KERNFRAGE: Welche Leitfrage muss dieses Deck unmissverständlich beantworten?
+- ANTWORT (GOVERNING THOUGHT): Liefert die Präsentation eine klare, tragfähige Beschluss- oder Handlungsempfehlung, oder verliert sie sich in Detailbeschreibungen?`
         },
         'I-MEET': {
             id: 'I-MEET',
@@ -295,25 +295,25 @@ Analysiere die strategische Relevanz des Vorhabens:
         'S-PPT-STRATEGY': {
             id: 'S-PPT-STRATEGY',
             title: 'Präsentations-Strategie & Wegwahl',
-            text: `TASK: WEGWAHL (MINIMAL-INVASIV VS. UMFASSENDES REDESIGN)
-Wäge anhand des Materials, des Reifegrads und des Anlasses zwei Vorgehensweisen ab:
+            text: `TASK: STRATEGISCHE WEGWAHL FÜR DAS VERLINKTE DECK
+Beurteile auf Basis des ausgelesenen Folienentwurfs und der begleitenden E-Mail zwei Handlungsoptionen:
 
-1. WEG A: MINIMAL-INVASIVE SCHNELLHILFE (QUICK FIX)
-   - Eignung: Wenn der Termin kurz bevorsteht, die Struktur grundsätzlich tragfähig ist oder primär sprachliches/visuelles Polishing gesucht wird.
+1. WEG A: MINIMAL-INVASIVE SCHNELLHILFE (QUICK FIX FÜR DAS BESTEHENDE DECK)
+   - Eignung: Wenn der Termin drängt, die bestehende Struktur der Kollegin / des Kollegen grundsätzlich tragfähig ist oder primär sprachliches und visuelles Polishing gesucht wird.
    - Hebel:
-     * Umwandlung passiver Folientitel in aussagekräftige «Action Titles» (ganze Sätze mit Botschaft).
-     * Rigides Entrümpeln überladener Folien (Regel: 1 Gedanke pro Folie, Streichung redundanter Aufzählungszeichen).
-     * Text in visuelle Strukturen überführen (3-Spalten-Raster, Gegenüberstellung, Callout-Boxen).
+     * Bestehende Folienreihenfolge weitgehend beibehalten, aber jeden Folientitel in einen prägnanten «Action Title» (ganzer Satz mit Kernbotschaft) umwandeln.
+     * Textwüsten und Aufzählungs-Friedhöfe rigide ausmisten: maximal 3 bis 4 Kernaussagen pro Folie.
+     * Text in klare visuelle Raster übersetzen (z.B. 3-Spalten-Struktur, Vorher/Nachher, Callout-Boxen für Kernbeschlüsse).
 
 2. WEG B: UMFASSENDES REDESIGN (STRATEGISCHE STORYLINE)
-   - Eignung: Bei hoher strategischer Relevanz (Vorstands-/Entscheidungstermin), verfahrenem rotem Faden oder Neukonzeption.
+   - Eignung: Bei hoher strategischer Relevanz (Vorstands-/Entscheidungstermin), verfahrenem rotem Faden oder wenn die Kernbotschaft im aktuellen Deck untergeht.
    - Hebel:
      * Radikale Reorganisation nach dem Pyramiden-Prinzip (Bottom Line Up Front / BLUF).
-     * Reduktion auf 5–8 wirkungsvolle Kernfolien für den Hauptteil.
-     * Auslagerung von technischen Details, Datenwüsten und Nachweisen in einen dedizierten «Backup-/Anhang»-Bereich.
+     * Reduktion auf 5 bis 8 wirkungsvolle Kernfolien für den Hauptteil.
+     * Auslagerung von technischen Details, Rohdaten und Nachweisen in einen dedizierten «Backup-/Anhang»-Bereich.
 
 TASK: EMPFEHLUNG DES KOMMUNIKATIONSEXPERTEN
-- Lege dich begründet fest: Welcher Weg (A oder B) liefert den höchsten Mehrwert bei vertretbarem Aufwand?
+- Lege dich begründet fest: Welcher Weg (A oder B) liefert der Kollegin / dem Kollegen den höchsten Hebel bei vertretbarem Aufwand?
 - Formuliere die tragende Leitbotschaft der Präsentation in genau einem prägnanten Satz.`
         },
         'A-AUDIT-ALL': {
@@ -547,7 +547,7 @@ Gliedere jede Folie exakt nach folgendem Standard:
 - **FOLIENAUFBAU & VISUALISIERUNG:**
   * Layout-Vorschlag: [z.B. 3 Spalten mit Icons, Vorher-Nachher-Matrix, horizontaler 4-Schritte-Zeitstrahl, 1 grosse Zahl links + 2 prägnante Kernaussagen rechts]
   * Inhalt: [Maximal 3 bis 4 präzise formulierte Stichpunkte ohne Füllwörter]
-- **QUICK-FIX TIPP:** [Ein konkreter Hinweis für minimal-invasive Anpassung, falls eine existierende Folie beibehalten wird.]
+- **QUICK-FIX TIPP FÜR BESTEHENDE FOLIE:** [Konkreter Hinweis, was die Kollegin / der Kollege an der vorliegenden Folie im verlinkten Deck sofort streichen, umschreiben oder umstellen sollte.]
 ---
 
 TASK: DIE 3 GOLDENEN PRÄSENTATIONS-REGELN FÜR DIESEN AUFTRITT
