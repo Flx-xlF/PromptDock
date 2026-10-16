@@ -404,13 +404,16 @@
     user-select: none;
 }
 
+.pd-rail-card,
 .pd-hud-dock {
-    background: rgba(18, 18, 22, 0.94);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(18, 18, 24, 0.94);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 0, 0, 0.4);
     border-radius: 14px;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    color: #f1f5f9;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -492,13 +495,13 @@
 }
 
 .pd-hud-header {
-    padding: 10px 14px;
+    padding: 8px 14px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     background: rgba(255, 255, 255, 0.02);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 10px;
     cursor: grab;
     user-select: none;
 }
@@ -617,105 +620,119 @@
 }
 
 .pd-hud-body {
-    padding: 12px 14px;
+    padding: 10px 14px 12px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-}
-
-.pd-hud-status-line {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 12px;
-    color: #a1a1aa;
-}
-
-.pd-step-tag {
-    font-size: 10px;
-    font-weight: 600;
-    background: rgba(255, 255, 255, 0.08);
-    color: #d4d4d8;
-    padding: 2px 6px;
-    border-radius: 4px;
-}
-
-.pd-step-desc strong {
-    color: #f4f4f5;
 }
 
 .pd-modifiers-row {
     display: flex;
     gap: 6px;
+    margin-bottom: 8px;
     flex-wrap: wrap;
 }
 
 .pd-mod-tag {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    color: #a1a1aa;
+    color: #94a3b8;
     padding: 3px 9px;
     border-radius: 12px;
     font-size: 11px;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.15s ease;
+    user-select: none;
+    font-family: inherit;
 }
 
 .pd-mod-tag:hover {
-    background: rgba(99, 102, 241, 0.12);
-    border-color: rgba(99, 102, 241, 0.3);
+    background: rgba(99, 102, 241, 0.14);
+    border-color: rgba(99, 102, 241, 0.35);
     color: #c7d2fe;
 }
 
-.pd-action-row {
+.pd-steering-composer {
     display: flex;
-    gap: 8px;
     align-items: center;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 10px;
+    padding: 4px 4px 4px 12px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.pd-note-input {
+.pd-steering-composer:focus-within {
+    border-color: rgba(99, 102, 241, 0.55);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.pd-steering-composer input,
+.pd-steering-composer .pd-note-input {
     flex: 1;
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 8px;
-    padding: 8px 12px;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #f1f5f9;
+    font-size: 12px;
+    font-family: inherit;
+    padding: 4px 0;
+}
+
+.pd-steering-composer input::placeholder,
+.pd-steering-composer .pd-note-input::placeholder {
+    color: #64748b;
+}
+
+.pd-btn-next {
+    flex-shrink: 0;
+    height: 28px;
+    padding: 0 12px;
+    border-radius: 7px;
+    background: #6366f1;
     color: #ffffff;
     font-size: 12px;
-    outline: none;
-    transition: border-color 0.15s ease;
-}
-
-.pd-note-input:focus {
-    border-color: #6366f1;
-}
-
-.pd-fork-row {
-    display: flex;
+    font-weight: 600;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding-top: 4px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    gap: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    white-space: nowrap;
+    font-family: inherit;
 }
 
-.pd-fork-label {
-    font-size: 11px;
-    color: #71717a;
+.pd-btn-next:hover {
+    background: #4f46e5;
 }
 
+.pd-fork-pill,
 .pd-fork-select {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    color: #a1a1aa;
+    height: 24px;
     font-size: 11px;
-    padding: 4px 8px;
+    font-weight: 500;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    color: #cbd5e1;
+    padding: 0 8px;
     outline: none;
     cursor: pointer;
+    transition: all 0.15s ease;
+    max-width: 175px;
+    font-family: inherit;
 }
 
+.pd-fork-pill:hover,
 .pd-fork-select:hover {
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.22);
 }
 
 .pd-primary-btn {

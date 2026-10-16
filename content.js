@@ -1687,6 +1687,35 @@ function renderRailUI() {
     const controls = document.createElement('div');
     controls.className = 'pd-hud-controls';
 
+    // Output Fork Dropdown: Relocated to compact pill select in header
+    const isFinalStep = currentIdx === totalTurns - 1;
+    if (isFinalStep && recipe.forks && recipe.forks.length > 0 && RecipeState.status === 'checkpoint') {
+        const forkSelect = document.createElement('select');
+        forkSelect.className = 'pd-fork-select pd-fork-pill';
+        forkSelect.title = 'Anderen Output wählen';
+
+        const defOpt = document.createElement('option');
+        defOpt.value = '';
+        defOpt.textContent = `Standard (${recipe.turns[currentIdx].title})`;
+        forkSelect.appendChild(defOpt);
+
+        const catalog = window.PromptDockCatalog;
+        recipe.forks.forEach(fId => {
+            const opt = document.createElement('option');
+            opt.value = fId;
+            opt.textContent = `➔ ${catalog?.CHUNKS[fId]?.title || fId}`;
+            forkSelect.appendChild(opt);
+        });
+
+        forkSelect.addEventListener('change', (e) => {
+            if (e.target.value) {
+                const noteVal = hud.querySelector('.pd-steering-composer input')?.value || '';
+                executeFork(e.target.value, noteVal);
+            }
+        });
+        controls.appendChild(forkSelect);
+    }
+
     const minBtn = document.createElement('button');
     minBtn.className = 'pd-ctrl-btn';
     minBtn.textContent = '—';
@@ -1712,14 +1741,12 @@ function renderRailUI() {
         const body = document.createElement('div');
         body.className = 'pd-hud-body';
 
-        const statusLine = document.createElement('div');
-        statusLine.className = 'pd-hud-status-line';
-        statusLine.innerHTML = `<span class="pd-step-tag">Schritt ${currentIdx + 1} von ${totalTurns}</span> <span class="pd-step-desc">Bereit für: <strong>${recipe.turns[currentIdx].title}</strong></span>`;
-        body.appendChild(statusLine);
-
-        // Steering Modifiers (no redundant "Direkt weiter" chip!)
+        // Steering Modifiers (compact chip row)
         const modsRow = document.createElement('div');
         modsRow.className = 'pd-modifiers-row';
+
+        const composer = document.createElement('div');
+        composer.className = 'pd-steering-composer';
 
         const noteInput = document.createElement('input');
         noteInput.type = 'text';
@@ -1744,68 +1771,22 @@ function renderRailUI() {
         });
         body.appendChild(modsRow);
 
-        // Action Row: Input + Primary Advance Button + Cancel Button
-        const actionRow = document.createElement('div');
-        actionRow.className = 'pd-action-row';
-
+        // Full-Width Spotlight Composer (Input + Integrated Weiter CTA)
         noteInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 executeNextTurn(noteInput.value);
             }
         });
-        actionRow.appendChild(noteInput);
+        composer.appendChild(noteInput);
 
         const nextBtn = document.createElement('button');
-        nextBtn.className = 'pd-primary-btn';
+        nextBtn.className = 'pd-btn-next pd-primary-btn';
         nextBtn.innerHTML = `Weiter ➔ <span class="pd-shortcut">⌥⇧→</span>`;
         bindAction(nextBtn, () => executeNextTurn(noteInput.value));
-        actionRow.appendChild(nextBtn);
+        composer.appendChild(nextBtn);
 
-        const cancelBtn = document.createElement('button');
-        cancelBtn.className = 'pd-cancel-btn';
-        cancelBtn.textContent = 'Abbrechen';
-        cancelBtn.title = 'Workflow komplett beenden';
-        bindAction(cancelBtn, (btn) => cancelWorkflow(btn));
-        actionRow.appendChild(cancelBtn);
-
-        body.appendChild(actionRow);
-
-        // Fork Dropdown: ONLY on final step if forks exist!
-        const isFinalStep = currentIdx === totalTurns - 1;
-        if (isFinalStep && recipe.forks && recipe.forks.length > 0) {
-            const forkRow = document.createElement('div');
-            forkRow.className = 'pd-fork-row';
-            
-            const forkLabel = document.createElement('span');
-            forkLabel.className = 'pd-fork-label';
-            forkLabel.textContent = 'Anderen Output wählen:';
-            forkRow.appendChild(forkLabel);
-
-            const forkSelect = document.createElement('select');
-            forkSelect.className = 'pd-fork-select';
-            const defOpt = document.createElement('option');
-            defOpt.value = '';
-            defOpt.textContent = `Standard (${recipe.turns[currentIdx].title})`;
-            forkSelect.appendChild(defOpt);
-
-            const catalog = window.PromptDockCatalog;
-            recipe.forks.forEach(fId => {
-                const opt = document.createElement('option');
-                opt.value = fId;
-                opt.textContent = `➔ ${catalog?.CHUNKS[fId]?.title || fId}`;
-                forkSelect.appendChild(opt);
-            });
-
-            forkSelect.addEventListener('change', (e) => {
-                if (e.target.value) {
-                    executeFork(e.target.value, noteInput.value);
-                }
-            });
-            forkRow.appendChild(forkSelect);
-            body.appendChild(forkRow);
-        }
-
+        body.appendChild(composer);
         hud.appendChild(body);
     } else if (RecipeState.status === 'completed') {
         const body = document.createElement('div');
