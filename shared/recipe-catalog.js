@@ -82,22 +82,29 @@ Erfasse:
 Greife direkt auf die in der vorliegenden E-Mail / Nachricht verlinkte PowerPoint-Präsentation (SharePoint-, OneDrive- oder Web-Link) bzw. allfällige Dateianhänge zu und analysiere den tatsächlichen Folieninhalt.
 
 Erfasse systematisch:
-1. ANLIEGEN & KONTEXT AUS DEM MAILTEXT:
-   - Welches Anliegen, welche Zielgruppe und welche Rahmenbedingungen (Termin, Dringlichkeit) nennt die Kollegin / der Kollege in der begleitenden Nachricht?
-   - Welches konkrete Ergebnis soll die Präsentation erzielen (z.B. formeller Geschäftsleitungs-/Vorstandsbeschluss, Budgetfreigabe, Projektstatus, Kundenüberzeugung)?
-   - Was ist die entscheidende Frage aus Sicht der Adressaten («What's in it for us / for the company?»)?
+1. ZIELGRUPPE & ENTSCHEIDUNGS-KONTEXT (MAILTEXT):
+   - Wer genau ist das Zielpublikum (z.B. Geschäftsleitung/Vorstand, Fachexperten, Team, Aufsichtsgremium, externe Partner)?
+   - Welches Vorwissen, welche Erwartungshaltung, welche Skepsis oder Eigeninteressen bringt diese Zielgruppe mit?
+   - Welches konkrete Ergebnis soll die Präsentation erzielen (formeller Beschluss, Budgetfreigabe, Richtungsentscheid, Information)?
+   - Was ist die entscheidende Kernfrage aus Sicht der Adressaten («What's in it for us / for the company?»)?
 
-2. ANALYSE DES VERLINKTEN DECKS (FOLIE FÜR FOLIE):
-   - Folienanzahl, erkennbare Abschnitte und thematischer Aufbau des vorliegenden Decks.
-   - Textdichte & Lesbarkeit: Überladene Folien («Textwüsten»), passive Bulletpoints vs. klare optische Botschaften.
-   - Qualität der aktuellen Folientitel: Rein thematische Stichworte (z.B. «Status», «Hintergrund») vs. aussagekräftige Botschaften.
+2. BESTANDSAUFNAHME DES DECKS (FOLIE FÜR FOLIE):
+   - Folienanzahl, Gliederungsabschnitte und thematischer Aufbau des vorliegenden Decks.
+   - Textdichte & Lesbarkeit: Überladene Folien («Textwüsten»), passive Bulletpoints vs. visuelle Klarheit.
+   - Qualität der Folientitel: Rein thematische Stichworte (z.B. «Status», «Hintergrund») vs. aussagekräftige Botschaften.
 
-TASK 2: DRAMATURGIE-CHECK (PYRAMIDEN-PRINZIP & SCQA)
+TASK 2: DRAMATURGIE-CHECK & STÄRKSTE STORYLINE (SCQA)
 Gleiche das verlinkte Foliendeck mit dem Pyramiden-Prinzip ab:
-- SITUATION: Ist die Ausgangslage für die Zielgruppe unstrittig und auf das Wesentliche verdichtet?
-- KOMPLIKATION: Wird sofort spürbar, warum JETZT Handlungsbedarf besteht (Problem, Risiko, veränderte Marktlage, strategische Chance)?
+- SITUATION: Ist die Ausgangslage für die Zielgruppe unstrittig, präzise und relevant beschrieben?
+- KOMPLIKATION: Wird sofort spürbar, warum JETZT Handlungsbedarf besteht (Problem, Risiko, veränderte Rahmenbedingungen, Chance)?
 - KERNFRAGE: Welche Leitfrage muss dieses Deck unmissverständlich beantworten?
-- ANTWORT (GOVERNING THOUGHT): Liefert die Präsentation eine klare, tragfähige Beschluss- oder Handlungsempfehlung, oder verliert sie sich in Detailbeschreibungen?`
+- ANTWORT (GOVERNING THOUGHT): Bietet die Präsentation eine glasklare, überzeugende Beschluss- oder Handlungsempfehlung, oder verliert sie sich in Detailbeschreibungen?
+
+TASK 3: MEDIALE & POLITISCHE BELASTBARKEITSPRÜFUNG
+Nimm die Perspektive eines investigativen Journalisten, eines politischen Gegners und eines skeptischen Aufsichtsorgans ein:
+- Wo enthält das vorliegende Deck Angriffsflächen, unbelegte Zahlenbehauptungen, voreilige Versprechungen oder heikle Formulierungen?
+- Welche Folien oder Aussagen würden bei einem Leak an die Medien oder in die Öffentlichkeit Reputationsschaden anrichten?
+- Sind alle getroffenen Aussagen konsistent mit bisherigen Unternehmenspositionen?`
         },
         'I-MEET': {
             id: 'I-MEET',
@@ -294,27 +301,32 @@ Analysiere die strategische Relevanz des Vorhabens:
         },
         'S-PPT-STRATEGY': {
             id: 'S-PPT-STRATEGY',
-            title: 'Präsentations-Strategie & Wegwahl',
+            title: 'Präsentations-Strategie & Argumentation',
             text: `TASK: STRATEGISCHE WEGWAHL FÜR DAS VERLINKTE DECK
 Beurteile auf Basis des ausgelesenen Folienentwurfs und der begleitenden E-Mail zwei Handlungsoptionen:
 
 1. WEG A: MINIMAL-INVASIVE SCHNELLHILFE (QUICK FIX FÜR DAS BESTEHENDE DECK)
-   - Eignung: Wenn der Termin drängt, die bestehende Struktur der Kollegin / des Kollegen grundsätzlich tragfähig ist oder primär sprachliches und visuelles Polishing gesucht wird.
+   - Eignung: Wenn der Termin drängt, die Grundstruktur tragfähig ist oder primär sprachliches/visuelles Polishing gesucht wird.
    - Hebel:
      * Bestehende Folienreihenfolge weitgehend beibehalten, aber jeden Folientitel in einen prägnanten «Action Title» (ganzer Satz mit Kernbotschaft) umwandeln.
      * Textwüsten und Aufzählungs-Friedhöfe rigide ausmisten: maximal 3 bis 4 Kernaussagen pro Folie.
      * Text in klare visuelle Raster übersetzen (z.B. 3-Spalten-Struktur, Vorher/Nachher, Callout-Boxen für Kernbeschlüsse).
+     * Schärfen & Entschärfen: Angreifbare Formulierungen medial und politisch abdichten.
 
-2. WEG B: UMFASSENDES REDESIGN (STRATEGISCHE STORYLINE)
+2. WEG B: UMFASSENDES REDESIGN (STRATEGISCHE STORYLINE & PYRAMIDENPRINZIP)
    - Eignung: Bei hoher strategischer Relevanz (Vorstands-/Entscheidungstermin), verfahrenem rotem Faden oder wenn die Kernbotschaft im aktuellen Deck untergeht.
    - Hebel:
-     * Radikale Reorganisation nach dem Pyramiden-Prinzip (Bottom Line Up Front / BLUF).
+     * Radikale Reorganisation entlang der stärksten Storyline (Bottom Line Up Front / BLUF).
+     * Rigides Zuschneiden aller Argumente auf die Psychologie, Erwartungen und Entscheidungskriterien der Zielgruppe.
      * Reduktion auf 5 bis 8 wirkungsvolle Kernfolien für den Hauptteil.
      * Auslagerung von technischen Details, Rohdaten und Nachweisen in einen dedizierten «Backup-/Anhang»-Bereich.
 
-TASK: EMPFEHLUNG DES KOMMUNIKATIONSEXPERTEN
+TASK: ARGUMENTATIONS-ARCHITEKTUR & EMPFEHLUNG DES KOMMUNIKATIONSEXPERTEN
 - Lege dich begründet fest: Welcher Weg (A oder B) liefert der Kollegin / dem Kollegen den höchsten Hebel bei vertretbarem Aufwand?
-- Formuliere die tragende Leitbotschaft der Präsentation in genau einem prägnanten Satz.`
+- Formuliere die tragende Leitbotschaft der Präsentation in genau einem prägnanten Satz.
+- Baue die 3 stärksten, überzeugendsten Hauptargumente auf:
+  * Warum überzeugen sie genau diese Zielgruppe?
+  * Halten die Argumente einer kritischen Prüfung durch Medien, Aufsicht oder Gegenpartei stand (Belastbarkeit)?`
         },
         'A-AUDIT-ALL': {
             id: 'A-AUDIT-ALL',
@@ -544,9 +556,11 @@ Gliedere jede Folie exakt nach folgendem Standard:
 ---
 ### FOLIE [Nummer]: [Funktion der Folie, z.B. Einstieg / Problem / Lösung / Wirtschaftlichkeit / Beschluss]
 - **ACTION TITLE (Headline):** [Vollständiger, prägnanter Aussagesatz oben auf der Folie, der die Kernbotschaft der Folie auf den Punkt bringt – keine generischen Schlagworte!]
+- **ZIELGRUPPEN-HEBEL:** [Warum überzeugt dieser Punkt genau die Adressaten? Welcher Vorbehalt wird hier entkräftet?]
 - **FOLIENAUFBAU & VISUALISIERUNG:**
   * Layout-Vorschlag: [z.B. 3 Spalten mit Icons, Vorher-Nachher-Matrix, horizontaler 4-Schritte-Zeitstrahl, 1 grosse Zahl links + 2 prägnante Kernaussagen rechts]
   * Inhalt: [Maximal 3 bis 4 präzise formulierte Stichpunkte ohne Füllwörter]
+- **BELASTBARKEITS-CHECK:** [Medial und politisch belastbare Faktenbasis; keine Angriffsflächen bei kritischen Gegenfragen]
 - **QUICK-FIX TIPP FÜR BESTEHENDE FOLIE:** [Konkreter Hinweis, was die Kollegin / der Kollege an der vorliegenden Folie im verlinkten Deck sofort streichen, umschreiben oder umstellen sollte.]
 ---
 
@@ -951,12 +965,12 @@ ROHDATEN:`
             family: 'review',
             turns: [
                 {
-                    title: 'LAGEBILD & DRAMATURGIE-CHECK',
+                    title: 'LAGEBILD, DRAMATURGIE & BELASTBARKEIT',
                     role: 'Du bist ein erfahrener Executive Präsentationsberater und Storytelling-Coach.',
                     chunks: ['I-PPT', 'R-FULL', 'C-THESIS', 'T-TLDR']
                 },
                 {
-                    title: 'STRATEGIE & WEGWAHL',
+                    title: 'STRATEGIE & ARGUMENTATION',
                     role: 'Du bist ein leitender Kommunikationsstratege und Präsentations-Experte.',
                     chunks: ['S-PPT-STRATEGY', { chunkId: 'S-MESSAGES', params: { count: 'drei' } }]
                 },
