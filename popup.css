@@ -535,6 +535,76 @@ textarea {
     border-radius: var(--radius-md);
 }
 
+/* --- Recipe Turns Inspector (Multi-Turn Preview in Editor Sheet) --- */
+.recipe-inspector {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.recipe-inspector-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #a5b4fc;
+    margin-bottom: 6px;
+}
+
+.recipe-turn-pills {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.recipe-turn-pills::-webkit-scrollbar {
+    display: none;
+}
+
+.recipe-turn-pill {
+    flex: 1;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+.recipe-turn-pill:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.recipe-turn-pill.active {
+    background: var(--accent-subtle);
+    border-color: var(--border-focus);
+    color: #e0e7ff;
+}
+
+.recipe-turn-detail {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    padding: 6px 8px;
+}
+
 /* Minimal Control Row & Toggle Switch */
 .auto-send-row,
 .checkbox-label,

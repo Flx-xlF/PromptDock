@@ -228,6 +228,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         const sheetTitle = document.getElementById('editor-sheet-title');
         if (sheetTitle) sheetTitle.textContent = 'Neuer Prompt';
         document.getElementById('save-btn').innerText = 'Speichern';
+
+        // Reset & hide recipe inspector for standard single-shot prompt
+        const inspector = document.getElementById('recipe-turns-inspector');
+        if (inspector) {
+            inspector.classList.add('hidden');
+            inspector.replaceChildren();
+        }
+        const contentLabel = document.getElementById('prompt-content-label');
+        if (contentLabel) contentLabel.classList.add('hidden');
+        document.getElementById('prompt-content').placeholder = 'Prompt Text...';
+
         updateCharCounter();
     });
     
@@ -240,6 +251,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('prompt-auto-send').checked = false;
         editingIndex = -1;
         document.getElementById('save-btn').innerText = 'Speichern';
+
+        // Reset & hide recipe inspector
+        const inspector = document.getElementById('recipe-turns-inspector');
+        if (inspector) {
+            inspector.classList.add('hidden');
+            inspector.replaceChildren();
+        }
+        const contentLabel = document.getElementById('prompt-content-label');
+        if (contentLabel) contentLabel.classList.add('hidden');
+        document.getElementById('prompt-content').placeholder = 'Prompt Text...';
+
         updateCharCounter();
     });
 
@@ -257,17 +279,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (name && content) {
             if (editingIndex >= 0) {
                 // Update existing
+                const existingPrompt = prompts[editingIndex];
+                const matchedRecipe = findMatchingRecipe(existingPrompt);
+
                 prompts[editingIndex].name = name;
                 prompts[editingIndex].content = content;
                 prompts[editingIndex].autoSend = autoSend;
+
+                // Explicitly persist recipeId so renaming never loses binding to Catalog.RECIPES
+                if (matchedRecipe) {
+                    prompts[editingIndex].recipeId = matchedRecipe.id;
+                } else if (existingPrompt.recipeId) {
+                    prompts[editingIndex].recipeId = existingPrompt.recipeId;
+                }
             } else {
                 // Add new
-                prompts.push({
+                const newPrompt = {
                     id: Date.now().toString(),
                     name,
                     content,
                     autoSend
-                });
+                };
+                const matchedRecipe = findMatchingRecipe(newPrompt);
+                if (matchedRecipe) {
+                    newPrompt.recipeId = matchedRecipe.id;
+                }
+                prompts.push(newPrompt);
             }
             try {
                 await PromptStorage.save(prompts);
@@ -559,6 +596,67 @@ function getRecipeWorkflowSummary(recipe, fallbackContent) {
     return (fallbackContent || '').replace(/\s+/g, ' ').slice(0, 60);
 }
 
+function renderRecipeInspector(recipe) {
+    const container = document.getElementById('recipe-turns-inspector');
+    if (!container || !recipe || !recipe.turns) return;
+
+    container.replaceChildren();
+
+    // 1. Header
+    const header = document.createElement('div');
+    header.className = 'recipe-inspector-header';
+    header.innerHTML = `
+        <span>${recipe.turns.length}-Schritte Workflow Rail</span>
+        <span style="color:var(--text-tertiary); font-weight:500;">Turn-Vorschau</span>
+    `;
+    container.appendChild(header);
+
+    // 2. Turn Pills Bar
+    const pillsRow = document.createElement('div');
+    pillsRow.className = 'recipe-turn-pills';
+
+    const detailBox = document.createElement('div');
+    detailBox.className = 'recipe-turn-detail';
+
+    function updateTurnDetail(turn, turnIdx) {
+        const chunkTitles = (turn.chunks || []).map(c => {
+            const id = typeof c === 'string' ? c : c.chunkId;
+            return Catalog?.CHUNKS?.[id]?.title || id;
+        });
+        detailBox.innerHTML = `
+            <div style="margin-bottom: 3px;"><strong>Schritt ${turnIdx + 1}:</strong> <span style="color: #e2e8f0; font-weight: 600;">${turn.title}</span></div>
+            <div style="margin-bottom: 3px;"><strong>Rolle:</strong> <span style="color: #cbd5e1;">${turn.role || 'Standard-Assistent'}</span></div>
+            <div><strong>Aktive Chunks:</strong> <span style="color: var(--text-tertiary);">${chunkTitles.join(' · ') || 'Keine Chunks'}</span></div>
+        `;
+    }
+
+    recipe.turns.forEach((turn, idx) => {
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = 'recipe-turn-pill' + (idx === 0 ? ' active' : '');
+        const numberIcons = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨'];
+        const icon = numberIcons[idx] || `${idx + 1}.`;
+        pill.textContent = `${icon} ${turn.title}`;
+        pill.title = `Turn ${idx + 1}: ${turn.title}`;
+
+        pill.addEventListener('click', (e) => {
+            e.preventDefault();
+            pillsRow.querySelectorAll('.recipe-turn-pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            updateTurnDetail(turn, idx);
+        });
+
+        pillsRow.appendChild(pill);
+    });
+
+    container.appendChild(pillsRow);
+
+    if (recipe.turns.length > 0) {
+        updateTurnDetail(recipe.turns[0], 0);
+    }
+    container.appendChild(detailBox);
+}
+
 /** Update the global storage usage bar in the footer. */
 function updateGlobalStorage() {
     const el = document.getElementById('global-storage');
@@ -715,11 +813,38 @@ async function renderPrompts() {
             editingIndex = originalIdx;
             document.getElementById('prompt-name').value = prompt.name;
             document.getElementById('prompt-content').value = prompt.content;
+            document.getElementById('prompt-auto-send').checked = !!prompt.autoSend;
             document.getElementById('prompt-modal')?.classList.remove('hidden');
             document.getElementById('add-form')?.classList.remove('hidden');
             document.getElementById('toggle-add-btn')?.classList.add('hidden');
+            
             const sheetTitle = document.getElementById('editor-sheet-title');
-            if (sheetTitle) sheetTitle.textContent = 'Prompt bearbeiten';
+            const inspector = document.getElementById('recipe-turns-inspector');
+            const contentLabel = document.getElementById('prompt-content-label');
+
+            if (matchedRecipe && matchedRecipe.turns && matchedRecipe.turns.length > 0) {
+                if (sheetTitle) sheetTitle.textContent = 'Workflow bearbeiten';
+                if (inspector) {
+                    inspector.classList.remove('hidden');
+                    renderRecipeInspector(matchedRecipe);
+                }
+                if (contentLabel) {
+                    contentLabel.classList.remove('hidden');
+                    contentLabel.textContent = 'Express-Modus / Direkt-Prompt (1-Turn Fallback)';
+                }
+                document.getElementById('prompt-content').placeholder = 'Express-Modus / Direkt-Prompt (1-Turn Fallback)';
+            } else {
+                if (sheetTitle) sheetTitle.textContent = 'Prompt bearbeiten';
+                if (inspector) {
+                    inspector.classList.add('hidden');
+                    inspector.replaceChildren();
+                }
+                if (contentLabel) {
+                    contentLabel.classList.add('hidden');
+                }
+                document.getElementById('prompt-content').placeholder = 'Prompt Text...';
+            }
+
             document.getElementById('save-btn').innerText = 'Aktualisieren';
             updateCharCounter();
         });
