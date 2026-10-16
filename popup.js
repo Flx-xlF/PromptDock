@@ -54,13 +54,15 @@ const PromptStorage = {
         }
 
         // 3. Legacy: all prompts in one local key (from previous fix)
-        const localData = await ext.storage.local.get('prompts');
-        if (localData.prompts && localData.prompts.length > 0) {
-            const legacy = localData.prompts;
-            await this.save(legacy);                        // migrate to sync
-            await ext.storage.local.remove('prompts');   // clean up
-            console.log('[PromptDock] Migrated from legacy local format.');
-            return legacy;
+        if (ext?.storage?.local) {
+            const localData = await ext.storage.local.get('prompts');
+            if (localData?.prompts && localData.prompts.length > 0) {
+                const legacy = localData.prompts;
+                await this.save(legacy);                        // migrate to sync
+                await ext.storage.local.remove('prompts');   // clean up
+                console.log('[PromptDock] Migrated from legacy local format.');
+                return legacy;
+            }
         }
 
         return null; // no stored data — caller should use defaults
