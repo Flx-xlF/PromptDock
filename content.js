@@ -1382,15 +1382,26 @@ function executeNextTurn(userSteeringNote) {
     const recipe = RecipeState.activeRecipe;
     const nextIdx = RecipeState.currentTurnIndex;
     const prevTurnTitle = recipe.turns[nextIdx - 1]?.title;
+    const turn = recipe.turns[nextIdx];
+    if (!turn) return;
 
-    const catalog = window.PromptDockCatalog;
-    if (!catalog) return;
+    let turnPrompt = '';
+    const isCustomTurn = (turn.content && (!turn.chunks || typeof turn.chunks[0] !== 'string')) || recipe.isCustomRecipe || (typeof recipe.id === 'string' && recipe.id.startsWith('r_'));
 
-    const turnPrompt = catalog.compileTurn(recipe, nextIdx, {
-        variableValues: RecipeState.variableValues,
-        userSteeringNote: userSteeringNote || '',
-        previousTurnTitle: prevTurnTitle
-    });
+    if (isCustomTurn && turn.content) {
+        turnPrompt = turn.content;
+        if (userSteeringNote && userSteeringNote.trim()) {
+            turnPrompt += `\n\nSTEUERUNG DURCH NUTZER:\n${userSteeringNote.trim()}`;
+        }
+    } else {
+        const catalog = window.PromptDockCatalog;
+        if (!catalog) return;
+        turnPrompt = catalog.compileTurn(recipe, nextIdx, {
+            variableValues: RecipeState.variableValues,
+            userSteeringNote: userSteeringNote || '',
+            previousTurnTitle: prevTurnTitle
+        });
+    }
 
     const injected = window.injectCopilotPrompt(turnPrompt, true);
     if (!injected) {
@@ -2058,28 +2069,53 @@ function renderRailUI() {
     railContainer.appendChild(hud);
 }
 
-window.startPromptDockRecipe = function(recipeIdOrName, options) {
+window.startPromptDockRecipe = function(recipePayload, options) {
     options = options || {};
     const catalog = window.PromptDockCatalog;
-    if (!catalog) {
-        console.error('[PromptDock] Recipe catalog not loaded!');
-        return false;
+
+    let recipe = null;
+    if (recipePayload && typeof recipePayload === 'object') {
+        recipe = recipePayload;
+    } else if (options.customRecipe && typeof options.customRecipe === 'object') {
+        recipe = options.customRecipe;
+    } else if (catalog && catalog.RECIPES) {
+        recipe = catalog.RECIPES.find(r => r.id === recipePayload || r.name.toLowerCase() === (recipePayload || '').toLowerCase());
     }
-    const recipe = options.customRecipe || (catalog && catalog.RECIPES ? catalog.RECIPES.find(r => r.id === recipeIdOrName || r.name.toLowerCase() === (recipeIdOrName || '').toLowerCase()) : null);
+
     if (!recipe) {
-        console.error(`[PromptDock] Recipe ${recipeIdOrName} not found.`);
+        console.error(`[PromptDock] Recipe ${typeof recipePayload === 'string' ? recipePayload : 'payload'} not found.`);
         return false;
     }
 
     const mode = options.mode || 'guided';
     const variableValues = options.variableValues || {};
 
+    const isCustom = recipe.isCustomRecipe || (typeof recipe.id === 'string' && recipe.id.startsWith('r_')) || (recipe.turns && recipe.turns.some(t => t.content && (!t.chunks || typeof t.chunks[0] !== 'string')));
+
     if (mode === 'express') {
-        const expressPrompt = catalog.compileExpress(recipe, variableValues);
+        let expressPrompt = '';
+        if (isCustom && Array.isArray(recipe.turns)) {
+            expressPrompt = recipe.turns
+                .map(t => `${t.title ? `### ${t.title}\n` : ''}${t.content || ''}`.trim())
+                .filter(Boolean)
+                .join('\n\n---\n\n');
+            if (!expressPrompt && recipe.content) {
+                expressPrompt = recipe.content;
+            }
+        } else if (catalog && typeof catalog.compileExpress === 'function') {
+            expressPrompt = catalog.compileExpress(recipe, variableValues);
+        }
         return window.injectCopilotPrompt(expressPrompt, false);
     }
 
-    const turnPrompt = catalog.compileTurn(recipe, 0, { variableValues });
+    const turn0 = recipe.turns && recipe.turns[0];
+    let turnPrompt = '';
+    if (isCustom && turn0 && turn0.content) {
+        turnPrompt = turn0.content;
+    } else if (catalog && typeof catalog.compileTurn === 'function') {
+        turnPrompt = catalog.compileTurn(recipe, 0, { variableValues });
+    }
+
     const injected = window.injectCopilotPrompt(turnPrompt, true);
 
     // CRITICAL FIX: If prompt could not be injected into this frame, DO NOT render UI!
@@ -2129,7 +2165,9 @@ const extRuntime = typeof browser !== 'undefined' ? browser.runtime : (typeof ch
 if (extRuntime && extRuntime.onMessage) {
     extRuntime.onMessage.addListener((msg, sender, sendResponse) => {
         if (msg && msg.type === 'START_RECIPE') {
-            const success = window.startPromptDockRecipe(msg.recipeId, msg.options);
+            const recipePayload = msg.recipe || msg.recipeId;
+            const options = { ...(msg.options || {}), customRecipe: msg.recipe || msg.options?.customRecipe };
+            const success = window.startPromptDockRecipe(recipePayload, options);
             sendResponse({ success });
         }
     });

@@ -1399,18 +1399,42 @@ async function executeRecipe(recipe, options, cardEl, tab) {
             files: ['shared/recipe-catalog.js', 'content.js']
         });
 
-        const results = await ext.scripting.executeScript({
-            target: { tabId: tab.id, allFrames: true },
-            func: (recId, opts, customRec) => {
-                if (window.startPromptDockRecipe) {
-                    return window.startPromptDockRecipe(recId, { ...opts, customRecipe: customRec });
-                }
-                return false;
-            },
-            args: [recipe.id, options, recipe]
-        });
+        const isCustomRecipe = (typeof recipe.id === 'string' && recipe.id.startsWith(RECIPE_KEY_PREFIX)) || recipe.isCustomRecipe;
 
-        const success = results && results.some(r => r.result === true);
+        let success = false;
+
+        // Step 1: For custom recipes (r_), pass the entire serialized recipe object via chrome.tabs.sendMessage
+        if (isCustomRecipe) {
+            try {
+                const response = await ext.tabs.sendMessage(tab.id, {
+                    type: 'START_RECIPE',
+                    recipeId: recipe.id,
+                    recipe: recipe,
+                    options: options
+                });
+                if (response && response.success) {
+                    success = true;
+                }
+            } catch (msgErr) {
+                console.warn("[PromptDock] tabs.sendMessage encountered an error, falling back to executeScript:", msgErr);
+            }
+        }
+
+        // Fallback or catalog recipes via executeScript
+        if (!success) {
+            const results = await ext.scripting.executeScript({
+                target: { tabId: tab.id, allFrames: true },
+                func: (recId, opts, customRec) => {
+                    if (window.startPromptDockRecipe) {
+                        return window.startPromptDockRecipe(recId, { ...opts, customRecipe: customRec });
+                    }
+                    return false;
+                },
+                args: [recipe.id, options, isCustomRecipe ? recipe : null]
+            });
+            success = results && results.some(r => r.result === true);
+        }
+
         if (success) {
             if (cardEl) {
                 cardEl.style.borderColor = "#107c10";
@@ -1422,14 +1446,24 @@ async function executeRecipe(recipe, options, cardEl, tab) {
                 try { window.close(); } catch (e) {}
             }, 700);
         } else {
-            const fallbackText = (options.mode === 'express')
-                ? Catalog.compileExpress(recipe, options.variableValues)
-                : Catalog.compileTurn(recipe, 0, { variableValues: options.variableValues });
+            let fallbackText = '';
+            if (isCustomRecipe && Array.isArray(recipe.turns)) {
+                fallbackText = (options.mode === 'express')
+                    ? recipe.turns.map(t => `${t.title ? `### ${t.title}\n` : ''}${t.content || ''}`.trim()).filter(Boolean).join('\n\n---\n\n')
+                    : (recipe.turns[0]?.content || recipe.content || '');
+                if (!fallbackText && recipe.content) {
+                    fallbackText = recipe.content;
+                }
+            } else {
+                fallbackText = (options.mode === 'express')
+                    ? Catalog.compileExpress(recipe, options.variableValues)
+                    : Catalog.compileTurn(recipe, 0, { variableValues: options.variableValues });
+            }
             await navigator.clipboard.writeText(fallbackText);
             if (cardEl) {
                 cardEl.style.borderColor = "#d2691e";
                 const playHint = cardEl.querySelector('.play-hint-icon');
-                if (playHint) playHint.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+                if (playHint) playHint.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
             }
         }
     } catch (err) {
