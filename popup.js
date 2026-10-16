@@ -4,7 +4,7 @@
  * Manages the extension popup UI:
  * 1. Prompt Management: CRUD operations with live byte counting against chrome.storage.sync quotas.
  * 2. Storage Architecture: Chunked sync storage ('p_<id>') with automatic migration from legacy keys.
- * 3. Mobile Sync: Direct HTTPS integration with GitHub Gists for iOS Apple Shortcuts sync.
+ * 3. Mobile Sync: Direct HTTPS integration with GitHub Gists for iOS Shortcuts sync.
  * 4. Backup & Restore: JSON file export and import with schema validation.
  * 5. Prompt Execution: Injects prompts into the active tab or triggers clipboard fallback.
  */
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             syncStatus.appendChild(document.createElement('br'));
             const note = document.createElement('span');
             note.style.cssText = 'font-size:10px;color:var(--text-tertiary);';
-            note.textContent = 'Nutze diese URL im Apple Shortcut mit der "Inhalte von URL abrufen" Aktion (Header: Authorization = Bearer PAT).';
+            note.textContent = 'Nutze diese URL im iOS-Shortcut mit der "Inhalte von URL abrufen" Aktion (Header: Authorization = Bearer PAT).';
             syncStatus.appendChild(note);
             syncStatus.className = 'sync-status success';
         }

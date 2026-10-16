@@ -2,7 +2,7 @@
 
 > **Built with care (and a bit of madness) by [schema/f](https://github.com/Flx-xlF)**
 
-### *Transform Microsoft Copilot, Google Gemini, ChatGPT, and Claude with interactive multi-turn workflows, an in-chat steering rail, contextual inline commenting, and one-click prompt management.*
+### *Transform Microsoft Copilot, Google Gemini, ChatGPT, and Claude with interactive multi-turn workflows, an in-chat steering cockpit, contextual inline commenting, and one-click prompt management.*
 
 [![Manifest V3](https://img.shields.io/badge/Chrome%20Extension-Manifest%20V3-blue?logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/intro/)
 [![Microsoft Copilot](https://img.shields.io/badge/Microsoft%20Copilot-Web%20App-0078D4?logo=microsoft&logoColor=white)](https://copilot.microsoft.com)
@@ -16,22 +16,26 @@
 
 ### What's New in PromptDock 2.0 🚀
 
-PromptDock 2.0 evolves from a fast prompt launcher into an **interactive AI workflow cockpit** — right inside your browser:
+PromptDock 2.0 evolves from a fast prompt launcher into an **interactive AI workflow cockpit** — engineered right inside your browser:
 
 - 🚊 **In-Chat Rail UX ("Rail, Checkpoint, Fork")**  
-  Complex corporate communication, audit, and strategic tasks are split into discrete cognitive turns (*Turn 1: Research/Lagebild* ➔ *Turn 2: Strategy/Audit* ➔ *Turn 3: Output*). A floating stepper rail sits directly above the chat input, showing your current step and workflow progress.
-- 🎯 **Draggable & Minimizable Cockpit**  
-  Drag the HUD header or floating pill anywhere on screen with automatic 12px viewport boundary clamps. Minimize to a slim status pill (`—`) while reading long AI outputs, expand (`↗`) to steer, or double-click to snap back to center-bottom.
-- 🛑 **Streaming Detection & Manual Stop Interception**  
-  PromptDock automatically detects when the LLM finishes generating. If you click the host chat's native stop button (*"Stop generating"* / *"Stop Response"*), PromptDock immediately catches the stop event and advances to your checkpoint without freezing. Workflows can be cancelled at any point via the dedicated **Abbrechen** / `×` button.
-- ⚡ **Command Palette & Fast Search (`⌘K` / `Ctrl+K`)**  
-  The redesigned popup features instant search across titles, prompt content, and recipe steps, category filter pills (*Audit*, *Inquiry*, *Memo*, *Single-Shot*, *Custom*), and direct click-to-run execution.
-- 🔀 **Dynamic Forking**  
-  Branch out at completion points: turn an analysis into a press reply, a Q&A defense document, an editorial planning entry, or a strategic briefing with one click.
-- ⌨️ **Muscle Memory Turn Advancement (`⌥⇧→` / `Alt+Shift+Right`)**  
-  Advance through multi-turn workflows or press `Enter` in the steering note input without leaving your keyboard.
+  Complex corporate communication, audit, and strategic tasks are split into discrete cognitive turns (*Turn 1: Research / Situation Analysis* ➔ *Turn 2: Strategy / Audit* ➔ *Turn 3: Output Synthesis*). A floating stepper rail sits directly above the chat input, showing your current step and workflow progress.
+- 🎙️ **2-Zone Spotlight Composer**  
+  The expanded HUD is organized into two dedicated zones: a compact top row of quick steering modifier chips (*+ Fakten korrigieren*, *+ Tiefer recherchieren*, *+ Haltung vorgeben*) and a unified full-width input container with an integrated primary `Weiter ➔` CTA (`⌥⇧→`). The steering input spans the full card width, eliminating truncated placeholders.
+- 🏝️ **Dynamic Island 36px Capsule**  
+  A single-line, 36px minimized status capsule featuring live turn status, workflow name, a pulsing streaming indicator, and compact quick actions. It never wraps and keeps your chat conversation completely unobscured.
+- 🌊 **Spring-Physics Morph & Scale Crossfade**  
+  Transitions between the expanded Spotlight Composer and the minimized Dynamic Island are powered by physical spring overshoot curves (`cubic-bezier(0.34, 1.15, 0.64, 1)`) paired with a micro-scale content crossfade (`scale(0.96) translateY(4px) ➔ scale(1)`), eliminating jarring snap cuts or layout reflows.
+- 📐 **Zero-Overlap Spatial Docking**  
+  PromptDock dynamically detects the host chat input container across Copilot, Gemini, ChatGPT, and Claude. Connected to a reactive `ResizeObserver`, `#promptdock-rail-container` anchors **10px above the top border** of the composer. As you type multi-line prompts or attach email cards, PDFs, and images, the HUD automatically glides upward with zero overlap.
+- 🛑 **Streaming State Guard & Native Stop Interception**  
+  When an AI response begins streaming, PromptDock displays a pulsing amber indicator (`Generiert Antwort...`) and auto-collapses into the 36px capsule. If you click the host chat's native stop button (*"Stop generating"* / *"Stop response"*), PromptDock catches the event and advances directly to your checkpoint without freezing.
+- 🎨 **Redesigned Command Palette & Slide-Up Sheet**  
+  A dark minimalist command palette unified with modern Indigo design tokens (`--accent: #6366f1`), sticky header brand badge, search shortcut (`⌘K` / `Ctrl+K`), horizontally scrollable category pills with overflow fade masks, directional card chevrons, and a slide-up prompt editor with custom toggle controls.
+- 🔀 **Dynamic Output Forking**  
+  Branch out at workflow completion points: transform an analysis into a press reply, a defensive Q&A matrix, an editorial board entry, or an executive briefing with a single click.
 - 📋 **Variable Sheet Modal**  
-  Fill in dynamic variables (e.g. `ZEITRAUM`, `PERSON`, `THEMA`, `SUCHBEGRIFF`) before launching, and choose your preferred execution mode (*Guided*, *Autopilot*, or *Express One-Shot*).
+  Configure dynamic template variables (e.g. `ZEITRAUM`, `PERSON`, `THEMA`, `SUCHBEGRIFF`) before launching, and select your execution mode (*Guided*, *Autopilot*, or *Express One-Shot*).
 
 ---
 
@@ -42,26 +46,26 @@ Prefer the pure, ultra-minimalist single-paste prompt list without the in-chat w
 - 📌 **Git Branch:** [`v1-classic`](https://github.com/Flx-xlF/PromptDock/tree/v1-classic)
 - 💾 **Release Archive:** [PromptDock v1.0.0-classic Release](https://github.com/Flx-xlF/PromptDock/releases/tag/v1.0.0-classic)
 
-Both editions share the same local-first, zero-telemetry architecture. PromptDock 2.0 also retains 100% backwards compatibility: any single-turn prompt in your list continues to execute as an instantaneous direct paste!
+Both editions share the same local-first, zero-telemetry architecture. PromptDock 2.0 retains 100% backwards compatibility: any single-turn prompt in your list continues to execute as an instantaneous direct paste!
 
 ---
 
 ### Key Features
 
 - ⚡ **One-Click Prompt & Workflow Injection**  
-  Keep high-leverage prompts and multi-turn recipes organized in a Swiss-minimalist command palette. One click on any item row injects and launches it in the active chat.
+  Keep high-leverage prompts and multi-turn recipes organized in a minimalist command palette. One click on any item row injects and launches it in the active chat.
 - 🎛️ **Draggable In-Chat HUD Rail**  
-  A floating cockpit that keeps you focused on complex multi-turn workflows without switching tabs. Reposition freely on your screen or minimize to a status pill.
+  A floating cockpit that keeps you focused on complex multi-turn workflows without switching tabs. Reposition freely on your screen or double-click to snap back to zero-overlap default docking.
 - ⌨️ **Muscle Memory Hotkeys**  
   Trigger your top 3 prompts with global keyboard shortcuts (`Alt+Shift+1`, `Alt+Shift+2`, `Alt+Shift+3`), search with `Cmd+K`, and advance turns with `Alt+Shift+ArrowRight`.
 - 💬 **Contextual Inline Commenting & Rewrites**  
-  Highlight any generated text inside Copilot, Gemini, ChatGPT, or Claude to trigger a floating action bar. Run quick one-click adjustments (*"sachlicher"*, *"einkürzen"*, *"positiv formulieren"*, *"empathischer"*) or leave custom instructions with a side-by-side visual diff comparison.
+  Highlight any generated text inside Copilot, Gemini, ChatGPT, or Claude to trigger a floating action bar. Run quick adjustments (*"sachlicher"*, *"einkürzen"*, *"positiv formulieren"*, *"empathischer"*, *"verständlicher"*) or leave custom instructions with a side-by-side visual diff comparison.
 - 🛡️ **Resilient 3-Tier Injection Engine**  
   Uses synthetic paste events with synchronous editor verification, `insertHTML`, and direct DOM node construction to prevent duplicate injection and preserve paragraph formatting across complex rich text editors (ProseMirror, Lexical, Quill).
 - 🔄 **Smart Clipboard Fallback**  
   If an input field is obscured, inside a nested iframe, or momentarily unreachable, your prompt or turn step is copied to your clipboard instantly with an unobtrusive toast notification.
 - 📱 **Mobile & iOS Shortcut Sync**  
-  Sync your prompt library directly to your iPhone via a private GitHub Gist—accessible natively via Apple Shortcuts without third-party cloud intermediaries.
+  Sync your prompt library directly to your mobile device via a private GitHub Gist—accessible natively via iOS shortcuts without third-party cloud intermediaries.
 - 🔒 **Zero Telemetry & 100% Local-First**  
   No telemetry, no tracking pixels, no remote analytics, and no accounts required. Prompts are stored strictly in your browser's chunked sync storage (`chrome.storage.sync` / `chrome.storage.local`).
 

@@ -120,7 +120,7 @@ ext.commands.onCommand.addListener(async (command) => {
                                 color: "white",
                                 padding: "12px 20px",
                                 borderRadius: "8px",
-                                fontFamily: "system-ui, -apple-system, sans-serif",
+                                fontFamily: "system-ui, sans-serif",
                                 fontSize: "14px",
                                 boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                                 zIndex: "999999",
