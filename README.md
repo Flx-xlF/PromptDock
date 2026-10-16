@@ -14,10 +14,16 @@
 
 ---
 
-### What's New in PromptDock 2.0 🚀
+### What's New in PromptDock 2.1 🚀
 
-PromptDock 2.0 evolves from a fast prompt launcher into an **interactive AI workflow cockpit** — engineered right inside your browser:
+PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI workflow cockpit & cross-device execution bridge** — engineered right inside your browser:
 
+- 📱 **Mobile Sync & QR Code Setup Sheet (v2.1)**  
+  Zero-friction mobile integration with a dedicated slide-up onboarding sheet. Displays an instant live QR code for mobile camera scanning and provides a 1-click clipboard copy button for your private Gist endpoint URL (`https://api.github.com/gists/<gist_id>`). Easily configure mobile automation shortcuts and trigger your prompts directly within mobile Copilot.
+- 📡 **Rich Multi-Turn Mobile Schema (v2.1)**  
+  Upgraded GitHub Gist sync engine that serializes prompts and recipes into a structured v2.1 JSON envelope. Includes categorized turns (`turns`), step sequences, and combined markdown blocks (`express`) so multi-turn workflows run effortlessly inside mobile chat contexts.
+- ⏱️ **1500ms Debounced Cloud Gist Sync**  
+  Eliminates burst HTTPS PATCH requests against GitHub's API by introducing an intelligent 1500ms debounce idle timer across all add, edit, and reorder operations.
 - 🧩 **Segmented Multi-Turn Recipe Composer**  
   Design and customize your own multi-step workflows directly within the popup editor. Switch between **Single-Shot** and **Multi-Turn** modes via an interactive segmented control. Build sequences step-by-step with horizontal step pills, append subsequent turns with a single click (`+`), and configure each step's title and prompt canvas independently.
 - 💾 **Dual-Tier Resilient Storage Architecture**  
@@ -54,7 +60,7 @@ Prefer the pure, ultra-minimalist single-paste prompt list without the in-chat w
 - 📌 **Git Branch:** [`v1-classic`](https://github.com/Flx-xlF/PromptDock/tree/v1-classic)
 - 💾 **Release Archive:** [PromptDock v1.0.0-classic Release](https://github.com/Flx-xlF/PromptDock/releases/tag/v1.0.0-classic)
 
-Both editions share the same local-first, zero-telemetry architecture. PromptDock 2.0 retains 100% backwards compatibility: any single-turn prompt in your list continues to execute as an instantaneous direct paste!
+Both editions share the same local-first, zero-telemetry architecture. PromptDock 2.1 retains 100% backwards compatibility: any single-turn prompt in your list continues to execute as an instantaneous direct paste!
 
 ---
 
@@ -74,8 +80,8 @@ Both editions share the same local-first, zero-telemetry architecture. PromptDoc
   Uses synthetic paste events with synchronous editor verification, `insertHTML`, and direct DOM node construction to prevent duplicate injection and preserve paragraph formatting across complex rich text editors (ProseMirror, Lexical, Quill).
 - 🔄 **Smart Clipboard Fallback**  
   If an input field is obscured, inside a nested iframe, or momentarily unreachable, your prompt or turn step is copied to your clipboard instantly with an unobtrusive toast notification.
-- 📱 **Mobile Shortcut & Private Gist Sync**  
-  Sync your prompt library directly to your mobile device via a private GitHub Gist—accessible natively via mobile shortcuts without third-party cloud intermediaries.
+- 📱 **Mobile Shortcut & Private Gist Sync (v2.1)**  
+  Sync your prompt library and multi-turn workflows directly to your mobile device via a private GitHub Gist—featuring rich v2.1 JSON formatting, instant QR onboarding, and 1500ms debouncing, accessible natively via mobile shortcuts without third-party cloud intermediaries.
 - 🔒 **Zero Telemetry & 100% Local-First**  
   No telemetry, no tracking pixels, no remote analytics, and no accounts required. Prompts are stored strictly in your browser's dual-tier storage (`chrome.storage.sync` for single-shot prompts, `chrome.storage.local` for multi-turn recipes).
 
@@ -83,7 +89,7 @@ Both editions share the same local-first, zero-telemetry architecture. PromptDoc
 
 ### Built-In Strategic Recipe Suite
 
-PromptDock 2.0 includes a vendor-agnostic Corporate Communications & Intelligence recipe suite:
+PromptDock 2.1 includes a vendor-agnostic Corporate Communications & Intelligence recipe suite:
 
 1. **Medienanfrage** (3 Turns: Lagebild ➔ Strategie ➔ Medienantwort)
 2. **Interview-Vorbereitung** (3 Turns: Briefing ➔ Haltung ➔ Antwortentwurf)
@@ -167,7 +173,7 @@ To validate syntax and create a store-compliant, clean ZIP package:
 ```bash
 python3 build_release.py
 ```
-Outputs: `release/promptdock-v2.0.0.zip`
+Outputs: `release/promptdock-v2.1.0.zip`
 
 ---
 

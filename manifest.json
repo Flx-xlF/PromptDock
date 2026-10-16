@@ -12,7 +12,7 @@
     }
   },
   "name": "PromptDock",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "One-click prompt injection, multi-turn AI workflows with in-chat rail, inline commenting, and rewriting for Copilot, Gemini, ChatGPT, and Claude.",
   "icons": {
     "16": "icons/icon-16.png",

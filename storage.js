@@ -274,7 +274,7 @@ export const PromptStorage = {
             : items.filter(i => i.id.startsWith(RECIPE_KEY_PREFIX) || i.isCustomRecipe);
 
         return {
-            version: "2.0.0",
+            version: "2.1.0",
             exportedAt: new Date().toISOString(),
             order: allSync[ORDER_KEY] || items.map(p => p.id),
             prompts: finalPrompts,
