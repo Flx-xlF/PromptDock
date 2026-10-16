@@ -2065,7 +2065,7 @@ window.startPromptDockRecipe = function(recipeIdOrName, options) {
         console.error('[PromptDock] Recipe catalog not loaded!');
         return false;
     }
-    const recipe = catalog.RECIPES.find(r => r.id === recipeIdOrName || r.name.toLowerCase() === (recipeIdOrName || '').toLowerCase());
+    const recipe = options.customRecipe || (catalog && catalog.RECIPES ? catalog.RECIPES.find(r => r.id === recipeIdOrName || r.name.toLowerCase() === (recipeIdOrName || '').toLowerCase()) : null);
     if (!recipe) {
         console.error(`[PromptDock] Recipe ${recipeIdOrName} not found.`);
         return false;

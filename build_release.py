@@ -33,7 +33,7 @@ def main():
     print(f"📦 Manifest version: {version}")
 
     # 2. Syntax validation
-    js_files = ["background.js", "content.js", "popup.js", "shared/browser-compat.js", "shared/recipe-catalog.js"]
+    js_files = ["background.js", "content.js", "popup.js", "storage.js", "shared/browser-compat.js", "shared/recipe-catalog.js"]
     for js in js_files:
         if not os.path.exists(js):
             print(f"❌ Error: Required file {js} is missing!")
@@ -54,6 +54,7 @@ def main():
         "popup.html",
         "popup.js",
         "popup.css",
+        "storage.js",
         "shared/browser-compat.js",
         "shared/recipe-catalog.js",
         "icons/icon-16.png",

@@ -605,6 +605,150 @@ textarea {
     padding: 6px 8px;
 }
 
+/* --- Mode Selector (Single-Shot vs Multi-Turn Workflow) --- */
+.editor-mode-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 6px 12px;
+    margin-bottom: 10px;
+}
+
+.mode-toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 !important;
+    cursor: pointer;
+}
+
+.mode-toggle-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mode-toggle-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.mode-toggle-desc {
+    font-size: 10px;
+    color: var(--text-tertiary);
+}
+
+/* --- Multi-Turn Recipe Editor Section --- */
+.recipe-turns-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.turns-editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2px;
+}
+
+.turns-editor-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #a5b4fc;
+}
+
+.add-turn-btn {
+    font-size: 11px !important;
+    padding: 3px 9px !important;
+    border-radius: var(--radius-sm) !important;
+}
+
+.active-turns-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 2px;
+}
+
+.turn-editor-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    transition: border-color 0.15s ease;
+}
+
+.turn-editor-card:focus-within {
+    border-color: var(--border-focus);
+}
+
+.turn-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.turn-card-badge {
+    font-size: 10px;
+    font-weight: 700;
+    color: #c7d2fe;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 4px;
+    padding: 1px 6px;
+    flex-shrink: 0;
+}
+
+.turn-title-input {
+    margin-bottom: 0 !important;
+    padding: 4px 8px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    flex: 1;
+}
+
+.turn-delete-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-tertiary);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 5px;
+    border-radius: var(--radius-sm);
+    transition: all 0.15s ease;
+}
+
+.turn-delete-btn:hover {
+    color: var(--danger);
+    background: rgba(239, 68, 68, 0.12);
+}
+
+.turn-content-textarea {
+    resize: vertical;
+    min-height: 52px !important;
+    margin-bottom: 0 !important;
+    padding: 6px 8px !important;
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+}
+
 /* Minimal Control Row & Toggle Switch */
 .auto-send-row,
 .checkbox-label,

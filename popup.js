@@ -9,7 +9,8 @@
  * 5. Prompt Execution: Injects prompts into the active tab or triggers clipboard fallback.
  */
 
-import { ext, StorageAdapter, PROMPT_KEY_PREFIX, ORDER_KEY } from './shared/browser-compat.js';
+import { ext, StorageAdapter, PROMPT_KEY_PREFIX, RECIPE_KEY_PREFIX, ORDER_KEY } from './shared/browser-compat.js';
+import { PromptStorage } from './storage.js';
 
 const Catalog = globalThis.PromptDockCatalog;
 
@@ -30,120 +31,6 @@ const DEFAULT_PROMPTS = (Catalog && Catalog.RECIPES && Catalog.RECIPES.length > 
         "autoSend": false
       }
     ];
-
-const PromptStorage = {
-    /** Load prompts, migrating from legacy formats if needed. */
-    async load() {
-        const allSync = await StorageAdapter.get(null);
-
-        // 1. New chunked format — preferred path
-        if (allSync[ORDER_KEY]) {
-            const order = allSync[ORDER_KEY];
-            return order
-                .map(id => allSync[PROMPT_KEY_PREFIX + id])
-                .filter(Boolean);
-        }
-
-        // 2. Legacy: all prompts in one sync key ('prompts')
-        if (allSync.prompts && allSync.prompts.length > 0) {
-            const legacy = allSync.prompts;
-            await this.save(legacy);                       // migrate
-            await StorageAdapter.remove('prompts');   // clean up
-            console.log('[PromptDock] Migrated from legacy sync format.');
-            return legacy;
-        }
-
-        // 3. Legacy: all prompts in one local key (from previous fix)
-        if (ext?.storage?.local) {
-            const localData = await ext.storage.local.get('prompts');
-            if (localData?.prompts && localData.prompts.length > 0) {
-                const legacy = localData.prompts;
-                await this.save(legacy);                        // migrate to sync
-                await ext.storage.local.remove('prompts');   // clean up
-                console.log('[PromptDock] Migrated from legacy local format.');
-                return legacy;
-            }
-        }
-
-        return null; // no stored data — caller should use defaults
-    },
-
-    /** Persist the full prompts array (sync, chunked). */
-    async save(prompts) {
-        // Build a batch write: order array + one key per prompt
-        const batch = {};
-        batch[ORDER_KEY] = prompts.map(p => p.id);
-        for (const p of prompts) {
-            batch[PROMPT_KEY_PREFIX + p.id] = { id: p.id, name: p.name, content: p.content, autoSend: !!p.autoSend };
-        }
-
-        // Remove orphaned prompt keys that are no longer in the list
-        const allData = await StorageAdapter.get(null);
-        const activeKeys = new Set(prompts.map(p => PROMPT_KEY_PREFIX + p.id));
-        const orphans = Object.keys(allData).filter(k =>
-            k.startsWith(PROMPT_KEY_PREFIX) && !activeKeys.has(k)
-        );
-        if (orphans.length > 0) {
-            await StorageAdapter.remove(orphans);
-        }
-
-        await StorageAdapter.set(batch);
-        
-        // Trigger background Gist sync if configured
-        this.syncGist(prompts).catch(console.error);
-    },
-    
-    /** Sync prompts to a Secret GitHub Gist. */
-    async syncGist(prompts) {
-        if (!ext?.storage?.local) return;
-        const local = await ext.storage.local.get(['github_pat', 'github_gist_id']);
-        const token = local?.github_pat;
-        if (!token) return; // Sync not configured
-        
-        // Format as a flat dictionary { "Prompt Name": "Prompt Content" } 
-        // This allows the iOS "Choose from List" action to natively display beautiful names 
-        // and return the text content automatically!
-        const mobileFormat = {};
-        prompts.forEach(p => {
-            mobileFormat[p.name] = p.content;
-        });
-        
-        const fileContent = JSON.stringify(mobileFormat, null, 2);
-        const payload = {
-            description: "PromptDock Prompts Sync",
-            public: false,
-            files: {
-                "prompts": { content: fileContent } // New dot-less file for iOS
-            }
-        };
-        
-        const headers = {
-            "Authorization": `Bearer ${token}`,
-            "Accept": "application/vnd.github.v3+json",
-            "Content-Type": "application/json"
-        };
-
-        if (local.github_gist_id) {
-            // Update existing Gist
-            const res = await fetch(`https://api.github.com/gists/${local.github_gist_id}`, {
-                method: 'PATCH',
-                headers,
-                body: JSON.stringify(payload)
-            });
-            if (!res.ok) throw new Error("Gist Update failed: " + res.status);
-        } else {
-            // Create new Gist
-            const res = await fetch("https://api.github.com/gists", {
-                method: 'POST',
-                headers,
-                body: JSON.stringify(payload)
-            });
-            if (!res.ok) throw new Error("Gist Creation failed: " + res.status);
-            const data = await res.json();
-            await ext.storage.local.set({ github_gist_id: data.id });
-        }
-    }
-};
 
 // ---------------------------------------------------------------------------
 // Byte-size helpers — mirrors chrome.storage.sync measurement
@@ -167,9 +54,11 @@ function calcTotalBytes(promptsList) {
     // Order key
     const orderValue = JSON.stringify(promptsList.map(p => p.id));
     total += ORDER_KEY.length + new Blob([orderValue]).size;
-    // Each prompt
+    // Each sync prompt (exclude custom recipes which live in chrome.storage.local)
     for (const p of promptsList) {
-        total += calcPromptBytes(p);
+        if (!p.id.startsWith(RECIPE_KEY_PREFIX) && !p.isCustomRecipe) {
+            total += calcPromptBytes(p);
+        }
     }
     return total;
 }
@@ -177,6 +66,138 @@ function calcTotalBytes(promptsList) {
 
 let prompts = [];
 let editingIndex = -1;
+let activeTurnsState = [];
+
+function createDefaultTurns() {
+    return [
+        { id: 'turn-1', title: 'Schritt 1: Lagebild', role: '', content: '' },
+        { id: 'turn-2', title: 'Schritt 2: Output', role: '', content: '' }
+    ];
+}
+
+function syncTurnsFromDOM() {
+    const container = document.getElementById('active-turns-container');
+    if (!container) return;
+    const cards = container.querySelectorAll('.turn-editor-card');
+    const turns = [];
+    cards.forEach((card, idx) => {
+        const titleInput = card.querySelector('.turn-title-input');
+        const contentInput = card.querySelector('.turn-content-textarea');
+        turns.push({
+            id: `turn-${idx + 1}`,
+            title: titleInput ? (titleInput.value.trim() || `Schritt ${idx + 1}`) : `Schritt ${idx + 1}`,
+            role: '',
+            content: contentInput ? contentInput.value.trim() : ''
+        });
+    });
+    activeTurnsState = turns;
+}
+
+function renderActiveTurns() {
+    const container = document.getElementById('active-turns-container');
+    if (!container) return;
+    container.replaceChildren();
+
+    if (!Array.isArray(activeTurnsState) || activeTurnsState.length === 0) {
+        activeTurnsState = createDefaultTurns();
+    }
+
+    activeTurnsState.forEach((turn, idx) => {
+        const card = document.createElement('div');
+        card.className = 'turn-editor-card';
+
+        const header = document.createElement('div');
+        header.className = 'turn-card-header';
+
+        const badge = document.createElement('span');
+        badge.className = 'turn-card-badge';
+        badge.textContent = `Turn ${idx + 1}`;
+        header.appendChild(badge);
+
+        const titleInput = document.createElement('input');
+        titleInput.type = 'text';
+        titleInput.className = 'turn-title-input';
+        titleInput.placeholder = `Titel (z.B. Schritt ${idx + 1}: Lagebild)`;
+        titleInput.value = turn.title || '';
+        titleInput.addEventListener('input', () => {
+            turn.title = titleInput.value;
+        });
+        header.appendChild(titleInput);
+
+        if (activeTurnsState.length > 1) {
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'turn-delete-btn';
+            delBtn.textContent = '×';
+            delBtn.title = 'Turn entfernen';
+            delBtn.addEventListener('click', () => {
+                syncTurnsFromDOM();
+                activeTurnsState.splice(idx, 1);
+                renderActiveTurns();
+                const charCounter = document.getElementById('char-counter');
+                if (charCounter) {
+                    charCounter.textContent = `${activeTurnsState.length} Turns definiert (Storage: local)`;
+                }
+            });
+            header.appendChild(delBtn);
+        }
+
+        card.appendChild(header);
+
+        const contentArea = document.createElement('textarea');
+        contentArea.className = 'turn-content-textarea';
+        contentArea.placeholder = `Prompt / Anweisung für Turn ${idx + 1}...`;
+        contentArea.value = turn.content || '';
+        contentArea.addEventListener('input', () => {
+            turn.content = contentArea.value;
+        });
+        card.appendChild(contentArea);
+
+        container.appendChild(card);
+    });
+}
+
+function setEditorMode(isMultiTurn) {
+    const modeCheckbox = document.getElementById('mode-toggle-checkbox');
+    if (modeCheckbox) modeCheckbox.checked = isMultiTurn;
+
+    const descEl = document.getElementById('mode-toggle-desc');
+    if (descEl) {
+        descEl.textContent = isMultiTurn
+            ? 'Multi-Turn Workflow (Sequenz)'
+            : 'Single-Shot (1-Turn Prompt)';
+    }
+
+    const turnsEditor = document.getElementById('recipe-turns-editor');
+    const contentArea = document.getElementById('prompt-content');
+    const contentLabel = document.getElementById('prompt-content-label');
+    const charCounter = document.getElementById('char-counter');
+    const sheetTitle = document.getElementById('editor-sheet-title');
+    const inspector = document.getElementById('recipe-turns-inspector');
+
+    if (isMultiTurn) {
+        turnsEditor?.classList.remove('hidden');
+        contentArea?.classList.add('hidden');
+        contentLabel?.classList.add('hidden');
+        inspector?.classList.add('hidden');
+        if (charCounter) {
+            charCounter.textContent = `${activeTurnsState.length} Turns definiert (Storage: local)`;
+            charCounter.classList.remove('over-limit');
+        }
+        if (sheetTitle) {
+            sheetTitle.textContent = (editingIndex >= 0) ? 'Workflow bearbeiten' : 'Neuer Multi-Turn Workflow';
+        }
+        document.getElementById('save-btn').disabled = false;
+        renderActiveTurns();
+    } else {
+        turnsEditor?.classList.add('hidden');
+        contentArea?.classList.remove('hidden');
+        if (sheetTitle) {
+            sheetTitle.textContent = (editingIndex >= 0) ? 'Prompt bearbeiten' : 'Neuer Prompt';
+        }
+        updateCharCounter();
+    }
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Load prompts (with migration from legacy formats)
@@ -196,10 +217,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const charCounter = document.getElementById('char-counter');
     
     updateCharCounter = function() {
+        const isMultiTurn = document.getElementById('mode-toggle-checkbox')?.checked || false;
+        if (isMultiTurn) {
+            charCounter.textContent = `${activeTurnsState.length} Turns konfiguriert (Storage: local)`;
+            charCounter.classList.remove('over-limit');
+            document.getElementById('save-btn').disabled = false;
+            return;
+        }
+
         const name = nameInput.value.trim();
         const content = contentInput.value.trim();
         const autoSend = document.getElementById('prompt-auto-send').checked;
-        // Use actual id when editing, or a placeholder id (13 chars like Date.now()) for new
         const id = editingIndex >= 0 ? prompts[editingIndex].id : '0000000000000';
         
         const mockPrompt = { id, name: name || 'x', content, autoSend };
@@ -221,12 +249,52 @@ document.addEventListener('DOMContentLoaded', async () => {
     contentInput.addEventListener('input', updateCharCounter);
     nameInput.addEventListener('input', updateCharCounter);
 
+    const modeToggle = document.getElementById('mode-toggle-checkbox');
+    if (modeToggle) {
+        modeToggle.addEventListener('change', () => {
+            if (modeToggle.checked) {
+                const currentContent = document.getElementById('prompt-content').value.trim();
+                if (currentContent && (!activeTurnsState || activeTurnsState.length === 0)) {
+                    activeTurnsState = [
+                        { id: 'turn-1', title: 'Schritt 1: Prompt', role: '', content: currentContent },
+                        { id: 'turn-2', title: 'Schritt 2: Vertiefung', role: '', content: '' }
+                    ];
+                } else if (!activeTurnsState || activeTurnsState.length === 0) {
+                    activeTurnsState = createDefaultTurns();
+                }
+            }
+            setEditorMode(modeToggle.checked);
+        });
+    }
+
+    const addTurnBtn = document.getElementById('add-turn-btn');
+    if (addTurnBtn) {
+        addTurnBtn.addEventListener('click', () => {
+            syncTurnsFromDOM();
+            activeTurnsState.push({
+                id: `turn-${activeTurnsState.length + 1}`,
+                title: `Schritt ${activeTurnsState.length + 1}`,
+                role: '',
+                content: ''
+            });
+            renderActiveTurns();
+            const counter = document.getElementById('char-counter');
+            if (counter) {
+                counter.textContent = `${activeTurnsState.length} Turns definiert (Storage: local)`;
+            }
+        });
+    }
+
     document.getElementById('toggle-add-btn').addEventListener('click', () => {
         document.getElementById('prompt-modal')?.classList.remove('hidden');
         document.getElementById('add-form')?.classList.remove('hidden');
         document.getElementById('toggle-add-btn')?.classList.add('hidden');
-        const sheetTitle = document.getElementById('editor-sheet-title');
-        if (sheetTitle) sheetTitle.textContent = 'Neuer Prompt';
+        editingIndex = -1;
+        document.getElementById('prompt-name').value = '';
+        document.getElementById('prompt-content').value = '';
+        document.getElementById('prompt-auto-send').checked = false;
+        activeTurnsState = createDefaultTurns();
+        setEditorMode(false);
         document.getElementById('save-btn').innerText = 'Speichern';
 
         // Reset & hide recipe inspector for standard single-shot prompt
@@ -250,6 +318,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('prompt-content').value = '';
         document.getElementById('prompt-auto-send').checked = false;
         editingIndex = -1;
+        activeTurnsState = [];
+        setEditorMode(false);
         document.getElementById('save-btn').innerText = 'Speichern';
 
         // Reset & hide recipe inspector
@@ -273,61 +343,123 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     document.getElementById('save-btn').addEventListener('click', async () => {
         const name = document.getElementById('prompt-name').value.trim();
-        const content = document.getElementById('prompt-content').value.trim();
         const autoSend = document.getElementById('prompt-auto-send').checked;
-        
-        if (name && content) {
-            if (editingIndex >= 0) {
-                // Update existing
-                const existingPrompt = prompts[editingIndex];
-                const matchedRecipe = findMatchingRecipe(existingPrompt);
+        const isMultiTurn = document.getElementById('mode-toggle-checkbox')?.checked || false;
 
-                prompts[editingIndex].name = name;
-                prompts[editingIndex].content = content;
-                prompts[editingIndex].autoSend = autoSend;
+        if (!name) {
+            alert("Bitte geben Sie einen Namen ein.");
+            return;
+        }
 
-                // Explicitly persist recipeId so renaming never loses binding to Catalog.RECIPES
-                if (matchedRecipe) {
-                    prompts[editingIndex].recipeId = matchedRecipe.id;
-                } else if (existingPrompt.recipeId) {
-                    prompts[editingIndex].recipeId = existingPrompt.recipeId;
-                }
-            } else {
-                // Add new
-                const newPrompt = {
-                    id: Date.now().toString(),
-                    name,
-                    content,
-                    autoSend
-                };
-                const matchedRecipe = findMatchingRecipe(newPrompt);
-                if (matchedRecipe) {
-                    newPrompt.recipeId = matchedRecipe.id;
-                }
-                prompts.push(newPrompt);
+        if (isMultiTurn) {
+            syncTurnsFromDOM();
+            if (!activeTurnsState || activeTurnsState.length === 0) {
+                alert("Ein Multi-Turn Workflow benötigt mindestens einen Turn.");
+                return;
             }
+
+            // Prefix r_ according to specification
+            let recipeId;
+            if (editingIndex >= 0) {
+                const existing = prompts[editingIndex];
+                recipeId = existing.id.startsWith(RECIPE_KEY_PREFIX) ? existing.id : `${RECIPE_KEY_PREFIX}${Date.now()}`;
+            } else {
+                recipeId = `${RECIPE_KEY_PREFIX}${Date.now()}`;
+            }
+
+            const compiledContent = activeTurnsState
+                .map((t, idx) => `${t.title || `Turn ${idx + 1}`}:\n${t.content || ''}`)
+                .join('\n\n---\n\n');
+
+            const recipeObj = {
+                id: recipeId,
+                name: name,
+                family: 'custom',
+                turns: activeTurnsState.map((t, idx) => ({
+                    id: t.id || `turn-${idx + 1}`,
+                    title: t.title || `Schritt ${idx + 1}`,
+                    role: t.role || '',
+                    chunks: [{ text: t.content || '' }],
+                    content: t.content || ''
+                })),
+                content: compiledContent,
+                autoSend: autoSend,
+                isCustomRecipe: true
+            };
+
+            if (editingIndex >= 0) {
+                prompts[editingIndex] = recipeObj;
+            } else {
+                prompts.push(recipeObj);
+            }
+
             try {
                 await PromptStorage.save(prompts);
             } catch (err) {
-                alert("Fehler beim Speichern: Speicherlimit erreicht. Bitte löschen Sie alte Prompts.");
-                // Revert changes in local array
-                if (editingIndex < 0) {
-                    prompts.pop();
-                }
+                alert("Fehler beim Speichern des Workflows: " + err.message);
+                if (editingIndex < 0) prompts.pop();
                 return;
             }
-            
+
             document.getElementById('cancel-add-btn').click();
             renderPrompts();
+            return;
         }
+
+        // Single-shot mode
+        const content = document.getElementById('prompt-content').value.trim();
+        if (!content) {
+            alert("Bitte geben Sie den Prompt-Text ein.");
+            return;
+        }
+
+        if (editingIndex >= 0) {
+            const existingPrompt = prompts[editingIndex];
+            const matchedRecipe = findMatchingRecipe(existingPrompt);
+            const pId = existingPrompt.id.startsWith(RECIPE_KEY_PREFIX) ? Date.now().toString() : existingPrompt.id;
+
+            prompts[editingIndex] = {
+                id: pId,
+                name: name,
+                content: content,
+                autoSend: autoSend,
+                ...(matchedRecipe ? { recipeId: matchedRecipe.id } : (existingPrompt.recipeId ? { recipeId: existingPrompt.recipeId } : {}))
+            };
+        } else {
+            const newPrompt = {
+                id: Date.now().toString(),
+                name,
+                content,
+                autoSend
+            };
+            const matchedRecipe = findMatchingRecipe(newPrompt);
+            if (matchedRecipe) {
+                newPrompt.recipeId = matchedRecipe.id;
+            }
+            prompts.push(newPrompt);
+        }
+
+        try {
+            await PromptStorage.save(prompts);
+        } catch (err) {
+            alert("Fehler beim Speichern: Speicherlimit erreicht. Bitte löschen Sie alte Prompts.");
+            if (editingIndex < 0) {
+                prompts.pop();
+            }
+            return;
+        }
+
+        document.getElementById('cancel-add-btn').click();
+        renderPrompts();
     });
 
     // Import / Export Event Listeners
-    document.getElementById('export-btn').addEventListener('click', () => {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(prompts, null, 2));
+    document.getElementById('export-btn').addEventListener('click', async () => {
+        const backupData = await PromptStorage.exportAll(prompts);
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
         const downloadAnchorNode = document.createElement('a');
         downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "prompts_backup.json");
+        downloadAnchorNode.setAttribute("download", "promptdock_backup.json");
         document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
@@ -344,30 +476,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         reader.onload = async (event) => {
             try {
                 const imported = JSON.parse(event.target.result);
-                if (!Array.isArray(imported)) {
-                    alert("Ungültiges Format: Datei muss ein JSON-Array sein.");
+                const loaded = await PromptStorage.importAll(imported);
+                if (!loaded) {
+                    alert("Ungültiges Format: Die Sicherungsdatei konnte nicht importiert werden.");
                     return;
                 }
-                // Schema validation: each item must have string name and content
-                const valid = imported.every(item =>
-                    item && typeof item.name === 'string' && typeof item.content === 'string'
-                );
-                if (!valid) {
-                    alert("Ungültiges Format: Jeder Eintrag muss 'name' und 'content' (Strings) enthalten.");
-                    return;
-                }
-                // Sanitize: only keep known fields
-                const sanitized = imported.map(item => ({
-                    id: typeof item.id === 'string' ? item.id : Date.now().toString() + Math.random(),
-                    name: item.name,
-                    content: item.content,
-                    autoSend: typeof item.autoSend === 'boolean' ? item.autoSend : false
-                }));
-                prompts = [...prompts, ...sanitized];
-                await PromptStorage.save(prompts);
+                prompts = loaded;
                 renderPrompts();
             } catch (err) {
-                alert("Fehler beim Importieren: " + err);
+                alert("Fehler beim Importieren: " + err.message);
             }
             e.target.value = ''; // Reset
         };
@@ -579,6 +696,10 @@ function normalizeSlug(str) {
 }
 
 function findMatchingRecipe(prompt) {
+    if (!prompt) return null;
+    if (prompt.isCustomRecipe || (typeof prompt.id === 'string' && prompt.id.startsWith(RECIPE_KEY_PREFIX))) {
+        return prompt;
+    }
     if (!Catalog || !Catalog.RECIPES) return null;
     const pSlug = normalizeSlug(prompt.recipeId || prompt.name);
     return Catalog.RECIPES.find(r => 
@@ -665,7 +786,9 @@ function updateGlobalStorage() {
     const pct = Math.round((usedBytes / QUOTA_BYTES_TOTAL) * 100);
     const usedKB = (usedBytes / 1024).toFixed(1);
     const totalKB = (QUOTA_BYTES_TOTAL / 1024).toFixed(0);
-    el.textContent = `Speicher: ${usedKB} / ${totalKB} KB (${pct}%)`;
+    const localRecipeCount = prompts.filter(p => (typeof p.id === 'string' && p.id.startsWith(RECIPE_KEY_PREFIX)) || p.isCustomRecipe).length;
+    const extraInfo = localRecipeCount > 0 ? ` · ${localRecipeCount} Workflows (lokal)` : '';
+    el.textContent = `Sync: ${usedKB} / ${totalKB} KB (${pct}%)${extraInfo}`;
     if (pct > 80) {
         el.classList.add('storage-warning');
     } else {
@@ -692,13 +815,14 @@ async function renderPrompts() {
     // Filter by search query and category
     const filteredPrompts = prompts.map((p, originalIdx) => ({ prompt: p, originalIdx })).filter(({ prompt }) => {
         const matchedRecipe = findMatchingRecipe(prompt);
+        const isCustomItem = !matchedRecipe || (typeof prompt.id === 'string' && prompt.id.startsWith(RECIPE_KEY_PREFIX)) || prompt.isCustomRecipe || (matchedRecipe && matchedRecipe.family === 'custom');
         
-        // 1. Category Filter
+        // 1. Category Filter: assign r_ items and custom single-shot prompts to "Eigene" (custom)
         if (currentCategoryFilter !== 'all') {
             if (currentCategoryFilter === 'custom') {
-                if (matchedRecipe) return false;
+                if (!isCustomItem) return false;
             } else {
-                if (!matchedRecipe || matchedRecipe.family !== currentCategoryFilter) return false;
+                if (isCustomItem || !matchedRecipe || matchedRecipe.family !== currentCategoryFilter) return false;
             }
         }
 
@@ -706,11 +830,15 @@ async function renderPrompts() {
         if (currentSearchQuery) {
             const nameMatch = (prompt.name || '').toLowerCase().includes(currentSearchQuery);
             const contentMatch = (prompt.content || '').toLowerCase().includes(currentSearchQuery);
+            const turnsMatch = (prompt.turns || (matchedRecipe && matchedRecipe.turns) || []).some(t => 
+                (t.title && t.title.toLowerCase().includes(currentSearchQuery)) ||
+                (t.content && t.content.toLowerCase().includes(currentSearchQuery))
+            );
             const recipeMatch = matchedRecipe && (
                 matchedRecipe.name.toLowerCase().includes(currentSearchQuery) ||
-                matchedRecipe.turns.some(t => t.title.toLowerCase().includes(currentSearchQuery))
+                (matchedRecipe.turns && matchedRecipe.turns.some(t => t.title.toLowerCase().includes(currentSearchQuery)))
             );
-            if (!nameMatch && !contentMatch && !recipeMatch) return false;
+            if (!nameMatch && !contentMatch && !recipeMatch && !turnsMatch) return false;
         }
 
         return true;
@@ -734,8 +862,9 @@ async function renderPrompts() {
         div.setAttribute('draggable', isFiltered ? 'false' : 'true');
         div.setAttribute('data-index', originalIdx);
         const matchedRecipe = findMatchingRecipe(prompt);
-        if (matchedRecipe && matchedRecipe.turns && matchedRecipe.turns.length > 0) {
-            div.title = `Klicken, um ${matchedRecipe.turns.length}-Schritte Workflow zu starten (Turn 1: ${matchedRecipe.turns[0].title})`;
+        const recipeTurns = (matchedRecipe && matchedRecipe.turns) ? matchedRecipe.turns : (prompt.turns || []);
+        if (recipeTurns.length > 0) {
+            div.title = `Klicken, um ${recipeTurns.length}-Schritte Workflow zu starten (Turn 1: ${recipeTurns[0]?.title || 'Start'})`;
         } else {
             div.title = 'Klicken zum Ausführen';
         }
@@ -769,11 +898,12 @@ async function renderPrompts() {
         nameSpan.textContent = prompt.name;
         leftDiv.appendChild(nameSpan);
 
-        if (matchedRecipe && matchedRecipe.turns && matchedRecipe.turns.length > 0) {
+        // Render "X Turns" badge for multi-turn items (both custom r_ and catalog recipes)
+        if (recipeTurns.length > 0) {
             const turnBadge = document.createElement('span');
             turnBadge.className = 'recipe-turn-badge';
-            turnBadge.title = `${matchedRecipe.turns.length}-Schritte Workflow mit Rail & Checkpoints`;
-            turnBadge.textContent = `${matchedRecipe.turns.length} Turns`;
+            turnBadge.title = `${recipeTurns.length}-Schritte Workflow mit Rail & Checkpoints`;
+            turnBadge.textContent = `${recipeTurns.length} Turns`;
             leftDiv.appendChild(turnBadge);
         }
         
@@ -812,17 +942,27 @@ async function renderPrompts() {
             e.stopPropagation();
             editingIndex = originalIdx;
             document.getElementById('prompt-name').value = prompt.name;
-            document.getElementById('prompt-content').value = prompt.content;
+            document.getElementById('prompt-content').value = prompt.content || '';
             document.getElementById('prompt-auto-send').checked = !!prompt.autoSend;
             document.getElementById('prompt-modal')?.classList.remove('hidden');
             document.getElementById('add-form')?.classList.remove('hidden');
             document.getElementById('toggle-add-btn')?.classList.add('hidden');
             
+            const isCustomRecipe = (typeof prompt.id === 'string' && prompt.id.startsWith(RECIPE_KEY_PREFIX)) || prompt.isCustomRecipe;
             const sheetTitle = document.getElementById('editor-sheet-title');
             const inspector = document.getElementById('recipe-turns-inspector');
             const contentLabel = document.getElementById('prompt-content-label');
 
-            if (matchedRecipe && matchedRecipe.turns && matchedRecipe.turns.length > 0) {
+            if (isCustomRecipe) {
+                activeTurnsState = (prompt.turns || []).map(t => ({
+                    id: t.id,
+                    title: t.title,
+                    role: t.role || '',
+                    content: t.content || (t.chunks && t.chunks[0]?.text) || ''
+                }));
+                setEditorMode(true);
+            } else if (matchedRecipe && matchedRecipe.turns && matchedRecipe.turns.length > 0) {
+                setEditorMode(false);
                 if (sheetTitle) sheetTitle.textContent = 'Workflow bearbeiten';
                 if (inspector) {
                     inspector.classList.remove('hidden');
@@ -834,6 +974,7 @@ async function renderPrompts() {
                 }
                 document.getElementById('prompt-content').placeholder = 'Express-Modus / Direkt-Prompt (1-Turn Fallback)';
             } else {
+                setEditorMode(false);
                 if (sheetTitle) sheetTitle.textContent = 'Prompt bearbeiten';
                 if (inspector) {
                     inspector.classList.add('hidden');
@@ -1141,13 +1282,13 @@ async function executeRecipe(recipe, options, cardEl, tab) {
 
         const results = await ext.scripting.executeScript({
             target: { tabId: tab.id, allFrames: true },
-            func: (recId, opts) => {
+            func: (recId, opts, customRec) => {
                 if (window.startPromptDockRecipe) {
-                    return window.startPromptDockRecipe(recId, opts);
+                    return window.startPromptDockRecipe(recId, { ...opts, customRecipe: customRec });
                 }
                 return false;
             },
-            args: [recipe.id, options]
+            args: [recipe.id, options, recipe]
         });
 
         const success = results && results.some(r => r.result === true);

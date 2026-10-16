@@ -7,6 +7,9 @@ export const ext = (globalThis.browser?.storage ? globalThis.browser : globalThi
 /** Prefix used for chunked individual prompt storage keys in chrome.storage.sync */
 export const PROMPT_KEY_PREFIX = 'p_';
 
+/** Prefix used for custom multi-turn recipe storage keys in chrome.storage.local */
+export const RECIPE_KEY_PREFIX = 'r_';
+
 /** Key that stores the ordered array of prompt IDs */
 export const ORDER_KEY = 'prompt_order';
 

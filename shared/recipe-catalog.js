@@ -906,27 +906,35 @@ ROHDATEN:`
             parts.push(handoff);
         }
 
-        // 3. Assemble Chunks
-        for (const item of turn.chunks) {
-            let chunkId = typeof item === 'string' ? item : item.chunkId;
-            let params = typeof item === 'object' ? item.params : {};
-            let chunkDef = CHUNKS[chunkId] || item;
+        // 3. Assemble Chunks or Direct Turn Content
+        if (Array.isArray(turn.chunks) && turn.chunks.length > 0) {
+            for (const item of turn.chunks) {
+                let chunkId = typeof item === 'string' ? item : item.chunkId;
+                let params = typeof item === 'object' ? item.params : {};
+                let chunkDef = CHUNKS[chunkId] || item;
 
-            if (!chunkDef) continue;
+                if (!chunkDef) continue;
 
-            let chunkText = '';
-            if (typeof chunkDef.compile === 'function') {
-                chunkText = chunkDef.compile(params);
-            } else {
-                chunkText = chunkDef.text || '';
+                let chunkText = '';
+                if (typeof chunkDef.compile === 'function') {
+                    chunkText = chunkDef.compile(params);
+                } else {
+                    chunkText = chunkDef.text || chunkDef.content || '';
+                }
+
+                // Interpolate variables (e.g. {ZEITRAUM}, {PERSON}, {SUCHBEGRIFF})
+                for (const [vKey, vVal] of Object.entries(variableValues)) {
+                    chunkText = chunkText.replaceAll(`{${vKey}}`, vVal || `[${vKey}]`);
+                }
+
+                parts.push(chunkText);
             }
-
-            // Interpolate variables (e.g. {ZEITRAUM}, {PERSON}, {SUCHBEGRIFF})
+        } else if (turn.content || turn.text) {
+            let turnText = turn.content || turn.text || '';
             for (const [vKey, vVal] of Object.entries(variableValues)) {
-                chunkText = chunkText.replaceAll(`{${vKey}}`, vVal || `[${vKey}]`);
+                turnText = turnText.replaceAll(`{${vKey}}`, vVal || `[${vKey}]`);
             }
-
-            parts.push(chunkText);
+            parts.push(turnText);
         }
 
         return parts.join('\n\n');
