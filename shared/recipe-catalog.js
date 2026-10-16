@@ -75,6 +75,30 @@ Erfasse:
 - sensible oder potenziell kontroverse Aussagen,
 - den kommunikativen und reputativen Kontext.`
         },
+        'I-PPT': {
+            id: 'I-PPT',
+            title: 'Inhalts- & Zielgruppen-Analyse (Präsentation)',
+            text: `TASK 1: INHALTS- & ZIELGRUPPEN-ANALYSE
+Analysiere den vorliegenden Folienentwurf, die Gliederung oder den Themenauftrag.
+Isoliere präzise:
+1. ANLASS & ZIELSETZUNG:
+   - Welcher Anlass liegt vor (z.B. Geschäftsleitungs-Entscheid, Statusbericht, Fachvortrag, Kunden-Pitch, Team-Briefing)?
+   - Welches konkrete Ergebnis soll am Ende stehen (formeller Beschluss, Budgetfreigabe, Information, Einstellungsänderung)?
+2. ZIELPUBLIKUM & ERWARTUNGSHALTUNG:
+   - Wer sitzt im Publikum (Führungskräfte, Fachexperten, gemischtes Publikum, kritische Stakeholder)?
+   - Wie ist das Vorwissen, welche Haltung (wohlwollend, neutral, skeptisch/kritisch) ist zu erwarten?
+   - Was ist die wichtigste Frage aus Sicht des Publikums («What's in it for us / for the company?»)?
+3. STATUS QUO DES MATERIALS:
+   - Liegt bereits ein Entwurf vor (Folienanzahl, Struktur, Textdichte) oder handelt es sich um eine Neukonzeption aus Rohinhalten?
+   - Wo liegen offensichtliche Schwachstellen (Textwüsten, unklare Botschaften, fehlender roter Faden, fehlende Handlungsaufforderung)?
+
+TASK 2: DRAMATURGIE-CHECK (PYRAMIDEN-PRINZIP & SCQA)
+Hinterfrage den Aufbau nach dem Pyramiden-Prinzip:
+- SITUATION: Ist die Ausgangslage für alle Beteiligten unstrittig und knapp beschrieben?
+- KOMPLIKATION: Was ist die treibende Veränderung, das Problem oder die Chance, die jetzt Handeln erfordert?
+- KERNFRAGE: Welche zentrale Frage muss diese Präsentation beantworten?
+- ANTWORT (GOVERNING THOUGHT): Was ist die übergeordnete Kernhypothese bzw. Lösungsempfehlung?`
+        },
         'I-MEET': {
             id: 'I-MEET',
             title: 'Inhalts-Analyse (Meeting)',
@@ -267,6 +291,30 @@ Analysiere die strategische Relevanz des Vorhabens:
 - Konkreter Beitrag zur Gesamtstrategie (unter Einbezug der zuständigen Organisationseinheiten / Fachbereiche),
 - Relevanz für die übergeordnete Positionierung,
 - Chancen und Zielkonflikte für Reputation und Stakeholder.`
+        },
+        'S-PPT-STRATEGY': {
+            id: 'S-PPT-STRATEGY',
+            title: 'Präsentations-Strategie & Wegwahl',
+            text: `TASK: WEGWAHL (MINIMAL-INVASIV VS. UMFASSENDES REDESIGN)
+Wäge anhand des Materials, des Reifegrads und des Anlasses zwei Vorgehensweisen ab:
+
+1. WEG A: MINIMAL-INVASIVE SCHNELLHILFE (QUICK FIX)
+   - Eignung: Wenn der Termin kurz bevorsteht, die Struktur grundsätzlich tragfähig ist oder primär sprachliches/visuelles Polishing gesucht wird.
+   - Hebel:
+     * Umwandlung passiver Folientitel in aussagekräftige «Action Titles» (ganze Sätze mit Botschaft).
+     * Rigides Entrümpeln überladener Folien (Regel: 1 Gedanke pro Folie, Streichung redundanter Aufzählungszeichen).
+     * Text in visuelle Strukturen überführen (3-Spalten-Raster, Gegenüberstellung, Callout-Boxen).
+
+2. WEG B: UMFASSENDES REDESIGN (STRATEGISCHE STORYLINE)
+   - Eignung: Bei hoher strategischer Relevanz (Vorstands-/Entscheidungstermin), verfahrenem rotem Faden oder Neukonzeption.
+   - Hebel:
+     * Radikale Reorganisation nach dem Pyramiden-Prinzip (Bottom Line Up Front / BLUF).
+     * Reduktion auf 5–8 wirkungsvolle Kernfolien für den Hauptteil.
+     * Auslagerung von technischen Details, Datenwüsten und Nachweisen in einen dedizierten «Backup-/Anhang»-Bereich.
+
+TASK: EMPFEHLUNG DES KOMMUNIKATIONSEXPERTEN
+- Lege dich begründet fest: Welcher Weg (A oder B) liefert den höchsten Mehrwert bei vertretbarem Aufwand?
+- Formuliere die tragende Leitbotschaft der Präsentation in genau einem prägnanten Satz.`
         },
         'A-AUDIT-ALL': {
             id: 'A-AUDIT-ALL',
@@ -484,6 +532,31 @@ Qualitätskriterien:
 - Stringenter roter Faden ohne Brüche,
 - Anschauliche Sprache, absolut frei von KI-Floskeln,
 - Faktengetreu und zitierfähig.`
+        },
+        'O-PPT-STORYBOARD': {
+            id: 'O-PPT-STORYBOARD',
+            title: 'Folien-Storyboard & Sprechernotizen',
+            text: `TASK: FOLIEN-STORYBOARD (MASTER-STRUKTUR)
+Erstelle auf Basis der gewählten Strategie und Dramaturgie das vollständige, sofort umsetzbare Folien-Storyboard.
+
+Gliedere jede Folie exakt nach folgendem Standard:
+
+---
+### FOLIE [Nummer]: [Funktion der Folie, z.B. Einstieg / Problem / Lösung / Wirtschaftlichkeit / Beschluss]
+- **ACTION TITLE (Headline):** [Vollständiger, prägnanter Aussagesatz oben auf der Folie, der die Kernbotschaft der Folie auf den Punkt bringt – keine generischen Schlagworte!]
+- **FOLIENAUFBAU & VISUALISIERUNG:**
+  * Layout-Vorschlag: [z.B. 3 Spalten mit Icons, Vorher-Nachher-Matrix, horizontaler 4-Schritte-Zeitstrahl, 1 grosse Zahl links + 2 prägnante Kernaussagen rechts]
+  * Inhalt: [Maximal 3 bis 4 präzise formulierte Stichpunkte ohne Füllwörter]
+- **SPRECHERNOTIZEN (Was wird gesagt?):**
+  * «[Ausformulierter, mündlich überzeugender Sprechtext in 2 bis 3 Sätzen. Erklärt das "Warum" und leitet logisch zur nächsten Folie über.]»
+- **QUICK-FIX TIPP:** [Ein konkreter Hinweis für minimal-invasive Anpassung, falls eine existierende Folie beibehalten wird.]
+---
+
+TASK: DIE 3 GOLDENEN PRÄSENTATIONS-REGELN FÜR DIESEN AUFTRITT
+Gib der vortragenden Person 3 konkrete, sofort anwendbare Tipps für den Vortrag mit:
+1. Einstieg & die ersten 60 Sekunden (wie Aufmerksamkeit gewonnen wird)
+2. Umgang mit Detailfragen / Unterbrechungen (Fokus auf Kernbeschluss)
+3. Do's & Don'ts für die visuelle Präsentation`
         }
     };
 
@@ -871,6 +944,31 @@ ROHDATEN:`
                     }]
                 }
             ]
+        },
+
+        // 17. PRÄSENTATION & STORYBOARD (3 TURNS)
+        {
+            id: 'recipe-praesentation',
+            name: 'Präsentation & Storyboard',
+            family: 'review',
+            turns: [
+                {
+                    title: 'LAGEBILD & DRAMATURGIE-CHECK',
+                    role: 'Du bist ein erfahrener Executive Präsentationsberater und Storytelling-Coach.',
+                    chunks: ['I-PPT', 'R-FULL', 'C-THESIS', 'T-TLDR']
+                },
+                {
+                    title: 'STRATEGIE & WEGWAHL',
+                    role: 'Du bist ein leitender Kommunikationsstratege und Präsentations-Experte.',
+                    chunks: ['S-PPT-STRATEGY', { chunkId: 'S-MESSAGES', params: { count: 'drei' } }]
+                },
+                {
+                    title: 'FOLIEN-STORYBOARD & SPRECHERNOTIZEN',
+                    role: 'Du bist ein meisterhafter Präsentations-Autor und Dramaturg.',
+                    chunks: ['O-PPT-STORYBOARD']
+                }
+            ],
+            forks: ['O-TABLE', 'O-QA', 'O-REPLY']
         }
     ];
 

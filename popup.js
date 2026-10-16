@@ -299,6 +299,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loaded = await PromptStorage.load();
     if (loaded && loaded.length > 0) {
         prompts = loaded;
+
+        // One-time catalog sync for newly introduced catalog recipes (v2.1+)
+        try {
+            const local = await ext.storage.local.get('v2_1_praesentation_seeded');
+            if (!local?.v2_1_praesentation_seeded) {
+                const hasPpt = prompts.some(p => p.recipeId === 'recipe-praesentation' || p.name === 'Präsentation & Storyboard');
+                if (!hasPpt && Catalog?.RECIPES) {
+                    const pptRecipe = Catalog.RECIPES.find(r => r.id === 'recipe-praesentation');
+                    if (pptRecipe) {
+                        const newId = (prompts.length + 1).toString();
+                        prompts.push({
+                            id: newId,
+                            name: pptRecipe.name,
+                            recipeId: pptRecipe.id,
+                            content: Catalog.compileExpress ? Catalog.compileExpress(pptRecipe) : '',
+                            autoSend: false
+                        });
+                        await PromptStorage.save(prompts);
+                    }
+                }
+                if (ext?.storage?.local) {
+                    await ext.storage.local.set({ v2_1_praesentation_seeded: true });
+                }
+            }
+        } catch (e) {
+            console.warn('[PromptDock] Failed seeding Präsentation recipe:', e);
+        }
     } else {
         prompts = [...DEFAULT_PROMPTS];
         await PromptStorage.save(prompts);
