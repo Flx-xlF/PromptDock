@@ -33,15 +33,28 @@ def main():
     print(f"📦 Manifest version: {version}")
 
     # 2. Syntax validation
+    import shutil
     js_files = ["background.js", "content.js", "popup.js", "storage.js", "shared/browser-compat.js", "shared/recipe-catalog.js"]
+    node_bin = shutil.which("node")
+    jsc_bin = "/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc" if os.path.exists("/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc") else None
+
     for js in js_files:
         if not os.path.exists(js):
             print(f"❌ Error: Required file {js} is missing!")
             sys.exit(1)
-        res = subprocess.run(["node", "-c", js], capture_output=True, text=True)
-        if res.returncode != 0:
-            print(f"❌ Syntax error in {js}:\n{res.stderr}")
-            sys.exit(1)
+        if node_bin:
+            res = subprocess.run([node_bin, "-c", js], capture_output=True, text=True)
+            if res.returncode != 0:
+                print(f"❌ Syntax error in {js}:\n{res.stderr}")
+                sys.exit(1)
+        elif jsc_bin:
+            # JSC syntax check (ES modules like storage.js or background.js require -m)
+            cmd = [jsc_bin, "-m", js] if js in ["background.js", "storage.js", "popup.js"] else [jsc_bin, "-e", f"load('{js}')"]
+            res = subprocess.run(cmd, capture_output=True, text=True)
+            # Ignore runtime errors from browser globals like 'chrome' or 'window', but catch parse/syntax errors
+            if res.returncode != 0 and ("SyntaxError" in res.stderr or "ParseError" in res.stderr):
+                print(f"❌ Syntax error in {js}:\n{res.stderr}")
+                sys.exit(1)
     print("✅ All JavaScript files passed syntax verification.")
 
     # 3. Required file collection

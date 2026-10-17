@@ -369,11 +369,20 @@ export const PromptStorage = {
         };
 
         const fileContent = JSON.stringify(v21Payload, null, 2);
+        
+        // Mobile-optimized key-value dictionary for instant 1-step Shortcuts sync
+        const quickDict = {};
+        for (const item of formattedItems) {
+            if (item.name) quickDict[item.name] = item.express || '';
+        }
+        const quickContent = JSON.stringify(quickDict, null, 2);
+
         const payload = {
             description: "PromptDock Prompts Sync v2.1",
             public: false,
             files: {
-                "prompts": { content: fileContent }
+                "prompts": { content: fileContent },
+                "quick": { content: quickContent }
             }
         };
 

@@ -262,7 +262,7 @@ function setEditorMode(isMultiTurn) {
                         id: t.id || `turn-${idx + 1}`,
                         title: t.title || `Schritt ${idx + 1}`,
                         role: t.role || '',
-                        content: t.content || (t.chunks && t.chunks[0]?.text) || ''
+                        content: t.content || (Catalog && typeof Catalog.compileTurn === 'function' ? Catalog.compileTurn(matched, idx) : ((t.chunks && t.chunks[0]?.text) || ''))
                     }));
                 }
             }

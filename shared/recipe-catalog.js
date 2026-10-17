@@ -14,15 +14,22 @@
     }
 }(typeof globalThis !== 'undefined' ? globalThis : this, function () {
 
-    // Global constraints block prepended to Turn 1
+    // Global constraints block prepended to Turn 1 (Analysis & Fact-Checking)
     const G_RAHMEN = `RAHMENBEDINGUNGEN:
 - Keine leeren Phrasen, Füllwörter oder KI-typischen Formulierungen. Jeder Satz muss Informationsgehalt haben.
 - Unterscheide strikt zwischen Fakten, Annahmen und Bewertungen.
-- Belegstatus-Kennzeichnung für alle Fakten:
-  ✅ Belegt (aus vorliegenden Unterlagen oder verifizierbarer Quelle)
+- Belegstatus-Kennzeichnung für Fakten in Analyse- und Recherche-Schritten:
+  ✅ Belegt (aus vorliegenden Unterlagen, E-Mail-Verlauf, SharePoint/Graph oder verifizierbarer Quelle)
   ⚠️ Plausibel, aber nicht verifiziert
   ❌ Nicht überprüfbar
+  (WICHTIG: In finalen Text-, E-Mail- oder Medienantwort-Entwürfen keine ✅/⚠️/❌-Icons im Fliesstext verwenden, sofern nicht explizit als Spalte in einer Prüftabelle gefordert.)
 - Fehlende Daten oder Informationslücken explizit benennen, nicht überspielen.`;
+
+    // Compact style & quality discipline for Turn 2+ (Strategy & Output drafting) and Forks
+    const G_OUTPUT_STYLE = `QUALITÄTS- & STILVORGABE:
+- Keine leeren Phrasen, Füllwörter oder KI-typischen Formulierungen. Präzise, adressatengerechte Sprache.
+- Fakten- und Strategietreue: Stütze dich strikt auf die gesicherten Erkenntnisse und erfinde keine Fakten hinzu.
+- Verwende in ausformulierten Antwort- oder Textentwürfen keine Belegstatus-Icons (✅, ⚠️, ❌), ausser wo explizit als Tabellenspalte gefordert.`;
 
     // Atomic Chunk Definitions
     const CHUNKS = {
@@ -30,7 +37,7 @@
         'I-MEDIA': {
             id: 'I-MEDIA',
             title: 'Inhalts-Analyse (Medien/Fragen)',
-            text: `TASK 1: INHALTS-ANALYSE & FRAGENKATALOG
+            text: `TASK: INHALTS-ANALYSE & FRAGENKATALOG
 Analysiere den Inhalt der Medienanfrage bzw. des Fragenkatalogs im Mailtext sowie allfälliger verlinkter oder angehängter Dateien.
 Isoliere:
 - die eigentliche Kernfrage und das übergeordnete Thema,
@@ -39,7 +46,7 @@ Isoliere:
 - den erkennbaren journalistischen Fokus, die vermutete Storyline und Stossrichtung,
 - allfällige Fristen oder Deadlines.
 
-FRAGENKATALOG-TYPOLOGIE:
+TASK: FRAGENKATALOG-TYPOLOGIE
 Beurteile die Struktur und Absicht der gestellten Fragen:
 - Liegen voneinander unabhängige, rein sachlich-faktische Einzelfragen vor?
 - Oder handelt es sich um kaskadierende, suggestive oder manipulative Fragen, die eine bestimmte Problem- oder Schuldthese stützen sollen?
@@ -48,25 +55,23 @@ Beurteile die Struktur und Absicht der gestellten Fragen:
         'I-MAIL': {
             id: 'I-MAIL',
             title: 'Inhalts-Analyse (E-Mail/Vorgang)',
-            text: `TASK 1: INHALTS-ANALYSE
-Analysiere den Inhalt der E-Mail sowie allfälliger verlinkter oder angehängter Dateien.
-Erfasse:
-- die relevanten Fakten,
-- den Kontext,
-- die expliziten und impliziten Fragestellungen,
-- beteiligte Personen und Organisationseinheiten.
+            text: `TASK: INHALTS- & THREAD-ANALYSE (OUTLOOK)
+Analysiere den vorliegenden E-Mail-Verlauf (Chronologie von unten nach oben beachten) sowie allfälliger verlinkter SharePoint-/OneDrive-Dokumente oder Dateianhänge.
+Erfasse strukturiert:
+- AKTUELLER AUSLÖSER & AUFTRAG (oberste Nachricht): Wer wendet sich aktuell mit welchem konkreten Auftrag, welcher Frage oder Bitte an mich?
+- THREAD-HISTORIE & KONTEXT: Was ist im bisherigen Verlauf (weitergeleitete Mails, Vorantworten) sachlich passiert und welche Positionen wurden bereits bezogen?
+- FAKTEN & ANHÄNGE: Welche gesicherten Fakten, Zahlen oder Entwürfe liegen im Thread bzw. in verlinkten Dateien vor?
+- BETEILIGTE AKTEURE: Relevante Personen, Absender, CC-Empfänger und Organisationseinheiten.
 
-TASK 2: ANLIEGEN IDENTIFIZIEREN
-Identifiziere präzise, welches Anliegen an mich herangetragen wird.
-Formuliere:
-- die Kernfrage,
-- allfällige Teilfragen,
-- die eigentliche Entscheidung oder Unterstützung, die von mir erwartet wird.`
+TASK: ANLIEGEN & ENTSCHEIDUNGSBEDARF IDENTIFIZIEREN
+Bestimme präzise, was von mir konkret erwartet wird:
+- die zu klärende Kernfrage und allfällige Teilfragen,
+- die anstehende Entscheidung, Freigabe, Einschätzung oder Antwortleistung.`
         },
         'I-DOC': {
             id: 'I-DOC',
             title: 'Inhalts-Analyse (Dokumentenprüfung)',
-            text: `TASK 1: INHALTS-ANALYSE
+            text: `TASK: INHALTS-ANALYSE
 Analysiere die verlinkte oder angehängte Datei bzw. den Entwurf.
 Erfasse:
 - Inhalt, Zweck und Zielsetzung des Dokuments,
@@ -78,7 +83,7 @@ Erfasse:
         'I-PPT': {
             id: 'I-PPT',
             title: 'Inhalts- & Zielgruppen-Analyse (Verlinkte Präsentation)',
-            text: `TASK 1: ZUGRIFF & BESTANDSAUFNAHME (VERLINKTE PRÄSENTATION IN OUTLOOK)
+            text: `TASK: ZUGRIFF & BESTANDSAUFNAHME (VERLINKTE PRÄSENTATION IN OUTLOOK)
 Greife direkt auf die in der vorliegenden E-Mail / Nachricht verlinkte PowerPoint-Präsentation (SharePoint-, OneDrive- oder Web-Link) bzw. allfällige Dateianhänge zu und analysiere den tatsächlichen Folieninhalt.
 
 Erfasse systematisch:
@@ -93,14 +98,14 @@ Erfasse systematisch:
    - Textdichte & Lesbarkeit: Überladene Folien («Textwüsten»), passive Bulletpoints vs. visuelle Klarheit.
    - Qualität der Folientitel: Rein thematische Stichworte (z.B. «Status», «Hintergrund») vs. aussagekräftige Botschaften.
 
-TASK 2: DRAMATURGIE-CHECK & STÄRKSTE STORYLINE (SCQA)
+TASK: DRAMATURGIE-CHECK & STÄRKSTE STORYLINE (SCQA)
 Gleiche das verlinkte Foliendeck mit dem Pyramiden-Prinzip ab:
 - SITUATION: Ist die Ausgangslage für die Zielgruppe unstrittig, präzise und relevant beschrieben?
 - KOMPLIKATION: Wird sofort spürbar, warum JETZT Handlungsbedarf besteht (Problem, Risiko, veränderte Rahmenbedingungen, Chance)?
 - KERNFRAGE: Welche Leitfrage muss dieses Deck unmissverständlich beantworten?
 - ANTWORT (GOVERNING THOUGHT): Bietet die Präsentation eine glasklare, überzeugende Beschluss- oder Handlungsempfehlung, oder verliert sie sich in Detailbeschreibungen?
 
-TASK 3: MEDIALE & POLITISCHE BELASTBARKEITSPRÜFUNG
+TASK: MEDIALE & POLITISCHE BELASTBARKEITSPRÜFUNG
 Nimm die Perspektive eines investigativen Journalisten, eines politischen Gegners und eines skeptischen Aufsichtsorgans ein:
 - Wo enthält das vorliegende Deck Angriffsflächen, unbelegte Zahlenbehauptungen, voreilige Versprechungen oder heikle Formulierungen?
 - Welche Folien oder Aussagen würden bei einem Leak an die Medien oder in die Öffentlichkeit Reputationsschaden anrichten?
@@ -109,14 +114,14 @@ Nimm die Perspektive eines investigativen Journalisten, eines politischen Gegner
         'I-MEET': {
             id: 'I-MEET',
             title: 'Inhalts-Analyse (Meeting)',
-            text: `TASK 1: INHALTS-ANALYSE
+            text: `TASK: INHALTS-ANALYSE
 Analysiere den Termin inkl. verlinkter oder angehängter Dateien.
 Erfasse:
 - Zweck und Ziel des Meetings,
 - Teilnehmende und deren Rollen,
 - Agenda und erwartete Themen.
 
-TASK 2: ANLIEGEN IDENTIFIZIEREN
+TASK: ANLIEGEN IDENTIFIZIEREN
 Identifiziere das Anliegen, das mich betrifft:
 - was von mir erwartet wird (Entscheidung, Input, Information, Freigabe),
 - welche Themen mich direkt betreffen,
@@ -128,7 +133,7 @@ Identifiziere das Anliegen, das mich betrifft:
             text: `SUCHBEGRIFF / SUCHSATZ:
 {SUCHBEGRIFF}
 
-TASK 1: INHALTS-ANALYSE & SUCHINTENTION
+TASK: INHALTS-ANALYSE & SUCHINTENTION
 Analysiere den Suchbegriff/-satz sowie allfällige Dateien. Bestimme:
 - die Kernfrage und Teilfragen,
 - den Informationsbedarf und Nutzungskontext,
@@ -137,41 +142,56 @@ Analysiere den Suchbegriff/-satz sowie allfällige Dateien. Bestimme:
         'I-TIME': {
             id: 'I-TIME',
             title: 'Zeitfenster-Vorbereitung',
-            text: `ZEITRAUM: {ZEITRAUM}
+            compile: (params) => {
+                const withTopic = params?.withTopic === true;
+                const headerLines = withTopic
+                    ? `THEMA / PROJEKT: {THEMA}\nZIELGRUPPE / EMPFÄNGER: {PERSON}\nZEITRAUM: {ZEITRAUM}`
+                    : `ZEITRAUM: {ZEITRAUM}`;
+                const topicScope = withTopic
+                    ? `\n- Fokussiere die Auswertung gezielt auf das Thema «{THEMA}» und den Informationsbedarf von «{PERSON}».`
+                    : '';
+                return `${headerLines}
 
-TASK 1: ZEITFENSTER-VORBEREITUNG
+TASK: ZEITFENSTER- & FOKUS-VORBEREITUNG
 Lege die zu analysierenden Zeitabschnitte anhand des angegebenen Zeitraums fest:
-- Hauptarbeitszeitraum (Rückblick & Learnings)
-- Abwesenheitstage / freie Tage
-- Kürzlicher Status (Wochenende bis heute früh)`
+- Hauptarbeitszeitraum (Rückblick & relevante Entwicklungen)
+- Abwesenheitstage / freie Tage bzw. Zwischenzeitraum
+- Aktueller Stand bis heute${topicScope}`;
+            }
         },
 
         // --- RESEARCH CHUNKS ---
         'R-FULL': {
             id: 'R-FULL',
-            title: 'Recherche (Web & Microsoft Graph)',
+            title: 'Recherche (Microsoft Graph, SharePoint & Web)',
             compile: (params) => {
-                const focus = params?.focus || 'bisherige mediale Berichterstattung, öffentlich verfügbare Fakten, frühere Stellungnahmen und historische Kontexte';
-                return `TASK: RECHERCHE
+                const isMedia = params?.scope === 'media';
+                const defaultFocus = isMedia
+                    ? 'bisherige mediale Berichterstattung, öffentlich verfügbare Fakten, frühere Stellungnahmen und historische Kontexte'
+                    : 'relevante Hintergrundfakten, Projektstände, bisherige Entscheidungen, Sprachregelungen und organisatorische Zusammenhänge';
+                const focus = params?.focus || defaultFocus;
+                return `TASK: RECHERCHE & FAKTENABGLEICH
+Recherchiere die relevanten Grundlagen zum isolierten Thema. Kennzeichne jede Faktenbehauptung mit ihrem Belegstatus (✅, ⚠️, ❌).
 
-Recherchiere die relevanten Fakten zum isolierten Thema.
+1. INTERNE RECHERCHE (MICROSOFT GRAPH & SHAREPOINT)
+Durchsuche frühere E-Mails, Teams-Chats, Besprechungsnotizen und SharePoint-Dokumente nach:
+- relevanten Fakten, bisherigen Positionierungen, Freigaben, Q&As, Argumentarien und vergleichbaren Vorgängen.
+- Gleiche Behauptungen oder Annahmen aus der vorliegenden Anfrage gezielt gegen unabhängige interne M365-Quellen ab, statt sie ungeprüft aus der Anfrage selbst zu übernehmen.
 
-1. FAKTENRECHERCHE
-Recherchiere: ${focus}.
-Kennzeichne jede Faktenbehauptung mit ihrem Belegstatus (✅, ⚠️, ❌).
-
-2. INTERNE RECHERCHE (MICROSOFT GRAPH)
-Durchsuche frühere E-Mails, Teams-Chats, SharePoint-Inhalte und Wissensquellen nach:
-- relevanten Fakten, bisherigen Positionierungen, Freigaben, Q&As, Argumentarien und vergleichbaren Fällen.
-Die aktuell vorliegende Anfrage/Datei ist von dieser historischen Recherche zwingend auszuschliessen.`;
+2. FAKTEN- & KONTEXTRECHERCHE
+Recherchiere ergänzend: ${focus}.`;
             }
         },
         'R-TIME': {
             id: 'R-TIME',
             title: 'Recherche (Zeitfenster Microsoft Graph)',
-            text: `TASK: RECHERCHE VIA MICROSOFT GRAPH
-Durchsuche alle gesendeten und empfangenen E-Mails, Teams-Chats, SharePoint-Seiten und Aktivitäten innerhalb des definierten Zeitfensters.
-Basiere alle Auswertungen ausschliesslich auf echten Daten; erfinde keine Einträge und kennzeichne Lücken explizit.`
+            compile: (params) => {
+                const withTopic = params?.withTopic === true;
+                const topicClause = withTopic ? ` mit engem Bezug zum Thema «{THEMA}»` : '';
+                return `TASK: RECHERCHE VIA MICROSOFT GRAPH
+Durchsuche alle gesendeten und empfangenen E-Mails, Teams-Chats, Kalendereinträge und SharePoint-Aktivitäten innerhalb des definierten Zeitfensters${topicClause}.
+Basiere alle Auswertungen ausschliesslich auf echten Daten aus Microsoft Graph; erfinde keine Einträge und kennzeichne Informationslücken explizit.`;
+            }
         },
 
         // --- CHECK LENSES ---
@@ -236,7 +256,7 @@ Qualitätsmassstab:
             title: 'Strategie-Abwägung & Haltung',
             compile: (params) => {
                 const framings = params?.framings || 'proaktiv, defensiv, rein sachlich, einordnend, kontextualisierend, reputationsorientiert';
-                const includeFormatAnalysis = params?.includeFormatAnalysis !== false;
+                const includeFormatAnalysis = params?.includeFormatAnalysis === true;
                 const formatBlock = includeFormatAnalysis ? `
 
 TASK: FRAGENKATALOG- & FORMAT-ABWÄGUNG (BEANTWORTUNGS-ARCHITEKTUR)
@@ -287,8 +307,9 @@ Formuliere ${count} prägnante, zitierfähige Kernbotschaften, die die definiert
         'S-DECISION': {
             id: 'S-DECISION',
             title: 'Handlungsoptionen & Entscheid',
-            text: `TASK: HANDLUNGSOPTIONEN & BEURTEILUNG
-Zeige mögliche Optionen auf (z.B. Freigabe ohne Auflagen, Freigabe mit Anpassungen, Überarbeitung, Nichtfreigabe bzw. Handlungsbedarf Ja/Nein) und bewerte Vor- und Nachteile.`
+            text: `TASK: HANDLUNGSOPTIONEN & EMPFEHLUNG
+Zeige die realistischen Handlungsoptionen auf (z.B. Freigabe ohne Auflagen, Freigabe mit Anpassungen, Überarbeitung, Nichtfreigabe bzw. kommunikativer Handlungsbedarf Ja/Nein) und bewerte kurz Vor- und Nachteile.
+Lege dich verbindlich fest und formuliere die empfohlene Haltung bzw. den Kernentscheid in genau einem prägnanten Satz.`
         },
         'S-ALIGN': {
             id: 'S-ALIGN',
@@ -332,18 +353,12 @@ TASK: ARGUMENTATIONS-ARCHITEKTUR & EMPFEHLUNG DES KOMMUNIKATIONSEXPERTEN
             id: 'A-AUDIT-ALL',
             title: '3D-Audit (Fakten, Logik, Reputation)',
             text: `TASK: SYSTEMATISCHES DREI-DIMENSIONEN-AUDIT
+Prüfe die Vorlage rigoros in drei Dimensionen:
+1. FAKTENCHECK: Sachliche Richtigkeit, Vollständigkeit, Aktualität und korrekte Einordnung von Zahlen, Daten und Zusammenhängen (Abgleich mit E-Mail-Verlauf und Microsoft Graph/SharePoint).
+2. LOGIKCHECK: Innere Konsistenz, Nachvollziehbarkeit, unbegründete Schlussfolgerungen, Widersprüche und gedankliche Sprünge.
+3. REPUTATIONSCHECK: Perspektive eines kritischen Journalisten, politischen Gegners oder skeptischen Stakeholders (negative Framings, Angriffsflächen, Risiken für die Glaubwürdigkeit).
 
-1. FAKTENCHECK:
-Prüfe sachliche Richtigkeit, Vollständigkeit, Aktualität und korrekte Einordnung von Zahlen und Zusammenhängen.
-
-2. LOGIKCHECK:
-Prüfe innere Konsistenz, Nachvollziehbarkeit, unbegründete Schlussfolgerungen, Widersprüche und gedankliche Sprünge.
-
-3. REPUTATIONSCHECK:
-Nimm die Perspektive eines investigativen Journalisten, eines politischen Gegners und eines skeptischen Stakeholders ein.
-Prüfe auf negative Framings, Angriffsflächen, politisch sensible Aussagen und Risiken für die Glaubwürdigkeit.
-
-Schlage für jede Beanstandung minimalinvasive Korrekturen vor (nur bei gravierenden Mängeln komplette Neuformulierungen).`
+WICHTIG: Gib die Einzelbefunde nicht als doppelte Vorab-Fliesstextliste aus, sondern führe alle konkreten Beanstandungen und minimalinvasiven Korrekturvorschläge direkt in der nachfolgenden Rückmeldungstabelle zusammen.`
         },
         'D-DELTA': {
             id: 'D-DELTA',
@@ -480,7 +495,11 @@ Falls kein Handlungsbedarf besteht, begründe dies kurz.`
         'O-WEEKLY': {
             id: 'O-WEEKLY',
             title: 'Wochenstart-Bericht',
-            text: `OUTPUT-FORMAT:
+            text: `TASK: WOCHENSTART-BERICHT
+
+E-MAIL-VORLAGE (VERSANDFERTIG FÜR OUTLOOK):
+BETREFF: «Briefing: Status, Delta & Inbox-Triage [Aktuelles Datum]»
+
 ## RÜCKBLICK & LEARNINGS
 [Zusammenfassung & strategische Erkenntnisse]
 
@@ -492,16 +511,12 @@ Falls kein Handlungsbedarf besteht, begründe dies kurz.`
 
 ## INBOX TRIAGE
 | Priorität | Absender | Betreff | Empfohlene Aktion | Begründung |
-|-----------|----------|---------|-------------------|------------|
-
-OUTPUT-AKTION:
-Sende diesen Bericht als E-Mail an meine geschäftliche Adresse mit dem Betreff:
-«Briefing: Status, Delta & Inbox-Triage [Aktuelles Datum]».`
+|-----------|----------|---------|-------------------|------------|`
         },
         'O-UPDATE': {
             id: 'O-UPDATE',
             title: 'Rückkehrer-Update',
-            text: `OUTPUT-FORMAT:
+            text: `TASK: RÜCKKEHRER-UPDATE
 THEMA: {THEMA}
 UPDATE: Für {PERSON} ({ZEITRAUM})
 TL;DR: [Max. 5 Zeilen]
@@ -583,12 +598,12 @@ Gib der vortragenden Person 3 konkrete, sofort anwendbare Tipps für den Vortrag
                 {
                     title: 'LAGEBILD',
                     role: 'Du bist ein erfahrener Kommunikationsstratege und Mediensprecher.',
-                    chunks: ['I-MEDIA', 'R-FULL', 'C-THESIS', 'C-DRAFT', 'T-TLDR']
+                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { scope: 'media' } }, 'C-THESIS', 'C-DRAFT', 'T-TLDR']
                 },
                 {
                     title: 'STRATEGIE',
                     role: 'Du bist ein erfahrener Kommunikationsstratege.',
-                    chunks: ['S-FULL']
+                    chunks: [{ chunkId: 'S-FULL', params: { includeFormatAnalysis: true } }]
                 },
                 {
                     title: 'OUTPUT (MEDIENANTWORT)',
@@ -613,7 +628,7 @@ Gib der vortragenden Person 3 konkrete, sofort anwendbare Tipps für den Vortrag
                 {
                     title: 'STRATEGIE',
                     role: 'Du bist ein erfahrener Kommunikationsstratege.',
-                    chunks: ['S-FULL', { chunkId: 'S-MESSAGES', params: { count: 'vier' } }]
+                    chunks: [{ chunkId: 'S-FULL', params: { includeFormatAnalysis: true } }, { chunkId: 'S-MESSAGES', params: { count: 'vier' } }]
                 },
                 {
                     title: 'OUTPUT (BRIEFING)',
@@ -633,7 +648,7 @@ Gib der vortragenden Person 3 konkrete, sofort anwendbare Tipps für den Vortrag
                 {
                     title: 'LAGEBILD',
                     role: 'Du bist ein erfahrener Chef-Kommunikator.',
-                    chunks: ['I-MEDIA', 'R-FULL', 'C-THESIS', 'T-TLDR']
+                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { scope: 'media' } }, 'C-THESIS', 'T-TLDR']
                 },
                 {
                     title: 'WORDING & Q+A',
@@ -747,7 +762,7 @@ Gib der vortragenden Person 3 konkrete, sofort anwendbare Tipps für den Vortrag
                 {
                     title: 'BEURTEILUNG & EMPFEHLUNG',
                     role: 'Du bist ein Senior Issue Manager.',
-                    chunks: ['S-DECISION', 'S-LITE', 'O-ACTIONS']
+                    chunks: ['S-DECISION', 'O-ACTIONS']
                 }
             ],
             forks: ['O-STRATEGY', 'O-THEMENPLANUNG']
@@ -786,7 +801,7 @@ Gib der vortragenden Person 3 konkrete, sofort anwendbare Tipps für den Vortrag
                 {
                     title: 'AUDIT & FREIGABE-ENTSCHEID',
                     role: 'Du bist ein Risikomanager und Freigabeverantwortlicher.',
-                    chunks: ['A-AUDIT-ALL', 'S-DECISION', 'S-LITE', { chunkId: 'O-TABLE', params: { withSummary: true } }]
+                    chunks: ['A-AUDIT-ALL', 'S-DECISION', { chunkId: 'O-TABLE', params: { withSummary: true } }]
                 }
             ]
         },
@@ -902,7 +917,11 @@ Gib der vortragenden Person 3 konkrete, sofort anwendbare Tipps für den Vortrag
                 {
                     title: 'KONTEXT & RECHERCHE',
                     role: 'Du bist ein präziser Intelligence Officer.',
-                    chunks: ['I-TIME', 'R-TIME', 'T-TLDR']
+                    chunks: [
+                        { chunkId: 'I-TIME', params: { withTopic: true } },
+                        { chunkId: 'R-TIME', params: { withTopic: true } },
+                        'T-TLDR'
+                    ]
                 },
                 {
                     title: 'DELTA & BRIEFING',
@@ -932,7 +951,7 @@ Gib der vortragenden Person 3 konkrete, sofort anwendbare Tipps für den Vortrag
                 {
                     title: 'LAGEBILD',
                     role: 'Du bist ein erfahrener Research Analyst und Intelligence Officer.',
-                    chunks: ['I-QUERY', 'R-FULL', 'C-PERSPECTIVE', 'T-TLDR']
+                    chunks: ['I-QUERY', { chunkId: 'R-FULL', params: { scope: 'media' } }, 'C-PERSPECTIVE', 'T-TLDR']
                 }
             ],
             forks: ['O-REPLY', 'O-STRATEGY', 'O-QA', 'O-THEMENPLANUNG']
@@ -992,32 +1011,46 @@ ROHDATEN:`
         const variableValues = options.variableValues || {};
         const userSteeringNote = options.userSteeringNote || '';
         const previousTurnTitle = options.previousTurnTitle || '';
+        const isExpress = !!options.isExpress;
 
         const turn = recipe.turns[turnIndex];
         if (!turn) return null;
 
         const parts = [];
 
-        // 1. Header
-        parts.push(`${recipe.name.toUpperCase()}: ${turn.title}`);
-        if (turn.role) {
+        // 1. Header & Role
+        if (isExpress) {
+            parts.push(`SCHRITT ${turnIndex + 1}: ${turn.title}`);
+        } else {
+            parts.push(`${recipe.name.toUpperCase()}: ${turn.title}`);
+        }
+
+        // Output role: in express mode, only if it's turn 0 or changed from previous turn
+        const prevRole = turnIndex > 0 ? recipe.turns[turnIndex - 1]?.role : null;
+        if (turn.role && (!isExpress || turnIndex === 0 || turn.role !== prevRole)) {
             parts.push(`ROLLE:\n${turn.role}`);
         }
 
-        // 2. Global Constraints on Turn 1 only
+        // 2. Constraints & Handoffs
         if (turnIndex === 0) {
             parts.push(G_RAHMEN);
-        } else {
-            // Handoff contract for subsequent turns
-            let handoff = `BASIS:\nVorangegangene Erkenntnisse aus dem Schritt «${previousTurnTitle || 'LAGEBILD'}» in diesem Chat.`;
+        } else if (!isExpress) {
+            // Multi-turn handoff contract
+            const resolvedPrevTitle = previousTurnTitle || (recipe.turns[turnIndex - 1] && recipe.turns[turnIndex - 1].title) || 'LAGEBILD';
+            let handoff = `BASIS:\nVorangegangene Erkenntnisse und Festlegungen aus dem Schritt «${resolvedPrevTitle}» in diesem Chat.`;
             if (userSteeringNote && userSteeringNote.trim()) {
                 handoff += `\n\nSTEUERUNG DURCH NUTZER:\n${userSteeringNote.trim()}`;
             }
             parts.push(handoff);
+            parts.push(G_OUTPUT_STYLE);
+        } else if (userSteeringNote && userSteeringNote.trim()) {
+            parts.push(`STEUERUNG DURCH NUTZER:\n${userSteeringNote.trim()}`);
         }
 
         // 3. Assemble Chunks or Direct Turn Content
+        let rawContent = '';
         if (Array.isArray(turn.chunks) && turn.chunks.length > 0) {
+            const chunkTexts = [];
             for (const item of turn.chunks) {
                 let chunkId = typeof item === 'string' ? item : item.chunkId;
                 let params = typeof item === 'object' ? item.params : {};
@@ -1032,19 +1065,31 @@ ROHDATEN:`
                     chunkText = chunkDef.text || chunkDef.content || '';
                 }
 
-                // Interpolate variables (e.g. {ZEITRAUM}, {PERSON}, {SUCHBEGRIFF})
+                // Interpolate variables (e.g. {ZEITRAUM}, {PERSON}, {SUCHBEGRIFF}, {THEMA})
                 for (const [vKey, vVal] of Object.entries(variableValues)) {
                     chunkText = chunkText.replaceAll(`{${vKey}}`, vVal || `[${vKey}]`);
                 }
 
-                parts.push(chunkText);
+                chunkTexts.push(chunkText);
             }
+            rawContent = chunkTexts.join('\n\n');
         } else if (turn.content || turn.text) {
             let turnText = turn.content || turn.text || '';
             for (const [vKey, vVal] of Object.entries(variableValues)) {
                 turnText = turnText.replaceAll(`{${vKey}}`, vVal || `[${vKey}]`);
             }
-            parts.push(turnText);
+            rawContent = turnText;
+        }
+
+        // Auto-number TASK headers sequentially within this turn
+        let taskCounter = 0;
+        const normalizedContent = rawContent.replace(/^TASK(?:\s+\d+)?:/gm, () => {
+            taskCounter += 1;
+            return `TASK ${taskCounter}:`;
+        });
+
+        if (normalizedContent) {
+            parts.push(normalizedContent);
         }
 
         return parts.join('\n\n');
@@ -1055,14 +1100,54 @@ ROHDATEN:`
      */
     function compileExpress(recipe, variableValues) {
         variableValues = variableValues || {};
-        const turnTexts = recipe.turns.map((_, i) => compileTurn(recipe, i, { variableValues }));
-        return turnTexts.join('\n\n---\n\n');
+        const header = `${recipe.name.toUpperCase()} (EXPRESS-MODUS)\nFühre diesen mehrstufigen Workflow vollständig und schrittweise in einer einzigen Antwort aus.`;
+        const turnTexts = recipe.turns.map((_, i) => compileTurn(recipe, i, { variableValues, isExpress: true }));
+        return [header, ...turnTexts].join('\n\n---\n\n');
+    }
+
+    /**
+     * Compiles an alternative branch / fork output prompt.
+     */
+    function compileFork(recipe, outputChunkId, options) {
+        options = options || {};
+        const variableValues = options.variableValues || {};
+        const userSteeringNote = options.userSteeringNote || '';
+        const chunkDef = CHUNKS[outputChunkId];
+        if (!chunkDef) return null;
+
+        const parts = [];
+        parts.push(`FORK-OUTPUT: ${chunkDef.title.toUpperCase()}`);
+
+        const recipeName = recipe ? recipe.name : 'PromptDock';
+        let handoff = `BASIS:\nVorangegangene Recherche, Analyse und Strategiefestlegungen im aktuellen Chatverlauf (Workflow «${recipeName}»).`;
+        if (userSteeringNote && userSteeringNote.trim()) {
+            handoff += `\n\nSTEUERUNG DURCH NUTZER:\n${userSteeringNote.trim()}`;
+        }
+        parts.push(handoff);
+        parts.push(G_OUTPUT_STYLE);
+
+        let chunkText = typeof chunkDef.compile === 'function' ? chunkDef.compile(options.params || {}) : (chunkDef.text || '');
+        for (const [vKey, vVal] of Object.entries(variableValues)) {
+            chunkText = chunkText.replaceAll(`{${vKey}}`, vVal || `[${vKey}]`);
+        }
+
+        let taskCounter = 0;
+        const normalizedChunkText = chunkText.replace(/^TASK(?:\s+\d+)?:/gm, () => {
+            taskCounter += 1;
+            return `TASK ${taskCounter}:`;
+        });
+        parts.push(normalizedChunkText);
+
+        return parts.join('\n\n');
     }
 
     return {
         CHUNKS,
         RECIPES,
+        G_RAHMEN,
+        G_OUTPUT_STYLE,
         compileTurn,
-        compileExpress
+        compileExpress,
+        compileFork
     };
 }));

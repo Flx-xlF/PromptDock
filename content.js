@@ -1421,20 +1421,29 @@ function executeFork(outputChunkId, userSteeringNote) {
     const catalog = window.PromptDockCatalog;
     if (!catalog) return;
 
-    const chunkDef = catalog.CHUNKS[outputChunkId];
-    if (!chunkDef) return;
+    let fullPrompt = '';
+    if (typeof catalog.compileFork === 'function') {
+        fullPrompt = catalog.compileFork(RecipeState.activeRecipe, outputChunkId, {
+            userSteeringNote: userSteeringNote || '',
+            variableValues: RecipeState.variableValues || {}
+        });
+    } else {
+        const chunkDef = catalog.CHUNKS[outputChunkId];
+        if (!chunkDef) return;
 
-    const chunkText = typeof chunkDef.compile === 'function' ? chunkDef.compile({}) : chunkDef.text;
-    const promptParts = [
-        `FORK-OUTPUT: ${chunkDef.title.toUpperCase()}`,
-        `BASIS:\nVorangegangene Recherche und Analyse in diesem Chat.`
-    ];
-    if (userSteeringNote && userSteeringNote.trim()) {
-        promptParts.push(`STEUERUNG DURCH NUTZER:\n${userSteeringNote.trim()}`);
+        const chunkText = typeof chunkDef.compile === 'function' ? chunkDef.compile({}) : chunkDef.text;
+        const promptParts = [
+            `FORK-OUTPUT: ${chunkDef.title.toUpperCase()}`,
+            `BASIS:\nVorangegangene Recherche und Analyse in diesem Chat.`
+        ];
+        if (userSteeringNote && userSteeringNote.trim()) {
+            promptParts.push(`STEUERUNG DURCH NUTZER:\n${userSteeringNote.trim()}`);
+        }
+        promptParts.push(chunkText);
+        fullPrompt = promptParts.join('\n\n');
     }
-    promptParts.push(chunkText);
 
-    const fullPrompt = promptParts.join('\n\n');
+    if (!fullPrompt) return;
     const injected = window.injectCopilotPrompt(fullPrompt, true);
     if (!injected) return;
 

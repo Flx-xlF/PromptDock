@@ -18,10 +18,14 @@
 
 PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI workflow cockpit & cross-device execution bridge** — engineered right inside your browser:
 
-- 📱 **Mobile Sync & QR Code Setup Sheet (v2.1)**  
-  Zero-friction mobile integration with a dedicated slide-up onboarding sheet. Displays an instant live QR code for mobile camera scanning and provides a 1-click clipboard copy button for your private Gist endpoint URL (`https://api.github.com/gists/<gist_id>`). Easily configure mobile automation shortcuts and trigger your prompts directly within mobile Copilot.
-- 📡 **Rich Multi-Turn Mobile Schema (v2.1)**  
-  Upgraded GitHub Gist sync engine that serializes prompts and recipes into a structured v2.1 JSON envelope. Includes categorized turns (`turns`), step sequences, and combined markdown blocks (`express`) so multi-turn workflows run effortlessly inside mobile chat contexts.
+- 📱 **Mobile Sync & 1-Step Shortcuts Bridge (v2.1)**  
+  Zero-friction mobile integration with a dedicated slide-up onboarding sheet and live QR code. Gist sync now publishes a dual payload: the complete structured schema (`prompts`) plus a mobile-optimized key-value dictionary (`quick`), enabling mobile automation shortcuts to query and copy prompts in a single, zero-loop native selection.
+- 🏢 **Microsoft 365 Graph & Outlook Native Grounding**  
+  Intelligent thread ingestion designed specifically for Outlook on Web and Microsoft Copilot. Parses email thread chronology (latest sender mandate down to historic forwards and linked SharePoint/OneDrive attachments), and guides Copilot to ground claims against independent internal M365 Graph data rather than taking thread claims at face value.
+- 🛡️ **Phase-Scoped Cognitive Guardrails & Anti-Fluff Discipline**  
+  Verification badges (✅, ⚠️, ❌) are strictly scoped to the research and audit phase, preventing icon leakage into final drafts. Turn 2+ and output forks inherit `G_OUTPUT_STYLE`, preserving uncompromising anti-fluff rules and executive tone through Turn 3 without repetitive role boilerplate.
+- 🔢 **Dynamic Task Header Sequencing**  
+  Turn and fork compilation engines dynamically re-index all prompt tasks into clean sequential numbers (`TASK 1:`, `TASK 2:`, `TASK 3:`...), ensuring host LLMs follow a clear, logical step order regardless of chunk assembly.
 - ⏱️ **1500ms Debounced Cloud Gist Sync**  
   Eliminates burst HTTPS PATCH requests against GitHub's API by introducing an intelligent 1500ms debounce idle timer across all add, edit, and reorder operations.
 - 🧩 **Segmented Multi-Turn Recipe Composer**  
