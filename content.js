@@ -1498,24 +1498,35 @@ let currentObservedComposer = null;
 function updateHudDockPosition(railHostElement, isUserDragged) {
     if (!railHostElement || isUserDragged) return;
 
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    railHostElement.style.maxWidth = 'calc(100vw - 16px)';
+    railHostElement.style.boxSizing = 'border-box';
+
     const composer = findHostComposerContainer();
     if (!composer) {
         railHostElement.style.position = 'fixed';
         railHostElement.style.bottom = '96px';
         railHostElement.style.left = '50%';
         railHostElement.style.top = 'auto';
-        railHostElement.style.width = RecipeState.isMinimized ? 'auto' : 'min(680px, calc(100vw - 32px))';
+        railHostElement.style.width = RecipeState.isMinimized ? 'auto' : `min(680px, calc(100vw - 16px))`;
         railHostElement.style.transform = 'translateX(-50%)';
         railHostElement.style.alignItems = 'center';
         return;
     }
 
     const rect = composer.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    // Position exactly 10px above composer's top edge
-    const bottomOffset = Math.max(16, viewportHeight - rect.top + 10);
-    const centerX = rect.left + rect.width / 2;
-    const maxWidth = Math.min(rect.width, 680);
+    const maxWidth = Math.max(280, Math.min(rect.width, 680, viewportWidth - 16));
+    const halfWidth = maxWidth / 2;
+
+    // Clamp horizontal center so neither left nor right edge clips outside viewport [8px, viewportWidth - 8px]
+    let centerX = rect.left + rect.width / 2;
+    const minCenter = 8 + halfWidth;
+    const maxCenter = Math.max(minCenter, viewportWidth - 8 - halfWidth);
+    centerX = Math.max(minCenter, Math.min(maxCenter, centerX));
+
+    // Position exactly 10px above composer's top edge, clamping bottomOffset so dock never clips top of viewport
+    const bottomOffset = Math.max(16, Math.min(viewportHeight - 60, viewportHeight - rect.top + 10));
 
     railHostElement.style.position = 'fixed';
     railHostElement.style.bottom = `${bottomOffset}px`;
@@ -1606,11 +1617,11 @@ function setupRailDragging(railContainer) {
         let newTop = startTop + dy;
 
         const rect = railContainer.getBoundingClientRect();
-        const maxLeft = window.innerWidth - rect.width - 12;
-        const maxTop = window.innerHeight - rect.height - 12;
+        const maxLeft = Math.max(8, window.innerWidth - rect.width - 8);
+        const maxTop = Math.max(8, window.innerHeight - rect.height - 8);
 
-        newLeft = Math.max(12, Math.min(maxLeft, newLeft));
-        newTop = Math.max(12, Math.min(maxTop, newTop));
+        newLeft = Math.max(8, Math.min(maxLeft, newLeft));
+        newTop = Math.max(8, Math.min(maxTop, newTop));
 
         railContainer.style.left = `${newLeft}px`;
         railContainer.style.top = `${newTop}px`;
@@ -1653,13 +1664,15 @@ function renderRailUI() {
 
     // Preserve custom drag position if moved, otherwise anchor dynamically above composer
     if (RecipeState.customPos) {
-        const safeLeft = Math.max(12, Math.min(window.innerWidth - 280, RecipeState.customPos.left));
-        const safeTop = Math.max(12, Math.min(window.innerHeight - 60, RecipeState.customPos.top));
+        const safeLeft = Math.max(8, Math.min(window.innerWidth - 80, RecipeState.customPos.left));
+        const safeTop = Math.max(8, Math.min(window.innerHeight - 50, RecipeState.customPos.top));
         railContainer.style.left = `${safeLeft}px`;
         railContainer.style.top = `${safeTop}px`;
         railContainer.style.bottom = 'auto';
         railContainer.style.transform = 'none';
-        railContainer.style.width = RecipeState.isMinimized ? 'auto' : 'min(680px, calc(100vw - 32px))';
+        railContainer.style.width = RecipeState.isMinimized ? 'auto' : 'min(680px, calc(100vw - 16px))';
+        railContainer.style.maxWidth = 'calc(100vw - 16px)';
+        railContainer.style.boxSizing = 'border-box';
     } else {
         updateHudDockPosition(railContainer, false);
     }

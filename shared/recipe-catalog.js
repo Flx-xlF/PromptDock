@@ -50,7 +50,13 @@ TASK: FRAGENKATALOG-TYPOLOGIE
 Beurteile die Struktur und Absicht der gestellten Fragen:
 - Liegen voneinander unabhängige, rein sachlich-faktische Einzelfragen vor?
 - Oder handelt es sich um kaskadierende, suggestive oder manipulative Fragen, die eine bestimmte Problem- oder Schuldthese stützen sollen?
-- Welche Fragen bauen aufeinander auf oder zerlegen einen zusammenhängenden Sachverhalt künstlich in Einzelschritte?`
+- Welche Fragen bauen aufeinander auf oder zerlegen einen zusammenhängenden Sachverhalt künstlich in Einzelschritte?
+
+TASK: ABKLÄRUNGS-TRIAGE & AUFWAND-MINIMIERUNG
+Ziel ist es, den internen Abklärungsaufwand in den Fachbereichen auf das absolute Minimum zu beschränken. Unterteile die identifizierten Fragen/Themen strikt in drei Kategorien:
+1. DIREKT BEANTWORTBAR (OHNE RÜCKFRAGE): Was lässt sich mit dem vorliegenden Mailverlauf, bestehenden SharePoint-/Graph-Wissensquellen oder geeigneter strategischer Flughöhe sofort beantworten? (Priorität: Möglichst viel hier bündeln!)
+2. BEWUSST NICHT INTERN ABKLÄREN (DETAILFALLE): Welche granularen oder suggestiven Teilfragen binden unnötig Ressourcen interner Fachspezialisten und können durch übergeordnete, einordnende Kernaussagen ohne Informationsverlust neutralisiert werden?
+3. ZWINGENDER MINIMAL-ABKLÄRUNGSBEDARF (BLOCKER): Welche 1–2 harten Fakten sind unverzichtbar, um Falschaussagen zu vermeiden? Formuliere diese als geschlossene, präzise Ja/Nein- oder Einzelsatz-Prüffragen an die zuständige Fachperson (keine offenen Rechercheaufträge!).`
         },
         'I-MAIL': {
             id: 'I-MAIL',
@@ -259,21 +265,20 @@ Qualitätsmassstab:
                 const includeFormatAnalysis = params?.includeFormatAnalysis === true;
                 const formatBlock = includeFormatAnalysis ? `
 
-TASK: FRAGENKATALOG- & FORMAT-ABWÄGUNG (BEANTWORTUNGS-ARCHITEKTUR)
-Falls mehrere Fragen oder ein Fragenkatalog vorliegen: Wäge systematisch ab, welche Beantwortungsform die grösste Themenhoheit, mediale Belastbarkeit und Glaubwürdigkeit sichert:
+TASK: FRAGENKATALOG- & FORMAT-ABWÄGUNG (BEANTWORTUNGS-ARCHITEKTUR & FLUGHÖHE)
+Falls mehrere Fragen oder ein Fragenkatalog vorliegen: Wäge systematisch ab, welche Beantwortungsform und strategische Flughöhe die grösste Themenhoheit, Glaubwürdigkeit und minimale interne Abklärungsbindung sichert:
 1. Option A: Punkt-für-Punkt-Beantwortung (1:1 Frage für Frage)
-   - Eignung: Bei rein sachlichen, voneinander unabhängigen Informationsfragen (Zahlen, Termine, Prozessabläufe).
-   - Risiko: Übernahme des gegnerischen/journalistischen Framings; Gefahr, sich in suggestiven Teilfragen zu verfangen oder Fangfragen zu legitimieren.
+   - Eignung: Bei rein sachlichen, unkritischen Einzelfragen mit bereits gesicherten Fakten.
+   - Risiko: Übernahme des gegnerischen Framings; Gefahr, sich in zeitraubenden internen Detailabklärungen zu verstricken.
 2. Option B: Summarische Antwort (Zusammenhängendes Statement)
-   - Eignung: Wenn Einzelfragen auf falschen Vorannahmen beruhen, rhetorisch/suggestiv sind oder das Thema als Gesamtnarrativ kontextualisiert werden muss (Themenhoheit).
+   - Eignung: Wenn Fragen auf falschen Vorannahmen beruhen, rhetorisch/suggestiv sind oder mit bereits vorliegenden Fakten auf übergeordneter Flughöhe souverän beantwortet werden können (Aufwand-Minimierung!).
    - Risiko: Vorwurf des Ausweichens («Medienstelle beantwortet konkrete Fragen nicht»).
-3. Option C: Hybrider Ansatz / Thematische Clusterung
-   - Eignung: Wenn die Fragen teils strategische Einordnung und teils konkrete, berechtigte Fakten/Zahlen erfordern.
-   - Mechanik: Zusammenfassendes Haltungs-Statement zur Einordnung + gezielte Beantwortung sachlicher Kernpunkte oder Gruppierung in 2–3 Themenblöcke.
+3. Option C: Hybrider Ansatz / Thematische Clusterung (Empfohlen bei gemischten Fragen)
+   - Eignung: Einleitendes Haltungsstatement zur Einordnung + gezielte Beantwortung sachlicher Kernfragen in 2–3 Themenblöcken ohne operative Verästelung.
 
-ENTSCHEIDUNG & BEGRÜNDUNG:
+ENTSCHEIDUNG & BEGRÜNDUNG (ABKLÄRUNGS-ÖKONOMIE):
 - Lege fest: Welches Format (Punkt-für-Punkt, Summarisch oder Hybrid/Geclustert) wird für diese Anfrage gewählt?
-- Begründe kurz die strategische Wahl und wie das Risiko (z.B. Ausweichvorwurf vs. Framing-Falle) neutralisiert wird.` : '';
+- Begründe, wie die gewählte strategische Flughöhe den internen Abklärungsaufwand bei Fachstellen minimiert und dennoch alle berechtigten Informationsbedürfnisse souverän abdeckt.` : '';
 
                 return `TASK: STRATEGIE-ABWÄGUNG
 Wäge verschiedene Antwortstrategien und Framings gegeneinander ab:
@@ -376,11 +381,15 @@ Vergleiche den Stand zu Beginn des Zeitfensters mit dem aktuellen Status:
             text: `TASK: MEDIENANTWORT
 Formuliere auf Basis der festgelegten Strategie, Storyline und gewählten Beantwortungs-Architektur den finalen Entwurf der Medienantwort.
 
-FORMAT-VORGABE:
+FORMAT-VORGABE & FLUGHÖHE:
 - Setze die in der Strategie-Phase gewählte Beantwortungsform konsequent um:
   * Bei summarischer Antwort: Ein zusammenhängendes, druckreifes Statement mit klaren Kernbotschaften, das den Gesamtsachverhalt souverän einordnet.
   * Bei hybridem/geclustertem Ansatz: Ein einleitendes Kernstatement gefolgt von thematisch gebündelten Sachantworten zu den berechtigten Informationsfragen.
   * Bei Punkt-für-Punkt: Präzise, nummerierte Antworten auf jede Einzelfrage ohne Rechtfertigungston.
+
+AUTONOMIE & AUFWAND-MINIMIERUNG:
+- Stütze den Entwurf konsequent auf die heute bereits gesicherten Fakten und die definierte Flughöhe, sodass die Antwort sofort versandbereit ist und keine neuen Abklärungsrunden in den Fachbereichen ausgelöst werden.
+- Falls eine unumgängliche Schlüsseltatsache aus der Abklärungs-Triage noch kurz bestätigt werden muss, kennzeichne exakt diese eine Stelle als minimalen Platzhalter: «[Kurze Bestätigung durch Fachbereich X: ...]».
 
 QUALITÄTSKRITERIEN & EVASION-CHECK:
 - Faktisch belastbar, verständlich, medientauglich, frei von PR-Floskeln.

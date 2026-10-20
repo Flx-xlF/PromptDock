@@ -390,7 +390,11 @@
     bottom: 84px;
     left: 50%;
     transform: translateX(-50%);
-    width: min(680px, calc(100vw - 32px));
+    width: min(680px, calc(100vw - 16px));
+    max-width: calc(100vw - 16px);
+    box-sizing: border-box;
+    container-type: inline-size;
+    container-name: pd-rail;
     z-index: 10002;
     display: none;
     flex-direction: column;
@@ -417,6 +421,9 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
     animation: pd-hud-appear 0.2s ease forwards;
     transition: max-width 0.4s cubic-bezier(0.34, 1.15, 0.64, 1),
                 max-height 0.4s cubic-bezier(0.34, 1.15, 0.64, 1),
@@ -438,7 +445,8 @@
     gap: 8px;
     height: 36px;
     max-height: 36px;
-    max-width: min(92vw, 520px);
+    max-width: min(calc(100vw - 16px), 520px);
+    width: auto;
     padding: 0 6px 0 10px;
     border-radius: 9999px;
     background: rgba(18, 18, 24, 0.94);
@@ -464,11 +472,12 @@
     font-size: 12px;
     font-weight: 600;
     color: #e2e8f0;
+    flex: 0 1 auto;
+    min-width: 48px;
     max-width: 130px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    flex-shrink: 0;
 }
 
 .pd-pill-step {
@@ -480,6 +489,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex: 1 1 0%;
+    min-width: 0;
 }
 
 .pd-pill-step strong {
@@ -1025,4 +1036,124 @@
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ==========================================================================
+   Responsive Adaptations (Narrow Sidebar / Outlook Copilot Panel <= 460px)
+   Uses container queries as primary and media queries as iframe fallback.
+   ========================================================================== */
+
+@container pd-rail (max-width: 460px) {
+    .pd-hud-header {
+        padding: 6px 10px;
+        gap: 6px;
+    }
+    .pd-hud-name {
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .pd-rail-steps {
+        gap: 4px;
+    }
+    .pd-rail-step:not(.active) .pd-step-title {
+        display: none !important;
+    }
+    .pd-step-line {
+        width: 8px;
+    }
+    .pd-fork-pill,
+    .pd-fork-select {
+        max-width: 115px;
+        font-size: 10px;
+        padding: 0 4px;
+    }
+    .pd-hud-body {
+        padding: 8px 10px 10px;
+    }
+    .pd-steering-composer {
+        gap: 6px;
+        padding: 4px 4px 4px 8px;
+    }
+    .pd-btn-next {
+        padding: 0 8px;
+        font-size: 11px;
+    }
+    .pd-btn-next .pd-shortcut {
+        display: none !important;
+    }
+    .pd-running-body {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .pd-pill-minimized,
+    .pd-hud-dock.pd-minimized {
+        max-width: calc(100% - 8px);
+        gap: 4px;
+        padding: 0 4px 0 8px;
+    }
+    .pd-pill-title {
+        max-width: 85px;
+    }
+}
+
+@media (max-width: 460px) {
+    #promptdock-rail-container {
+        width: calc(100vw - 16px) !important;
+        max-width: calc(100vw - 16px) !important;
+    }
+    .pd-hud-header {
+        padding: 6px 10px;
+        gap: 6px;
+    }
+    .pd-hud-name {
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .pd-rail-steps {
+        gap: 4px;
+    }
+    .pd-rail-step:not(.active) .pd-step-title {
+        display: none !important;
+    }
+    .pd-step-line {
+        width: 8px;
+    }
+    .pd-fork-pill,
+    .pd-fork-select {
+        max-width: 115px;
+        font-size: 10px;
+        padding: 0 4px;
+    }
+    .pd-hud-body {
+        padding: 8px 10px 10px;
+    }
+    .pd-steering-composer {
+        gap: 6px;
+        padding: 4px 4px 4px 8px;
+    }
+    .pd-btn-next {
+        padding: 0 8px;
+        font-size: 11px;
+    }
+    .pd-btn-next .pd-shortcut {
+        display: none !important;
+    }
+    .pd-running-body {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .pd-pill-minimized,
+    .pd-hud-dock.pd-minimized {
+        max-width: calc(100vw - 16px) !important;
+        gap: 4px;
+        padding: 0 4px 0 8px;
+    }
+    .pd-pill-title {
+        max-width: 85px;
+    }
+}
+
 

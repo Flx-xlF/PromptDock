@@ -44,8 +44,10 @@ PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI work
   A single-line, 36px minimized status capsule featuring live turn status, workflow name, a pulsing streaming indicator, and compact quick actions. It never wraps and keeps your chat conversation completely unobscured.
 - 🌊 **Spring-Physics Morph & Scale Crossfade**  
   Transitions between the expanded Spotlight Composer and the minimized Dynamic Island are powered by physical spring overshoot curves (`cubic-bezier(0.34, 1.15, 0.64, 1)`) paired with a micro-scale content crossfade (`scale(0.96) translateY(4px) ➔ scale(1)`), eliminating jarring snap cuts or layout reflows.
-- 📐 **Zero-Overlap Spatial Docking**  
-  PromptDock dynamically detects the host chat input container across Copilot, Gemini, ChatGPT, and Claude. Connected to a reactive `ResizeObserver`, `#promptdock-rail-container` anchors **10px above the top border** of the composer. As you type multi-line prompts or attach email cards, PDFs, and images, the HUD automatically glides upward with zero overlap.
+- 📐 **Zero-Overlap Spatial Docking & Sidebar Clamping (<= 460px)**  
+  PromptDock dynamically detects the host chat input container across Copilot, Gemini, ChatGPT, and Claude. Connected to a reactive `ResizeObserver`, the HUD anchors **10px above the composer** with runtime horizontal clamping `[8px, viewportWidth - 8px]`. In narrow split screens or Outlook on the Web sidebars, CSS Container Queries (`@container pd-rail (max-width: 460px)`) collapse inactive stepper labels into compact dots (~80px footprint), keeping window controls accessible with zero horizontal overflow.
+- 🎯 **Effort-Minimizing Abklärungs-Triage (Corporate Media Suite)**  
+  Integrated into `Medienanfrage`: incoming media questions are systematically categorized into 3 tiers (immediately answerable from existing context, deliberate non-escalation of detail traps, and minimal blocker validation as closed yes/no checks). Prioritizes high-altitude strategic framing to protect internal corporate specialist departments from unnecessary research loops.
 - 🛑 **Streaming State Guard & Native Stop Interception**  
   When an AI response begins streaming, PromptDock displays a pulsing amber indicator (`Generiert Antwort...`) and auto-collapses into the 36px capsule. If you click the host chat's native stop button (*"Stop generating"* / *"Stop response"*), PromptDock catches the event and advances directly to your checkpoint without freezing.
 - 🎨 **Redesigned Command Palette & Slide-Up Sheet**  
@@ -95,7 +97,7 @@ Both editions share the same local-first, zero-telemetry architecture. PromptDoc
 
 PromptDock 2.1 includes a vendor-agnostic Corporate Communications & Intelligence recipe suite:
 
-1. **Medienanfrage** (3 Turns: Lagebild ➔ Strategie ➔ Medienantwort)
+1. **Medienanfrage** (3 Turns: Lagebild & Abklärungs-Triage ➔ Strategie & Format-Abwägung ➔ Medienantwort)
 2. **Interview-Vorbereitung** (3 Turns: Briefing ➔ Haltung ➔ Antwortentwurf)
 3. **Wording & Sprachregelung** (2 Turns: Kernanalyse ➔ Leitbotschaften & FAQ)
 4. **Strategischer Sparringspartner** (Herausforderndes Sparring)
