@@ -1,0 +1,13 @@
+{
+  "name": "promptdock",
+  "version": "2.1.0",
+  "description": "Interactive AI workflow cockpit and prompt manager for Manifest V3 browsers",
+  "private": true,
+  "scripts": {
+    "build": "python3 build_release.py",
+    "package": "python3 build_release.py",
+    "validate": "python3 build_release.py"
+  },
+  "author": "schema/f",
+  "license": "MIT"
+}
