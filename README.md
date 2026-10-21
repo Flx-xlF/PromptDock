@@ -23,9 +23,11 @@ PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI work
 - 🏢 **Microsoft 365 Graph & Outlook Native Grounding**  
   Intelligent thread ingestion designed specifically for Outlook on Web and Microsoft Copilot. Parses email thread chronology (latest sender mandate down to historic forwards and linked SharePoint/OneDrive attachments), and guides Copilot to ground claims against independent internal M365 Graph data rather than taking thread claims at face value.
 - 🛡️ **Phase-Scoped Cognitive Guardrails & Anti-Fluff Discipline**  
-  Verification badges (✅, ⚠️, ❌) are strictly scoped to the research and audit phase, preventing icon leakage into final drafts. Turn 2+ and output forks inherit `G_OUTPUT_STYLE`, preserving uncompromising anti-fluff rules and executive tone through Turn 3 without repetitive role boilerplate.
-- 🔢 **Dynamic Task Header Sequencing**  
-  Turn and fork compilation engines dynamically re-index all prompt tasks into clean sequential numbers (`TASK 1:`, `TASK 2:`, `TASK 3:`...), ensuring host LLMs follow a clear, logical step order regardless of chunk assembly.
+  Verification badges (✅, ⚠️, ❌) are strictly scoped to the research and audit phase, preventing icon leakage into final drafts. Turn 2+ and output forks inherit `G_OUTPUT_STYLE`, preserving uncompromising anti-fluff rules and executive tone. Furthermore, non-final turns automatically inject a strict `PHASEN-FOKUS` boundary rule that prevents host LLMs from rushing ahead and drafting premature final outputs during early analysis or strategy steps.
+- 🗜️ **Chrome Sync Quota Hardening & High-Density Compaction**  
+  All 17 recipes are optimized to strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (e.g. `recipe-praesentation` compressed from 11.4 KB down to 7.8 KB). Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_3_catalog_compacted`), preventing fatal storage quota exceptions.
+- 🔢 **Dynamic Task Header Sequencing & Clean Unicode Flow**  
+  Turn and fork compilation engines dynamically re-index all prompt tasks into clean sequential numbers (`TASK 1:`, `TASK 2:`, `TASK 3:`...) with clean Unicode arrow (`→`) flow, ensuring host LLMs follow a clear, logical step order regardless of chunk assembly.
 - ⏱️ **1500ms Debounced Cloud Gist Sync**  
   Eliminates burst HTTPS PATCH requests against GitHub's API by introducing an intelligent 1500ms debounce idle timer across all add, edit, and reorder operations.
 - 🧩 **Segmented Multi-Turn Recipe Composer**  
@@ -113,7 +115,7 @@ PromptDock 2.1 includes a vendor-agnostic Corporate Communications & Intelligenc
 14. **Projekt- & Status-Update** (Kompaktes Reporting)
 15. **Tiefenrecherche & Intelligence** (Quellen- & Fakten-Dossier)
 16. **Standort- & Stakeholder-Austausch** (Kompakteinträge)
-17. **Präsentation & Storyboard** (3 Turns: Lagebild, Dramaturgie & Belastbarkeit ➔ Strategie & Argumentation ➔ Folien-Storyboard & Struktur)
+17. **Präsentation & Storyboard** (3 Turns: Lagebild, Zielgruppe & Belastbarkeit ➔ Strategie, Argumentation & Storyline ➔ Folien-Storyboard & Konkrete Inputs)
 
 ---
 

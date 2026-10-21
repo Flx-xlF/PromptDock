@@ -175,10 +175,14 @@ export const PromptStorage = {
             } else {
                 const pKey = item.id.startsWith(PROMPT_KEY_PREFIX) ? item.id : `${PROMPT_KEY_PREFIX}${item.id}`;
                 activeSyncKeys.add(pKey);
+                let safeContent = item.content || '';
+                if (safeContent.length > 7800 && item.recipeId) {
+                    safeContent = safeContent.slice(0, 7800);
+                }
                 syncBatch[pKey] = {
                     id: item.id,
                     name: item.name,
-                    content: item.content || '',
+                    content: safeContent,
                     autoSend: !!item.autoSend,
                     ...(item.recipeId ? { recipeId: item.recipeId } : {})
                 };

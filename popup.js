@@ -300,31 +300,42 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (loaded && loaded.length > 0) {
         prompts = loaded;
 
-        // One-time catalog sync for newly introduced catalog recipes (v2.1+)
+        // One-time catalog sync & high-signal compaction upgrade (v2.3)
         try {
-            const local = await ext.storage.local.get('v2_1_praesentation_seeded');
-            if (!local?.v2_1_praesentation_seeded) {
-                const hasPpt = prompts.some(p => p.recipeId === 'recipe-praesentation' || p.name === 'Präsentation & Storyboard');
-                if (!hasPpt && Catalog?.RECIPES) {
-                    const pptRecipe = Catalog.RECIPES.find(r => r.id === 'recipe-praesentation');
-                    if (pptRecipe) {
-                        const newId = (prompts.length + 1).toString();
+            const local = await ext.storage.local.get(['v2_1_praesentation_seeded', 'v2_3_catalog_compacted']);
+            if ((!local?.v2_1_praesentation_seeded || !local?.v2_3_catalog_compacted) && Catalog?.RECIPES) {
+                let changed = false;
+                for (const catRecipe of Catalog.RECIPES) {
+                    const compiledExpress = Catalog.compileExpress ? Catalog.compileExpress(catRecipe) : '';
+                    const idx = prompts.findIndex(p => p.recipeId === catRecipe.id || p.name === catRecipe.name);
+                    if (idx >= 0 && !prompts[idx].isCustomRecipe) {
+                        prompts[idx].recipeId = catRecipe.id;
+                        prompts[idx].content = compiledExpress;
+                        changed = true;
+                    } else if (catRecipe.id === 'recipe-praesentation' && idx < 0) {
                         prompts.push({
-                            id: newId,
-                            name: pptRecipe.name,
-                            recipeId: pptRecipe.id,
-                            content: Catalog.compileExpress ? Catalog.compileExpress(pptRecipe) : '',
+                            id: (prompts.length + 1).toString(),
+                            name: catRecipe.name,
+                            recipeId: catRecipe.id,
+                            content: compiledExpress,
                             autoSend: false
                         });
-                        await PromptStorage.save(prompts);
+                        changed = true;
                     }
                 }
+                if (changed) {
+                    await PromptStorage.save(prompts);
+                }
                 if (ext?.storage?.local) {
-                    await ext.storage.local.set({ v2_1_praesentation_seeded: true });
+                    await ext.storage.local.set({
+                        v2_1_praesentation_seeded: true,
+                        v2_2_praesentation_upgraded: true,
+                        v2_3_catalog_compacted: true
+                    });
                 }
             }
         } catch (e) {
-            console.warn('[PromptDock] Failed seeding Präsentation recipe:', e);
+            console.warn('[PromptDock] Failed catalog compaction upgrade:', e);
         }
     } else {
         prompts = [...DEFAULT_PROMPTS];

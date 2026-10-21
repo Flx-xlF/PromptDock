@@ -36,27 +36,18 @@
         // --- INTAKE ADAPTERS ---
         'I-MEDIA': {
             id: 'I-MEDIA',
-            title: 'Inhalts-Analyse (Medien/Fragen)',
-            text: `TASK: INHALTS-ANALYSE & FRAGENKATALOG
-Analysiere den Inhalt der Medienanfrage bzw. des Fragenkatalogs im Mailtext sowie allfälliger verlinkter oder angehängter Dateien.
-Isoliere:
-- die eigentliche Kernfrage und das übergeordnete Thema,
-- alle expliziten und impliziten Teilfragen (vollständig nummeriert erfassen),
-- die enthaltenen Thesen, Unterstellungen oder Vorannahmen,
-- den erkennbaren journalistischen Fokus, die vermutete Storyline und Stossrichtung,
-- allfällige Fristen oder Deadlines.
+            title: 'Inhalts-Analyse & Triage (Medien/Fragen)',
+            text: `TASK: FRAGENKATALOG, TYPOLOGIE & THESEN-CHECK
+Analysiere die Medienanfrage im Mailtext sowie allfällige Anhänge/Links:
+1. **Kernfrage & Teilfragen:** Isoliere das übergeordnete Thema, alle expliziten/impliziten Teilfragen (nummeriert) sowie Fristen/Deadlines.
+2. **Fragen-Typologie & Stossrichtung:** Unterscheide rein sachliche Einzelfragen von kaskadierenden, suggestiven oder manipulativen Fragen. Welches Narrativ (Storyline) verfolgt der Journalist?
+3. **Kritischer Thesen-Check (Steel-Manning):** Prüfe enthaltene Unterstellungen oder Vorannahmen: Was ist der wahre Kern bzw. das stärkste Gegenargument, und welche Annahmen sind faktisch unhaltbar?
 
-TASK: FRAGENKATALOG-TYPOLOGIE
-Beurteile die Struktur und Absicht der gestellten Fragen:
-- Liegen voneinander unabhängige, rein sachlich-faktische Einzelfragen vor?
-- Oder handelt es sich um kaskadierende, suggestive oder manipulative Fragen, die eine bestimmte Problem- oder Schuldthese stützen sollen?
-- Welche Fragen bauen aufeinander auf oder zerlegen einen zusammenhängenden Sachverhalt künstlich in Einzelschritte?
-
-TASK: ABKLÄRUNGS-TRIAGE & AUFWAND-MINIMIERUNG
-Ziel ist es, den internen Abklärungsaufwand in den Fachbereichen auf das absolute Minimum zu beschränken. Unterteile die identifizierten Fragen/Themen strikt in drei Kategorien:
-1. DIREKT BEANTWORTBAR (OHNE RÜCKFRAGE): Was lässt sich mit dem vorliegenden Mailverlauf, bestehenden SharePoint-/Graph-Wissensquellen oder geeigneter strategischer Flughöhe sofort beantworten? (Priorität: Möglichst viel hier bündeln!)
-2. BEWUSST NICHT INTERN ABKLÄREN (DETAILFALLE): Welche granularen oder suggestiven Teilfragen binden unnötig Ressourcen interner Fachspezialisten und können durch übergeordnete, einordnende Kernaussagen ohne Informationsverlust neutralisiert werden?
-3. ZWINGENDER MINIMAL-ABKLÄRUNGSBEDARF (BLOCKER): Welche 1–2 harten Fakten sind unverzichtbar, um Falschaussagen zu vermeiden? Formuliere diese als geschlossene, präzise Ja/Nein- oder Einzelsatz-Prüffragen an die zuständige Fachperson (keine offenen Rechercheaufträge!).`
+TASK: ABKLÄRUNGS-TRIAGE (AUFWAND-MINIMIERUNG)
+Beschränke den internen Abklärungsaufwand in den Fachbereichen auf das absolute Minimum. Ordne jede Frage nach dem internen Faktenabgleich einer von drei Kategorien zu:
+1. **DIREKT BEANTWORTBAR (OHNE RÜCKFRAGE):** Sofort aus Mailverlauf, M365-Wissensquellen (SharePoint/Graph) oder auf übergeordneter Flughöhe beantwortbar (Priorität: maximal hier bündeln!).
+2. **BEWUSST NICHT INTERN ABKLÄREN (DETAILFALLE):** Granulare oder suggestive Teilfragen, die unnötig Fachressourcen binden und durch eine übergeordnete Kernaussage souverän abgedeckt werden.
+3. **ZWINGENDER MINIMAL-CHECK (BLOCKER):** Maximal 1–2 unverzichtbare Faktenlücken – formuliert als geschlossene Ja/Nein-Prüffrage an die Fachstelle (keine offenen Rechercheaufträge!).`
         },
         'I-MAIL': {
             id: 'I-MAIL',
@@ -88,34 +79,20 @@ Erfasse:
         },
         'I-PPT': {
             id: 'I-PPT',
-            title: 'Inhalts- & Zielgruppen-Analyse (Verlinkte Präsentation)',
-            text: `TASK: ZUGRIFF & BESTANDSAUFNAHME (VERLINKTE PRÄSENTATION IN OUTLOOK)
-Greife direkt auf die in der vorliegenden E-Mail / Nachricht verlinkte PowerPoint-Präsentation (SharePoint-, OneDrive- oder Web-Link) bzw. allfällige Dateianhänge zu und analysiere den tatsächlichen Folieninhalt.
+            title: 'Kontext-, Zielgruppen- & Deck-Analyse (Präsentation)',
+            text: `TASK: MODUS, ZIELGRUPPE & ENTSCHEIDUNGS-PSYCHOLOGIE
+Analysiere den E-Mail-Verlauf sowie verlinkte/angehängte Dokumente oder Folien (SharePoint, OneDrive, Anhang):
+1. **Arbeitsmodus:** Bestimme, ob **MODUS A (Neukonzeption/Outline aus Kontext ohne bestehende PPT)** oder **MODUS B (Review & Umbau eines verlinkten/angehängten Foliendecks)** vorliegt.
+2. **Gremium & Mandat:** Wer ist das Zielpublikum, nach welcher Logik entscheidet es, und welcher exakte Beschluss/Effekt muss am Ende stehen?
+3. **Der «Elefant im Raum»:** Welcher unausgesprochene Vorbehalt, Zielkonflikt, Kosten- oder Risikopunkt blockiert die Zustimmung am stärksten?
 
-Erfasse systematisch:
-1. ZIELGRUPPE & ENTSCHEIDUNGS-KONTEXT (MAILTEXT):
-   - Wer genau ist das Zielpublikum (z.B. Geschäftsleitung/Vorstand, Fachexperten, Team, Aufsichtsgremium, externe Partner)?
-   - Welches Vorwissen, welche Erwartungshaltung, welche Skepsis oder Eigeninteressen bringt diese Zielgruppe mit?
-   - Welches konkrete Ergebnis soll die Präsentation erzielen (formeller Beschluss, Budgetfreigabe, Richtungsentscheid, Information)?
-   - Was ist die entscheidende Kernfrage aus Sicht der Adressaten («What's in it for us / for the company?»)?
-
-2. BESTANDSAUFNAHME DES DECKS (FOLIE FÜR FOLIE):
-   - Folienanzahl, Gliederungsabschnitte und thematischer Aufbau des vorliegenden Decks.
-   - Textdichte & Lesbarkeit: Überladene Folien («Textwüsten»), passive Bulletpoints vs. visuelle Klarheit.
-   - Qualität der Folientitel: Rein thematische Stichworte (z.B. «Status», «Hintergrund») vs. aussagekräftige Botschaften.
-
-TASK: DRAMATURGIE-CHECK & STÄRKSTE STORYLINE (SCQA)
-Gleiche das verlinkte Foliendeck mit dem Pyramiden-Prinzip ab:
-- SITUATION: Ist die Ausgangslage für die Zielgruppe unstrittig, präzise und relevant beschrieben?
-- KOMPLIKATION: Wird sofort spürbar, warum JETZT Handlungsbedarf besteht (Problem, Risiko, veränderte Rahmenbedingungen, Chance)?
-- KERNFRAGE: Welche Leitfrage muss dieses Deck unmissverständlich beantworten?
-- ANTWORT (GOVERNING THOUGHT): Bietet die Präsentation eine glasklare, überzeugende Beschluss- oder Handlungsempfehlung, oder verliert sie sich in Detailbeschreibungen?
-
-TASK: MEDIALE & POLITISCHE BELASTBARKEITSPRÜFUNG
-Nimm die Perspektive eines investigativen Journalisten, eines politischen Gegners und eines skeptischen Aufsichtsorgans ein:
-- Wo enthält das vorliegende Deck Angriffsflächen, unbelegte Zahlenbehauptungen, voreilige Versprechungen oder heikle Formulierungen?
-- Welche Folien oder Aussagen würden bei einem Leak an die Medien oder in die Öffentlichkeit Reputationsschaden anrichten?
-- Sind alle getroffenen Aussagen konsistent mit bisherigen Unternehmenspositionen?`
+TASK: DRAMATURGIE- (SCQA) & BELASTBARKEITS-PRÜFUNG (LEAK-TEST)
+- **SCQA- & Substanz-Diagnose:**
+  * *Bei MODUS A:* Extrahiere die tragfähigen Fakten, Zahlen und offenen Lücken für Situation (S), Handlungsdruck/Komplikation (C), Kernfrage (Q) und Kernantrag (A).
+  * *Bei MODUS B:* Prüfe das Deck Folie für Folie auf Brüche im roten Faden, schwache Themen-Titel («Status», «Hintergrund» statt aktiver Action Titles), Textwüsten und redundante Folien.
+- **Politische & mediale Verwundbarkeit (Leak- & Gegner-Test):**
+  * Welche Aussagen, Zahlen oder Formulierungen wären bei einer Indiskretion (Medien-Leak, Öffentlichkeitsgesetz, politische Anfrage) ohne mündliche Tonspur angreifbar oder skandalisierbar?
+  * Was ist das härteste Gegenargument (Steel Man) einer kritischen Aufsichts-, Politik- oder Medieninstanz?`
         },
         'I-MEET': {
             id: 'I-MEET',
@@ -265,33 +242,19 @@ Qualitätsmassstab:
                 const includeFormatAnalysis = params?.includeFormatAnalysis === true;
                 const formatBlock = includeFormatAnalysis ? `
 
-TASK: FRAGENKATALOG- & FORMAT-ABWÄGUNG (BEANTWORTUNGS-ARCHITEKTUR & FLUGHÖHE)
-Falls mehrere Fragen oder ein Fragenkatalog vorliegen: Wäge systematisch ab, welche Beantwortungsform und strategische Flughöhe die grösste Themenhoheit, Glaubwürdigkeit und minimale interne Abklärungsbindung sichert:
-1. Option A: Punkt-für-Punkt-Beantwortung (1:1 Frage für Frage)
-   - Eignung: Bei rein sachlichen, unkritischen Einzelfragen mit bereits gesicherten Fakten.
-   - Risiko: Übernahme des gegnerischen Framings; Gefahr, sich in zeitraubenden internen Detailabklärungen zu verstricken.
-2. Option B: Summarische Antwort (Zusammenhängendes Statement)
-   - Eignung: Wenn Fragen auf falschen Vorannahmen beruhen, rhetorisch/suggestiv sind oder mit bereits vorliegenden Fakten auf übergeordneter Flughöhe souverän beantwortet werden können (Aufwand-Minimierung!).
-   - Risiko: Vorwurf des Ausweichens («Medienstelle beantwortet konkrete Fragen nicht»).
-3. Option C: Hybrider Ansatz / Thematische Clusterung (Empfohlen bei gemischten Fragen)
-   - Eignung: Einleitendes Haltungsstatement zur Einordnung + gezielte Beantwortung sachlicher Kernfragen in 2–3 Themenblöcken ohne operative Verästelung.
-
-ENTSCHEIDUNG & BEGRÜNDUNG (ABKLÄRUNGS-ÖKONOMIE):
-- Lege fest: Welches Format (Punkt-für-Punkt, Summarisch oder Hybrid/Geclustert) wird für diese Anfrage gewählt?
-- Begründe, wie die gewählte strategische Flughöhe den internen Abklärungsaufwand bei Fachstellen minimiert und dennoch alle berechtigten Informationsbedürfnisse souverän abdeckt.` : '';
+TASK: BEANTWORTUNGS-ARCHITEKTUR & ABKLÄRUNGS-ÖKONOMIE
+Wäge bei mehreren Fragen ab, welches Format Themenhoheit sichert und internen Abklärungsaufwand minimiert:
+- **Option A (Punkt-für-Punkt):** Nur bei rein sachlichen, unkritischen Einzelfragen mit bereits gesicherten Fakten. Risiko: Übernahme fremden Framings & Detailverzettelung.
+- **Option B (Summarische Antwort):** Zusammenhängendes Statement auf übergeordneter Flughöhe – ideal bei falschen Vorannahmen, suggestiven Fragen oder zur Vermeidung unnötiger interner Detailrecherchen.
+- **Option C (Hybrid / Geclustert):** Einleitendes Haltungsstatement + gebündelte Beantwortung der Sachfragen in 2–3 Themenblöcken.
+*Entscheide verbindlich (A, B oder C) und begründe, wie diese Flughöhe Fachstellen schont und dennoch alle berechtigten Fragen substanziell abdeckt.*` : '';
 
                 return `TASK: STRATEGIE-ABWÄGUNG
-Wäge verschiedene Antwortstrategien und Framings gegeneinander ab:
-- Mögliche Framings: ${framings}.
-- Beurteile Chancen und Risiken jeder Option aus medialer, politischer und reputationsbezogener Sicht.
-- Frage dich bei jeder Strategie: Was würde ein kritischer Journalist oder politischer Gegner dagegen vorbringen?${formatBlock}
+Wäge die Antwortstrategien (${framings}) mit Chancen, Risiken sowie den härtesten Gegenargumenten von Medien oder Politik gegeneinander ab.${formatBlock}
 
-TASK: EMPFOHLENE HALTUNG
-Lege dich auf die belastbarste Strategie fest und formuliere die empfohlene Grundhaltung in genau einem prägnanten Satz.
-
-TASK: STORYLINE & ARGUMENTE
-Entwickle auf Basis der gewählten Strategie die überzeugendste Storyline.
-Leite daraus priorisierte Haupt- und Unterstützungsargumente ab.`;
+TASK: EMPFOHLENE HALTUNG & STORYLINE
+1. **Grundhaltung:** Lege dich auf die belastbarste Strategie fest und formuliere die Haltung in genau einem prägnanten Satz.
+2. **Storyline & Argumente:** Entwickle den roten Faden und leite daraus priorisierte Haupt- und Unterstützungsargumente ab.`;
             }
         },
         'S-LITE': {
@@ -327,32 +290,22 @@ Analysiere die strategische Relevanz des Vorhabens:
         },
         'S-PPT-STRATEGY': {
             id: 'S-PPT-STRATEGY',
-            title: 'Präsentations-Strategie & Argumentation',
-            text: `TASK: STRATEGISCHE WEGWAHL FÜR DAS VERLINKTE DECK
-Beurteile auf Basis des ausgelesenen Folienentwurfs und der begleitenden E-Mail zwei Handlungsoptionen:
+            title: 'Präsentations-Strategie, Argumentation & Horizontale Storyline',
+            text: `TASK: STRATEGISCHE WEGWAHL & DRAMATURGIE
+Triff auf Basis des Lagebilds eine klare Richtungsentscheidung:
+- **Bei bestehendem Deck (MODUS B):** Entscheide begründet zwischen **Weg 1: Gezieltes Folien-Upgrade** (Struktur behalten, Titel in scharfe Action Titles umwandeln, Textwüsten auf 3–4 Kernaussagen kürzen, heikle Stellen abdichten) und **Weg 2: Strukturelles Redesign** (Neubau entlang einer 5–8-Folien-Entscheidungsdramaturgie + Backup).
+- **Bei Neukonzeption (MODUS A):** Wähle und begründe die wirksamste Dramaturgie für das Zielpublikum:
+  1. *BLUF / Entscheidungs-Dramaturgie:* Kernantrag zuerst → 3 Begründungssäulen → Risikominimierung & Umsetzung (für zeitknappe Gremien/GL).
+  2. *Problem-Lösungs-Spannungsbogen (SCQA):* Handlungsdruck/Kosten des Nichtstuns → Optionenvergleich → Zieloption (bei Skepsis oder Richtungsentscheid).
+  3. *Einordnungs- & Vertrauens-Dramaturgie:* Gemeinsame Ziele & Faktenbasis → Abwägung der Zielkonflikte → Leitplanken & nächste Schritte (bei politisch/emotional heiklen Themen).
 
-1. WEG A: MINIMAL-INVASIVE SCHNELLHILFE (QUICK FIX FÜR DAS BESTEHENDE DECK)
-   - Eignung: Wenn der Termin drängt, die Grundstruktur tragfähig ist oder primär sprachliches/visuelles Polishing gesucht wird.
-   - Hebel:
-     * Bestehende Folienreihenfolge weitgehend beibehalten, aber jeden Folientitel in einen prägnanten «Action Title» (ganzer Satz mit Kernbotschaft) umwandeln.
-     * Textwüsten und Aufzählungs-Friedhöfe rigide ausmisten: maximal 3 bis 4 Kernaussagen pro Folie.
-     * Text in klare visuelle Raster übersetzen (z.B. 3-Spalten-Struktur, Vorher/Nachher, Callout-Boxen für Kernbeschlüsse).
-     * Schärfen & Entschärfen: Angreifbare Formulierungen medial und politisch abdichten.
+TASK: LEITBOTSCHAFT & 3 TRAGENDE ARGUMENTATIONSSÄULEN
+1. **Leitbotschaft (Governing Thought):** Formuliere die zentrale Gesamtaussage bzw. Beschlussempfehlung in genau einem präzisen, politisch und medial unangreifbaren Satz.
+2. **Die 3 Argumentationssäulen:** Entwickle die 3 stärksten Hauptargumente und weise pro Säule knapp nach: (a) **Faktenbeleg aus dem Kontext**, (b) **Zielgruppen-Hebel (ausgeräumter Vorbehalt)**, (c) **Politische & mediale Belastbarkeit**.
 
-2. WEG B: UMFASSENDES REDESIGN (STRATEGISCHE STORYLINE & PYRAMIDENPRINZIP)
-   - Eignung: Bei hoher strategischer Relevanz (Vorstands-/Entscheidungstermin), verfahrenem rotem Faden oder wenn die Kernbotschaft im aktuellen Deck untergeht.
-   - Hebel:
-     * Radikale Reorganisation entlang der stärksten Storyline (Bottom Line Up Front / BLUF).
-     * Rigides Zuschneiden aller Argumente auf die Psychologie, Erwartungen und Entscheidungskriterien der Zielgruppe.
-     * Reduktion auf 5 bis 8 wirkungsvolle Kernfolien für den Hauptteil.
-     * Auslagerung von technischen Details, Rohdaten und Nachweisen in einen dedizierten «Backup-/Anhang»-Bereich.
-
-TASK: ARGUMENTATIONS-ARCHITEKTUR & EMPFEHLUNG DES KOMMUNIKATIONSEXPERTEN
-- Lege dich begründet fest: Welcher Weg (A oder B) liefert der Kollegin / dem Kollegen den höchsten Hebel bei vertretbarem Aufwand?
-- Formuliere die tragende Leitbotschaft der Präsentation in genau einem prägnanten Satz.
-- Baue die 3 stärksten, überzeugendsten Hauptargumente auf:
-  * Warum überzeugen sie genau diese Zielgruppe?
-  * Halten die Argumente einer kritischen Prüfung durch Medien, Aufsicht oder Gegenpartei stand (Belastbarkeit)?`
+TASK: HORIZONTALE STORYLINE (DIE ACTION-TITLE-KETTE)
+Entwirf das Rückgrat der Präsentation als fortlaufende, nummerierte Liste aller geplanten **Action Titles (ganze, aktive Aussagesätze pro Folie)**.
+*Qualitätsgesetz:* Nacheinander gelesen müssen diese Action Titles allein eine lückenlose, logisch zwingende Geschichte ergeben – ohne gedankliche Sprünge und ohne generische Themen-Überschriften.`
         },
         'A-AUDIT-ALL': {
             id: 'A-AUDIT-ALL',
@@ -379,22 +332,10 @@ Vergleiche den Stand zu Beginn des Zeitfensters mit dem aktuellen Status:
             id: 'O-MEDIA',
             title: 'Medienantwort',
             text: `TASK: MEDIENANTWORT
-Formuliere auf Basis der festgelegten Strategie, Storyline und gewählten Beantwortungs-Architektur den finalen Entwurf der Medienantwort.
-
-FORMAT-VORGABE & FLUGHÖHE:
-- Setze die in der Strategie-Phase gewählte Beantwortungsform konsequent um:
-  * Bei summarischer Antwort: Ein zusammenhängendes, druckreifes Statement mit klaren Kernbotschaften, das den Gesamtsachverhalt souverän einordnet.
-  * Bei hybridem/geclustertem Ansatz: Ein einleitendes Kernstatement gefolgt von thematisch gebündelten Sachantworten zu den berechtigten Informationsfragen.
-  * Bei Punkt-für-Punkt: Präzise, nummerierte Antworten auf jede Einzelfrage ohne Rechtfertigungston.
-
-AUTONOMIE & AUFWAND-MINIMIERUNG:
-- Stütze den Entwurf konsequent auf die heute bereits gesicherten Fakten und die definierte Flughöhe, sodass die Antwort sofort versandbereit ist und keine neuen Abklärungsrunden in den Fachbereichen ausgelöst werden.
-- Falls eine unumgängliche Schlüsseltatsache aus der Abklärungs-Triage noch kurz bestätigt werden muss, kennzeichne exakt diese eine Stelle als minimalen Platzhalter: «[Kurze Bestätigung durch Fachbereich X: ...]».
-
-QUALITÄTSKRITERIEN & EVASION-CHECK:
-- Faktisch belastbar, verständlich, medientauglich, frei von PR-Floskeln.
-- Konsistent mit der definierten Haltung.
-- Abdeckungs-Check: Wurden alle berechtigten Informationsbedürfnisse der Medienanfrage substanziell adressiert, sodass kein Vorwurf des Ausweichens («Fragen blieben unbeantwortet») erhoben werden kann?`
+Formuliere auf Basis der festgelegten Strategie, Storyline und Beantwortungs-Architektur den versandfertigen Entwurf der Medienantwort:
+- **Format & Flughöhe:** Setze das gewählte Format (Summarisch als geschlossenes Statement, Hybrid/Geclustert nach Themenblöcken oder Punkt-für-Punkt) konsequent und ohne Rechtfertigungston um.
+- **Autonomie & Aufwand-Minimierung:** Stütze den Text strikt auf die bereits gesicherten Fakten, sodass keine neuen Recherche-Schleifen in den Fachbereichen ausgelöst werden. Falls ein einziger harter Blocker-Fakt noch bestätigt werden muss, markiere ihn exakt als «[Kurze Bestätigung durch Fachbereich X: ...]».
+- **Qualitäts- & Evasion-Check:** Faktisch belastbar, frei von PR-Floskeln, konsistent mit der Haltung. Stelle sicher, dass alle berechtigten Informationsbedürfnisse substanziell abgedeckt sind (kein Vorwurf des Ausweichens).`
         },
         'O-REPLY': {
             id: 'O-REPLY',
@@ -571,28 +512,24 @@ Qualitätskriterien:
         },
         'O-PPT-STORYBOARD': {
             id: 'O-PPT-STORYBOARD',
-            title: 'Folien-Storyboard & Struktur',
-            text: `TASK: FOLIEN-STORYBOARD (MASTER-STRUKTUR)
-Erstelle auf Basis der gewählten Strategie und Dramaturgie das vollständige, sofort umsetzbare Folien-Storyboard.
+            title: 'Folien-Storyboard & Konkrete Folien-Inputs',
+            text: `TASK: AUSGEARBEITETES FOLIEN-STORYBOARD & KONKRETE FOLIEN-INPUTS
+Setze die Strategie und die horizontale Action-Title-Kette in ein sofort nutzbares Folien-Konzept um. Verzichte auf generische Platzhalter oder banale Deko-Tipps («Icons einfügen») und arbeite ausschliesslich mit den konkreten Fakten und Zahlen des Falls.
 
-Gliedere jede Folie exakt nach folgendem Standard:
-
+Gliedere jede Folie nach folgendem Schema:
 ---
-### FOLIE [Nummer]: [Funktion der Folie, z.B. Einstieg / Problem / Lösung / Wirtschaftlichkeit / Beschluss]
-- **ACTION TITLE (Headline):** [Vollständiger, prägnanter Aussagesatz oben auf der Folie, der die Kernbotschaft der Folie auf den Punkt bringt – keine generischen Schlagworte!]
-- **ZIELGRUPPEN-HEBEL:** [Warum überzeugt dieser Punkt genau die Adressaten? Welcher Vorbehalt wird hier entkräftet?]
-- **FOLIENAUFBAU & VISUALISIERUNG:**
-  * Layout-Vorschlag: [z.B. 3 Spalten mit Icons, Vorher-Nachher-Matrix, horizontaler 4-Schritte-Zeitstrahl, 1 grosse Zahl links + 2 prägnante Kernaussagen rechts]
-  * Inhalt: [Maximal 3 bis 4 präzise formulierte Stichpunkte ohne Füllwörter]
-- **BELASTBARKEITS-CHECK:** [Medial und politisch belastbare Faktenbasis; keine Angriffsflächen bei kritischen Gegenfragen]
-- **QUICK-FIX TIPP FÜR BESTEHENDE FOLIE:** [Konkreter Hinweis, was die Kollegin / der Kollege an der vorliegenden Folie im verlinkten Deck sofort streichen, umschreiben oder umstellen sollte.]
+### FOLIE [Nr.]: [Dramaturgische Funktion – bei MODUS B zusätzlich Bezug zur Ist-Folie, z.B. «Ersetzt Folie 3–4» / «Überarbeitung Folie 2» / «Neu»]
+- **ACTION TITLE (Headline):** [Vollständiger, aktiver Aussagesatz mit der Kernbotschaft – keine Schlagworte wie «Ausgangslage» oder «Status»]
+- **DRUCKREIFER FOLIENINHALT (MAX. 3–4 KERNAUSSAGEN):**
+  * [Ausformulierte, kontextgesättigte Stichpunkte im konkreten Wortlaut inkl. Zahlen/Belegen; fehlende Einzeldaten als «[Datenpunkt X ergänzen]» markieren]
+  * [Jede Aussage muss den **Leak-Test** bestehen: auch ohne mündliche Tonspur sachlich unangreifbar, politisch ausgewogen und medial nicht skandalisierbar]
+- **BEWEIS- & STRUKTURLOGIK:** [Inhaltliche Beweisführung auf der Folie, z.B. Status quo vs. Zielbild, Optionen-Matrix nach 3 Kriterien, Kausalkette Ursache → Wirkung → Massnahme]
+- **ZIELGRUPPEN-HEBEL & ROTSTIFT:** [Welchen Einwand räumt die Folie aus – und was muss gegenüber dem Entwurf bzw. heiklen Formulierungen konkret gestrichen oder geschärft werden («Statt X → Besser Y»)?]
 ---
 
-TASK: DIE 3 GOLDENEN PRÄSENTATIONS-REGELN FÜR DIESEN AUFTRITT
-Gib der vortragenden Person 3 konkrete, sofort anwendbare Tipps für den Vortrag mit:
-1. Einstieg & die ersten 60 Sekunden (wie Aufmerksamkeit gewonnen wird)
-2. Umgang mit Detailfragen / Unterbrechungen (Fokus auf Kernbeschluss)
-3. Do's & Don'ts für die visuelle Präsentation`
+TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
+1. **Empfohlene Backup-Folien (1–3 Folien):** Welche Detaildaten, Nachweise oder Spezialfragen gehören bewusst in den Anhang, um den Hauptteil schlank zu halten?
+2. **Antizipation der 3 härtesten Fragen (Gremium, Politik, Medien):** Die 3 unangenehmsten Fragen zum Vorhaben – jeweils mit einer souveränen, faktenfesten 2-Satz-Antwort.`
         }
     };
 
@@ -607,7 +544,7 @@ Gib der vortragenden Person 3 konkrete, sofort anwendbare Tipps für den Vortrag
                 {
                     title: 'LAGEBILD',
                     role: 'Du bist ein erfahrener Kommunikationsstratege und Mediensprecher.',
-                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { scope: 'media' } }, 'C-THESIS', 'C-DRAFT', 'T-TLDR']
+                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { scope: 'media' } }, 'C-DRAFT', 'T-TLDR']
                 },
                 {
                     title: 'STRATEGIE',
@@ -632,7 +569,7 @@ Gib der vortragenden Person 3 konkrete, sofort anwendbare Tipps für den Vortrag
                 {
                     title: 'LAGEBILD',
                     role: 'Du bist ein erfahrener Mediensprecher und Interview-Coach.',
-                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { focus: 'bisherige Berichterstattung, bisherige Unternehmens- bzw. Organisations-Positionierungen, Journalistin/Journalist und Medium' } }, 'C-THESIS', 'T-TLDR']
+                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { focus: 'bisherige Berichterstattung, bisherige Unternehmens- bzw. Organisations-Positionierungen, Journalistin/Journalist und Medium' } }, 'T-TLDR']
                 },
                 {
                     title: 'STRATEGIE',
@@ -657,7 +594,7 @@ Gib der vortragenden Person 3 konkrete, sofort anwendbare Tipps für den Vortrag
                 {
                     title: 'LAGEBILD',
                     role: 'Du bist ein erfahrener Chef-Kommunikator.',
-                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { scope: 'media' } }, 'C-THESIS', 'T-TLDR']
+                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { scope: 'media' } }, 'T-TLDR']
                 },
                 {
                     title: 'WORDING & Q+A',
@@ -993,18 +930,18 @@ ROHDATEN:`
             family: 'review',
             turns: [
                 {
-                    title: 'LAGEBILD, DRAMATURGIE & BELASTBARKEIT',
-                    role: 'Du bist ein erfahrener Executive Präsentationsberater und Storytelling-Coach.',
-                    chunks: ['I-PPT', 'R-FULL', 'C-THESIS', 'T-TLDR']
+                    title: 'LAGEBILD, ZIELGRUPPE & BELASTBARKEIT',
+                    role: 'Du bist ein strategischer Executive-Präsentationsberater, Kommunikationsstratege und politisch-medialer Risikoprüfer.',
+                    chunks: ['I-PPT', 'R-FULL', 'T-TLDR']
                 },
                 {
-                    title: 'STRATEGIE & ARGUMENTATION',
-                    role: 'Du bist ein leitender Kommunikationsstratege und Präsentations-Experte.',
-                    chunks: ['S-PPT-STRATEGY', { chunkId: 'S-MESSAGES', params: { count: 'drei' } }]
+                    title: 'STRATEGIE, ARGUMENTATION & STORYLINE',
+                    role: 'Du bist ein leitender Kommunikationsstratege und Storyline-Architekt für anspruchsvolle Entscheidungs- und Stakeholder-Gremien.',
+                    chunks: ['S-PPT-STRATEGY']
                 },
                 {
-                    title: 'FOLIEN-STORYBOARD & STRUKTUR',
-                    role: 'Du bist ein meisterhafter Präsentations-Autor und Dramaturg.',
+                    title: 'FOLIEN-STORYBOARD & KONKRETE INPUTS',
+                    role: 'Du bist ein erstklassiger Präsentations-Autor und Dramaturg für kontextstarke, politisch und medial belastbare Entscheidungsvorlagen.',
                     chunks: ['O-PPT-STORYBOARD']
                 }
             ],
@@ -1099,6 +1036,10 @@ ROHDATEN:`
 
         if (normalizedContent) {
             parts.push(normalizedContent);
+        }
+
+        if (!isExpress && turnIndex < recipe.turns.length - 1) {
+            parts.push(`PHASEN-FOKUS:\nFühre in diesem Schritt ausschliesslich «${turn.title}» aus. Erstelle noch keinen finalen Antwort-, Text- oder Folienentwurf.`);
         }
 
         return parts.join('\n\n');
