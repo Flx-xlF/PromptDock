@@ -300,10 +300,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (loaded && loaded.length > 0) {
         prompts = loaded;
 
-        // One-time catalog sync & high-signal compaction upgrade (v2.3)
+        // One-time catalog sync & high-signal compaction upgrade (v2.4)
         try {
-            const local = await ext.storage.local.get(['v2_1_praesentation_seeded', 'v2_3_catalog_compacted']);
-            if ((!local?.v2_1_praesentation_seeded || !local?.v2_3_catalog_compacted) && Catalog?.RECIPES) {
+            const local = await ext.storage.local.get(['v2_1_praesentation_seeded', 'v2_4_medien_reasoning']);
+            if ((!local?.v2_1_praesentation_seeded || !local?.v2_4_medien_reasoning) && Catalog?.RECIPES) {
                 let changed = false;
                 for (const catRecipe of Catalog.RECIPES) {
                     const compiledExpress = Catalog.compileExpress ? Catalog.compileExpress(catRecipe) : '';
@@ -330,7 +330,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     await ext.storage.local.set({
                         v2_1_praesentation_seeded: true,
                         v2_2_praesentation_upgraded: true,
-                        v2_3_catalog_compacted: true
+                        v2_3_catalog_compacted: true,
+                        v2_4_medien_reasoning: true
                     });
                 }
             }

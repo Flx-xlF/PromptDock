@@ -330,12 +330,17 @@ Vergleiche den Stand zu Beginn des Zeitfensters mit dem aktuellen Status:
         // --- OUTPUT TEMPLATES (TURN 3 / TURN 2 FINAL) ---
         'O-MEDIA': {
             id: 'O-MEDIA',
-            title: 'Medienantwort',
-            text: `TASK: MEDIENANTWORT
-Formuliere auf Basis der festgelegten Strategie, Storyline und Beantwortungs-Architektur den versandfertigen Entwurf der Medienantwort:
-- **Format & Flughöhe:** Setze das gewählte Format (Summarisch als geschlossenes Statement, Hybrid/Geclustert nach Themenblöcken oder Punkt-für-Punkt) konsequent und ohne Rechtfertigungston um.
-- **Autonomie & Aufwand-Minimierung:** Stütze den Text strikt auf die bereits gesicherten Fakten, sodass keine neuen Recherche-Schleifen in den Fachbereichen ausgelöst werden. Falls ein einziger harter Blocker-Fakt noch bestätigt werden muss, markiere ihn exakt als «[Kurze Bestätigung durch Fachbereich X: ...]».
-- **Qualitäts- & Evasion-Check:** Faktisch belastbar, frei von PR-Floskeln, konsistent mit der Haltung. Stelle sicher, dass alle berechtigten Informationsbedürfnisse substanziell abgedeckt sind (kein Vorwurf des Ausweichens).`
+            title: 'Medienantwort & Begründung',
+            text: `TASK: MEDIENANTWORT & KURZBEGRÜNDUNG
+Formuliere auf Basis der festgelegten Strategie, Storyline und Beantwortungs-Architektur den versandfertigen Entwurf der Medienantwort sowie direkt dazu eine prägnante Begründung:
+
+1. **MEDIENANTWORT (VERSANDFERTIGER ENTWURF):**
+   - **Format & Flughöhe:** Setze das gewählte Format (Summarisch als geschlossenes Statement, Hybrid/Geclustert nach Themenblöcken oder Punkt-für-Punkt) konsequent und ohne Rechtfertigungston um.
+   - **Autonomie & Aufwand-Minimierung:** Stütze den Text strikt auf die bereits gesicherten Fakten, sodass keine neuen Recherche-Schleifen in den Fachbereichen ausgelöst werden. Falls ein einziger harter Blocker-Fakt noch bestätigt werden muss, markiere ihn exakt als «[Kurze Bestätigung durch Fachbereich X: ...]».
+   - **Qualitäts- & Evasion-Check:** Faktisch belastbar, frei von PR-Floskeln, konsistent mit der Haltung; alle berechtigten Informationsbedürfnisse substanziell abgedeckt (kein Vorwurf des Ausweichens).
+
+2. **BEGRÜNDUNG DES ENTWURFS (MAX. 4 SÄTZE):**
+   - Liefere direkt neben bzw. unmittelbar zum Antwortentwurf in **maximal 4 prägnanten Sätzen** die Begründung für den gewählten Entwurf: Warum wurden genau diese Flughöhe, Struktur und Formulierung gewählt, wie sichert der Text die Themenhoheit und welche Risiken oder Detailfallen werden damit bewusst umschifft?`
         },
         'O-REPLY': {
             id: 'O-REPLY',
