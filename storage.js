@@ -320,46 +320,56 @@ export const PromptStorage = {
         const token = local?.github_pat;
         if (!token) return;
 
-        const resolveCategory = (p) => {
+        const Catalog = globalThis.PromptDockCatalog;
+
+        const resolveCategory = (p, catRecipe) => {
             if (p.category) return p.category;
-            const isCustom = p.isCustomRecipe || (typeof p.id === 'string' && p.id.startsWith(RECIPE_KEY_PREFIX));
-            if (isCustom) return 'Eigene';
-            if (p.family === 'respond') return 'PR & Medien';
-            if (p.family === 'review') return 'Review & Audit';
-            if (p.family === 'plan') return 'Planung & Strategie';
-            if (p.family === 'custom') return 'Eigene';
+            const family = p.family || catRecipe?.family;
+            if (family === 'respond') return 'PR & Medien';
+            if (family === 'review') return 'Review & Audit';
+            if (family === 'plan' || family === 'temporal' || family === 'create' || family === 'single') return 'Planung & Strategie';
             return 'Eigene';
         };
 
         const formattedItems = (items || []).map(p => {
-            const isMultiTurn = Boolean((p.turns && p.turns.length > 0) || p.isCustomRecipe || (typeof p.id === 'string' && p.id.startsWith(RECIPE_KEY_PREFIX)));
+            const catRecipe = (!p.isCustomRecipe && Catalog?.RECIPES)
+                ? Catalog.RECIPES.find(r => r.id === p.recipeId || r.name === p.name)
+                : null;
+            const sourceRecipe = (Array.isArray(p.turns) && p.turns.length > 0) ? p : catRecipe;
+            const isMultiTurn = Boolean(sourceRecipe && Array.isArray(sourceRecipe.turns) && sourceRecipe.turns.length > 1);
 
             let turns = [];
-            if (Array.isArray(p.turns) && p.turns.length > 0) {
-                turns = p.turns.map((t, idx) => ({
-                    step: idx + 1,
-                    title: t.title || `Schritt ${idx + 1}`,
-                    content: t.content || (t.chunks && t.chunks[0]?.text) || ''
-                }));
+            if (sourceRecipe && Array.isArray(sourceRecipe.turns) && sourceRecipe.turns.length > 0) {
+                turns = sourceRecipe.turns.map((t, idx) => {
+                    let compiledStep = '';
+                    if (Catalog && typeof Catalog.compileTurn === 'function') {
+                        compiledStep = Catalog.compileTurn(sourceRecipe, idx, {}) || '';
+                    }
+                    if (!compiledStep) {
+                        compiledStep = t.content || (t.chunks && t.chunks[0]?.text) || '';
+                    }
+                    return {
+                        step: idx + 1,
+                        title: t.title || `Schritt ${idx + 1}`,
+                        content: compiledStep
+                    };
+                });
             }
 
-            let expressText = '';
-            if (isMultiTurn && turns.length > 0) {
+            let expressText = p.content || '';
+            if (!expressText && sourceRecipe && Catalog && typeof Catalog.compileExpress === 'function') {
+                expressText = Catalog.compileExpress(sourceRecipe) || '';
+            } else if (!expressText && turns.length > 0) {
                 expressText = turns
                     .map(t => `${t.title ? `### ${t.title}\n` : ''}${t.content || ''}`.trim())
                     .filter(Boolean)
                     .join('\n\n---\n\n');
-                if (!expressText && p.content) {
-                    expressText = p.content;
-                }
-            } else {
-                expressText = p.content || '';
             }
 
             return {
                 id: p.id || '',
                 name: p.name || 'Prompt',
-                category: resolveCategory(p),
+                category: resolveCategory(p, catRecipe),
                 isMultiTurn,
                 turns,
                 express: expressText

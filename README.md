@@ -18,14 +18,14 @@
 
 PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI workflow cockpit & cross-device execution bridge** — engineered right inside your browser:
 
-- 📱 **Mobile Sync & 1-Step Shortcuts Bridge (v2.1)**  
-  Zero-friction mobile integration with a dedicated slide-up onboarding sheet and live QR code. Gist sync now publishes a dual payload: the complete structured schema (`prompts`) plus a mobile-optimized key-value dictionary (`quick`), enabling mobile automation shortcuts to query and copy prompts in a single, zero-loop native selection.
+- 📱 **Mobile Sync & Zero-Input Execution Bridge (v2.1)**  
+  Zero-friction mobile integration with a dedicated slide-up onboarding sheet and live QR code. Gist sync publishes a dual payload: the complete structured schema (`prompts`) with full catalog metadata resolution, plus a mobile-optimized dictionary (`quick`). All template variables automatically resolve to sensible defaults or active context fallbacks (*«Gemäss aktuellem E-Mail-Verlauf / Kontext»*), enabling mobile automation shortcuts to query, copy, and execute prompts immediately on open email threads without manual input stalls.
 - 🏢 **Microsoft 365 Graph & Outlook Native Grounding**  
-  Intelligent thread ingestion designed specifically for Outlook on Web and Microsoft Copilot. Parses email thread chronology (latest sender mandate down to historic forwards and linked SharePoint/OneDrive attachments), and guides Copilot to ground claims against independent internal M365 Graph data rather than taking thread claims at face value.
-- 🛡️ **Phase-Scoped Cognitive Guardrails & Anti-Fluff Discipline**  
-  Verification badges (✅, ⚠️, ❌) are strictly scoped to the research and audit phase, preventing icon leakage into final drafts. Turn 2+ and output forks inherit `G_OUTPUT_STYLE`, preserving uncompromising anti-fluff rules and executive tone. Furthermore, non-final turns automatically inject a strict `PHASEN-FOKUS` boundary rule that prevents host LLMs from rushing ahead and drafting premature final outputs during early analysis or strategy steps.
+  Intelligent thread ingestion designed specifically for Outlook on Web and Microsoft Copilot. Consolidated single-task intake (`I-MAIL`, `I-MEET`) parses email thread chronology (latest sender mandate down to historic forwards and linked SharePoint/OneDrive attachments), and directs Copilot to ground claims against independent internal M365 Graph data (emails, Teams chats, meeting notes, SharePoint).
+- 🛡️ **Source-Grounded Verification & Phase Guardrails**  
+  Employs strict source attribution (citing email threads, M365 Graph, or attachments) and gap markers (*«[Offen / Zu prüfen]»*) rather than decorative icons or negative-constraint bans. Turn 2+ and output forks inherit `G_OUTPUT_STYLE`, preserving uncompromising anti-fluff rules and executive tone. Furthermore, non-final turns automatically inject a strict `PHASEN-FOKUS` boundary rule preventing host LLMs from drafting premature final outputs during early analysis steps.
 - 🗜️ **Chrome Sync Quota Hardening & High-Density Compaction**  
-  All 17 recipes are optimized to strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (e.g. `recipe-praesentation` compressed from 11.4 KB down to 7.8 KB; `recipe-medienanfrage` with dual reasoning draft at 6.7 KB). Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_4_medien_reasoning`), preventing fatal storage quota exceptions.
+  All 17 recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (e.g. `recipe-praesentation` at 6.8 KB, `recipe-medienanfrage` at 5.9 KB). Every turn across all recipes is capped at $\le 5$ high-impact tasks. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_6_mobile_express`), preventing fatal storage quota exceptions.
 - 🔢 **Dynamic Task Header Sequencing & Clean Unicode Flow**  
   Turn and fork compilation engines dynamically re-index all prompt tasks into clean sequential numbers (`TASK 1:`, `TASK 2:`, `TASK 3:`...) with clean Unicode arrow (`→`) flow, ensuring host LLMs follow a clear, logical step order regardless of chunk assembly.
 - ⏱️ **1500ms Debounced Cloud Gist Sync**  
@@ -36,8 +36,8 @@ PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI work
   A modern hybrid persistence model: single-shot prompts are stored in `chrome.storage.sync` (`p_<id>`) for instant synchronization across devices, while complex multi-turn workflows are saved in `chrome.storage.local` (`r_<id>`), ensuring zero risk of sync quota bottlenecks. Both tiers are merged transparently into a unified catalog with full export and import support.
 - 🌉 **Execution Bridge & Direct Turn Injection**  
   Custom multi-turn recipes connect directly to the in-chat HUD rail via runtime message passing. Each turn injects directly into the chat input without rigid catalog schemas, preserving user-defined instructions and allowing real-time steering notes at every checkpoint.
-- ⚡ **Express Mode Fallback Integrity**  
-  Launch any multi-turn workflow as an instantaneous single-shot prompt when time is critical: PromptDock automatically compiles all turn instructions with clean markdown dividers (`---`) and injects the composite workflow directly into the composer.
+- ⚡ **Deliverable-First Express Mode & Single Persona**  
+  Launch any multi-turn workflow as an instantaneous single-shot prompt: PromptDock emits a single unified persona (`ROLLE:`) at Turn 0, eliminating jarring mid-prompt persona switching. Preliminary analysis and strategy steps are compressed into compact, scannable bullet points, reserving maximum token budget and prominence for the immediately usable deliverable. Intermediate checkpoint summaries (`T-TLDR`) are suppressed on non-final steps, eliminating token waste.
 - 🚊 **In-Chat Rail UX ("Rail, Checkpoint, Fork")**  
   Complex corporate communication, audit, and strategic tasks are split into discrete cognitive turns (*Turn 1: Research / Situation Analysis* ➔ *Turn 2: Strategy / Audit* ➔ *Turn 3: Output Synthesis*). A floating stepper rail sits directly above the chat input, showing your current step and workflow progress.
 - 🎙️ **2-Zone Spotlight Composer**  

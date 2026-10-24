@@ -17,19 +17,13 @@
     // Global constraints block prepended to Turn 1 (Analysis & Fact-Checking)
     const G_RAHMEN = `RAHMENBEDINGUNGEN:
 - Keine leeren Phrasen, Füllwörter oder KI-typischen Formulierungen. Jeder Satz muss Informationsgehalt haben.
-- Unterscheide strikt zwischen Fakten, Annahmen und Bewertungen.
-- Belegstatus-Kennzeichnung für Fakten in Analyse- und Recherche-Schritten:
-  ✅ Belegt (aus vorliegenden Unterlagen, E-Mail-Verlauf, SharePoint/Graph oder verifizierbarer Quelle)
-  ⚠️ Plausibel, aber nicht verifiziert
-  ❌ Nicht überprüfbar
-  (WICHTIG: In finalen Text-, E-Mail- oder Medienantwort-Entwürfen keine ✅/⚠️/❌-Icons im Fliesstext verwenden, sofern nicht explizit als Spalte in einer Prüftabelle gefordert.)
-- Fehlende Daten oder Informationslücken explizit benennen, nicht überspielen.`;
+- Unterscheide strikt zwischen gesicherten Fakten (mit kurzer Nennung der Quelle aus Mailverlauf, SharePoint/Graph oder Anhang), plausiblen Annahmen und Bewertungen.
+- Fehlende Daten oder Informationslücken explizit als «[Offen / Zu prüfen]» benennen, niemals überspielen oder hinzuerfinden.`;
 
     // Compact style & quality discipline for Turn 2+ (Strategy & Output drafting) and Forks
     const G_OUTPUT_STYLE = `QUALITÄTS- & STILVORGABE:
 - Keine leeren Phrasen, Füllwörter oder KI-typischen Formulierungen. Präzise, adressatengerechte Sprache.
-- Fakten- und Strategietreue: Stütze dich strikt auf die gesicherten Erkenntnisse und erfinde keine Fakten hinzu.
-- Verwende in ausformulierten Antwort- oder Textentwürfen keine Belegstatus-Icons (✅, ⚠️, ❌), ausser wo explizit als Tabellenspalte gefordert.`;
+- Fakten- und Strategietreue: Stütze dich strikt auf die gesicherten Erkenntnisse; markiere offene Punkte bei Bedarf mit «[Offen / Zu prüfen]».`;
 
     // Atomic Chunk Definitions
     const CHUNKS = {
@@ -52,18 +46,11 @@ Beschränke den internen Abklärungsaufwand in den Fachbereichen auf das absolut
         'I-MAIL': {
             id: 'I-MAIL',
             title: 'Inhalts-Analyse (E-Mail/Vorgang)',
-            text: `TASK: INHALTS- & THREAD-ANALYSE (OUTLOOK)
-Analysiere den vorliegenden E-Mail-Verlauf (Chronologie von unten nach oben beachten) sowie allfälliger verlinkter SharePoint-/OneDrive-Dokumente oder Dateianhänge.
-Erfasse strukturiert:
-- AKTUELLER AUSLÖSER & AUFTRAG (oberste Nachricht): Wer wendet sich aktuell mit welchem konkreten Auftrag, welcher Frage oder Bitte an mich?
-- THREAD-HISTORIE & KONTEXT: Was ist im bisherigen Verlauf (weitergeleitete Mails, Vorantworten) sachlich passiert und welche Positionen wurden bereits bezogen?
-- FAKTEN & ANHÄNGE: Welche gesicherten Fakten, Zahlen oder Entwürfe liegen im Thread bzw. in verlinkten Dateien vor?
-- BETEILIGTE AKTEURE: Relevante Personen, Absender, CC-Empfänger und Organisationseinheiten.
-
-TASK: ANLIEGEN & ENTSCHEIDUNGSBEDARF IDENTIFIZIEREN
-Bestimme präzise, was von mir konkret erwartet wird:
-- die zu klärende Kernfrage und allfällige Teilfragen,
-- die anstehende Entscheidung, Freigabe, Einschätzung oder Antwortleistung.`
+            text: `TASK: INHALTS-, THREAD- & AUFTRAGSANALYSE (OUTLOOK)
+Analysiere den vorliegenden E-Mail-Verlauf (Chronologie von unten nach oben beachten) sowie allfällige verlinkte SharePoint-/OneDrive-Dokumente oder Dateianhänge:
+- **Aktueller Auftrag & Erwartung (oberste Nachricht):** Wer verlangt von mir konkret welche Antwortleistung, Entscheidung, Freigabe oder Einschätzung (inkl. Kern- und Teilfragen)?
+- **Thread-Historie & Positionen:** Was ist im bisherigen Verlauf sachlich passiert und welche Festlegungen wurden bereits getroffen?
+- **Gesicherte Fakten & Akteure:** Welche belastbaren Daten/Zahlen liegen im Thread oder in Anhängen vor, und welche Schlüsselpersonen (Absender, CC, Einheiten) sind involviert?`
         },
         'I-DOC': {
             id: 'I-DOC',
@@ -97,18 +84,10 @@ TASK: DRAMATURGIE- (SCQA) & BELASTBARKEITS-PRÜFUNG (LEAK-TEST)
         'I-MEET': {
             id: 'I-MEET',
             title: 'Inhalts-Analyse (Meeting)',
-            text: `TASK: INHALTS-ANALYSE
-Analysiere den Termin inkl. verlinkter oder angehängter Dateien.
-Erfasse:
-- Zweck und Ziel des Meetings,
-- Teilnehmende und deren Rollen,
-- Agenda und erwartete Themen.
-
-TASK: ANLIEGEN IDENTIFIZIEREN
-Identifiziere das Anliegen, das mich betrifft:
-- was von mir erwartet wird (Entscheidung, Input, Information, Freigabe),
-- welche Themen mich direkt betreffen,
-- welche heiklen Punkte mich überraschen könnten.`
+            text: `TASK: TERMIN-, KONTEXT- & ANLIEGENSANALYSE
+Analysiere den Termin inkl. Einladungstext sowie verlinkter oder angehängter Dateien:
+- **Zweck, Agenda & Akteure:** Was ist das Ziel des Meetings, welche Themen stehen an und wer nimmt in welcher Rolle teil?
+- **Mein Mandat & Erwartung:** Welcher konkrete Beitrag wird von mir erwartet (Entscheidung, Input, Freigabe) und welche heiklen Punkte könnten mich überraschen?`
         },
         'I-QUERY': {
             id: 'I-QUERY',
@@ -153,16 +132,10 @@ Lege die zu analysierenden Zeitabschnitte anhand des angegebenen Zeitraums fest:
                     ? 'bisherige mediale Berichterstattung, öffentlich verfügbare Fakten, frühere Stellungnahmen und historische Kontexte'
                     : 'relevante Hintergrundfakten, Projektstände, bisherige Entscheidungen, Sprachregelungen und organisatorische Zusammenhänge';
                 const focus = params?.focus || defaultFocus;
-                return `TASK: RECHERCHE & FAKTENABGLEICH
-Recherchiere die relevanten Grundlagen zum isolierten Thema. Kennzeichne jede Faktenbehauptung mit ihrem Belegstatus (✅, ⚠️, ❌).
-
-1. INTERNE RECHERCHE (MICROSOFT GRAPH & SHAREPOINT)
-Durchsuche frühere E-Mails, Teams-Chats, Besprechungsnotizen und SharePoint-Dokumente nach:
-- relevanten Fakten, bisherigen Positionierungen, Freigaben, Q&As, Argumentarien und vergleichbaren Vorgängen.
-- Gleiche Behauptungen oder Annahmen aus der vorliegenden Anfrage gezielt gegen unabhängige interne M365-Quellen ab, statt sie ungeprüft aus der Anfrage selbst zu übernehmen.
-
-2. FAKTEN- & KONTEXTRECHERCHE
-Recherchiere ergänzend: ${focus}.`;
+                return `TASK: RECHERCHE & FAKTENABGLEICH (M365 GRAPH & KONTEXT)
+Durchsuche frühere E-Mails, Teams-Chats, Besprechungsnotizen und SharePoint-Dokumente gezielt nach: ${focus}.
+- Gleiche Behauptungen oder Vorannahmen aus der vorliegenden Anfrage aktiv gegen unabhängige interne M365-Quellen ab, statt sie ungeprüft zu übernehmen.
+- Benenne zu jedem zentralen Fakt kurz die Quelle und markiere offene Punkte als «[Offen / Zu prüfen]».`;
             }
         },
         'R-TIME': {
@@ -181,24 +154,19 @@ Basiere alle Auswertungen ausschliesslich auf echten Daten aus Microsoft Graph; 
         'C-THESIS': {
             id: 'C-THESIS',
             title: 'Kritischer Thesen-Check',
-            text: `TASK: THESEN-CHECK (STEEL-MANNING)
-Hinterfrage die Thesen und Annahmen systematisch:
-1. Formuliere die stärkste Version jeder These (Steel Man).
-2. Formuliere die stärkste Gegenthese.
-3. Identifiziere die Annahmen, die wahr sein müssten, damit die These hält.
-4. Prüfe jede Annahme auf Belastbarkeit.
-5. Erst dann: bewerte.
-Unterscheide klar zwischen Tatsachen, Einschätzungen, Interpretationen und unbelegten Behauptungen.`
+            text: `TASK: KRITISCHER THESEN- & PRÄMISSEN-CHECK
+Prüfe die zentralen Thesen und Vorannahmen auf ihre tatsächliche Belastbarkeit:
+- **Prämissen & Faktencheck:** Welche stillschweigenden Annahmen müssen zutreffen, damit die These hält – und wo widersprechen ihnen Fakten?
+- **Stärkstes Gegenargument (Steel Man):** Was ist der gewichtigste sachliche Einwand gegen die vorgetragene Position?
+- **Fazit:** Was davon ist gesicherte Tatsache, was legitime Bewertung und was unbelegte Behauptung?`
         },
         'C-REQUEST': {
             id: 'C-REQUEST',
             title: 'Kritischer Sachverhalts-Check',
-            text: `TASK: KRITISCHER SACHVERHALTS-CHECK
-Hinterfrage den Sachverhalt sowie das an mich herangetragene Anliegen systematisch:
-1. Formuliere die stärkste Version des Anliegens (Steel Man).
-2. Formuliere die stärkste Gegenposition.
-3. Identifiziere die zugrundeliegenden Annahmen und prüfe sie auf Belastbarkeit.
-4. Prüfe auf blinde Flecken, Fehleinschätzungen und alternative Interpretationen.`
+            text: `TASK: KRITISCHER SACHVERHALTS- & REALITÄTS-CHECK
+Hinterfrage das an mich herangetragene Anliegen nüchtern vor einer Entscheidung oder Antwort:
+- **Kern & Berechtigung (Steel Man):** Was ist der berechtigte Kern des Anliegens und auf welchen ungesicherten Annahmen fusst es?
+- **Gegenargumente & Blinde Flecken:** Welche Risiken, Zielkonflikte, Präzedenzwirkungen oder relevanten Gegenpositionen werden im Anliegen ausgeblendet?`
         },
         'C-PERSPECTIVE': {
             id: 'C-PERSPECTIVE',
@@ -508,7 +476,7 @@ Erstelle eine vollständige Gliederung des Artikels mit Zwischenüberschriften, 
             id: 'O-ARTICLE-DRAFT',
             title: 'Vollständiger Artikelentwurf',
             text: `TASK: VOLLSTÄNDIGER ARTIKELENTWURF
-Verfasse nun den vollständigen Artikel auf Basis der freigegebenen Outline und Recherche.
+Verfasse direkt den vollständigen, publikationsreifen Artikel auf Basis der erstellten Outline und der gesicherten Recherche (allfällige noch offene Detailpunkte als «[Offen: ...]» im Text markieren).
 Qualitätskriterien:
 - Fesselnder Einstieg (Lead),
 - Stringenter roter Faden ohne Brüche,
@@ -919,10 +887,10 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                     role: 'Du bist Planungsredakteur für die interne und regionale Kommunikation.',
                     chunks: [{
                         id: 'STAKEHOLDER-RAW',
-                        compile: () => `Erstelle aus den Rohdaten kurze Einträge im Stil einer internen Kommunikationsplanung.
-ZIELSTIL: Pro Thema genau ein kompakter Eintrag. Sachlich, knapp, planungstauglich.
-FORM: «Standort/Bereich, Thema: Kerninhalt; Stakeholder-/Kommunikationshinweis; Datum.»
-ROHDATEN:`
+                        compile: () => `TASK: KOMPAKTE STAKEHOLDER- & PLANUNGSEINTRÄGE
+Extrahiere alle relevanten Themen aus dem vorliegenden E-Mail-Verlauf, den Termin-/Besprechungsnotizen oder angehängten Unterlagen und erstelle kurze Einträge im Stil einer internen Kommunikationsplanung.
+- **Zielstil:** Pro Thema genau ein kompakter Eintrag. Sachlich, knapp, planungstauglich.
+- **Form:** «Standort/Bereich, Thema: Kerninhalt; Stakeholder-/Kommunikationshinweis; Datum.»`
                     }]
                 }
             ]
@@ -959,13 +927,32 @@ ROHDATEN:`
      */
     function compileTurn(recipe, turnIndex, options) {
         options = options || {};
-        const variableValues = options.variableValues || {};
+        const rawVars = options.variableValues || {};
         const userSteeringNote = options.userSteeringNote || '';
         const previousTurnTitle = options.previousTurnTitle || '';
         const isExpress = !!options.isExpress;
 
         const turn = recipe.turns[turnIndex];
         if (!turn) return null;
+
+        // Build effective variable map with fallbacks to recipe defaults or active Outlook context
+        const effectiveVars = {};
+        if (Array.isArray(recipe.variables)) {
+            for (const v of recipe.variables) {
+                const k = v.key || v.name;
+                if (k) {
+                    const provided = rawVars[k] !== undefined && rawVars[k] !== '' ? rawVars[k] : v.default;
+                    effectiveVars[k] = provided || 'Gemäss aktuellem E-Mail-Verlauf / Kontext';
+                }
+            }
+        }
+        for (const [vKey, vVal] of Object.entries(rawVars)) {
+            if (vVal !== undefined && vVal !== '') {
+                effectiveVars[vKey] = vVal;
+            } else if (!effectiveVars[vKey]) {
+                effectiveVars[vKey] = 'Gemäss aktuellem E-Mail-Verlauf / Kontext';
+            }
+        }
 
         const parts = [];
 
@@ -976,9 +963,8 @@ ROHDATEN:`
             parts.push(`${recipe.name.toUpperCase()}: ${turn.title}`);
         }
 
-        // Output role: in express mode, only if it's turn 0 or changed from previous turn
-        const prevRole = turnIndex > 0 ? recipe.turns[turnIndex - 1]?.role : null;
-        if (turn.role && (!isExpress || turnIndex === 0 || turn.role !== prevRole)) {
+        // Output role: in express mode, emit only once at turn 0 to prevent mid-prompt persona switching
+        if (turn.role && (!isExpress || turnIndex === 0)) {
             parts.push(`ROLLE:\n${turn.role}`);
         }
 
@@ -1004,6 +990,10 @@ ROHDATEN:`
             const chunkTexts = [];
             for (const item of turn.chunks) {
                 let chunkId = typeof item === 'string' ? item : item.chunkId;
+                // In Express Mode, skip intermediate T-TLDR summaries on non-final turns of multi-turn recipes
+                if (isExpress && chunkId === 'T-TLDR' && recipe.turns.length > 1 && turnIndex < recipe.turns.length - 1) {
+                    continue;
+                }
                 let params = typeof item === 'object' ? item.params : {};
                 let chunkDef = CHUNKS[chunkId] || item;
 
@@ -1017,8 +1007,8 @@ ROHDATEN:`
                 }
 
                 // Interpolate variables (e.g. {ZEITRAUM}, {PERSON}, {SUCHBEGRIFF}, {THEMA})
-                for (const [vKey, vVal] of Object.entries(variableValues)) {
-                    chunkText = chunkText.replaceAll(`{${vKey}}`, vVal || `[${vKey}]`);
+                for (const [vKey, vVal] of Object.entries(effectiveVars)) {
+                    chunkText = chunkText.replaceAll(`{${vKey}}`, vVal);
                 }
 
                 chunkTexts.push(chunkText);
@@ -1026,8 +1016,8 @@ ROHDATEN:`
             rawContent = chunkTexts.join('\n\n');
         } else if (turn.content || turn.text) {
             let turnText = turn.content || turn.text || '';
-            for (const [vKey, vVal] of Object.entries(variableValues)) {
-                turnText = turnText.replaceAll(`{${vKey}}`, vVal || `[${vKey}]`);
+            for (const [vKey, vVal] of Object.entries(effectiveVars)) {
+                turnText = turnText.replaceAll(`{${vKey}}`, vVal);
             }
             rawContent = turnText;
         }
@@ -1055,7 +1045,11 @@ ROHDATEN:`
      */
     function compileExpress(recipe, variableValues) {
         variableValues = variableValues || {};
-        const header = `${recipe.name.toUpperCase()} (EXPRESS-MODUS)\nFühre diesen mehrstufigen Workflow vollständig und schrittweise in einer einzigen Antwort aus.`;
+        const isMultiStep = Array.isArray(recipe.turns) && recipe.turns.length > 1;
+        const execInstruction = isMultiStep
+            ? 'Führe diesen mehrstufigen Workflow komplett in einer einzigen Antwort aus: Halte die Vorstufen (Analyse & Strategie) kompakt in prägnanten Stichpunkten, damit das Hauptgewicht auf dem direkt nutzbaren Endresultat im letzten Schritt liegt.'
+            : 'Führe diesen Auftrag direkt und präzise aus.';
+        const header = `${recipe.name.toUpperCase()} (EXPRESS-MODUS)\n${execInstruction}`;
         const turnTexts = recipe.turns.map((_, i) => compileTurn(recipe, i, { variableValues, isExpress: true }));
         return [header, ...turnTexts].join('\n\n---\n\n');
     }
