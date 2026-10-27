@@ -300,10 +300,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (loaded && loaded.length > 0) {
         prompts = loaded;
 
-        // One-time catalog sync & high-signal compaction upgrade (v2.6)
+        // One-time catalog sync & high-signal compaction upgrade (v2.8)
         try {
-            const local = await ext.storage.local.get(['v2_1_praesentation_seeded', 'v2_6_mobile_express']);
-            if ((!local?.v2_1_praesentation_seeded || !local?.v2_6_mobile_express) && Catalog?.RECIPES) {
+            const local = await ext.storage.local.get(['v2_1_praesentation_seeded', 'v2_8_medien_check_seeded']);
+            if ((!local?.v2_1_praesentation_seeded || !local?.v2_8_medien_check_seeded) && Catalog?.RECIPES) {
                 let changed = false;
                 for (const catRecipe of Catalog.RECIPES) {
                     const compiledExpress = Catalog.compileExpress ? Catalog.compileExpress(catRecipe) : '';
@@ -312,7 +312,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         prompts[idx].recipeId = catRecipe.id;
                         prompts[idx].content = compiledExpress;
                         changed = true;
-                    } else if (catRecipe.id === 'recipe-praesentation' && idx < 0) {
+                    } else if ((catRecipe.id === 'recipe-praesentation' || catRecipe.id === 'recipe-medienantwort-check') && idx < 0) {
                         prompts.push({
                             id: (prompts.length + 1).toString(),
                             name: catRecipe.name,
@@ -333,7 +333,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         v2_3_catalog_compacted: true,
                         v2_4_medien_reasoning: true,
                         v2_5_lean_grounding: true,
-                        v2_6_mobile_express: true
+                        v2_6_mobile_express: true,
+                        v2_7_medien_final_check: true,
+                        v2_8_medien_check_seeded: true
                     });
                 }
             }

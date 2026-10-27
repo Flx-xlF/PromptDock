@@ -25,7 +25,7 @@ PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI work
 - 🛡️ **Source-Grounded Verification & Phase Guardrails**  
   Employs strict source attribution (citing email threads, M365 Graph, or attachments) and gap markers (*«[Offen / Zu prüfen]»*) rather than decorative icons or negative-constraint bans. Turn 2+ and output forks inherit `G_OUTPUT_STYLE`, preserving uncompromising anti-fluff rules and executive tone. Furthermore, non-final turns automatically inject a strict `PHASEN-FOKUS` boundary rule preventing host LLMs from drafting premature final outputs during early analysis steps.
 - 🗜️ **Chrome Sync Quota Hardening & High-Density Compaction**  
-  All 17 recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (e.g. `recipe-praesentation` at 6.8 KB, `recipe-medienanfrage` at 5.9 KB). Every turn across all recipes is capped at $\le 5$ high-impact tasks. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_6_mobile_express`), preventing fatal storage quota exceptions.
+  All 18 recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (e.g. `recipe-praesentation` at 6.8 KB, `recipe-medienanfrage` with dual-lock audit at 7.1 KB, `recipe-medienantwort-check` at 2.3 KB). Every turn across all recipes is capped at $\le 5$ high-impact tasks. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_8_medien_check_seeded`), preventing fatal storage quota exceptions.
 - 🔢 **Dynamic Task Header Sequencing & Clean Unicode Flow**  
   Turn and fork compilation engines dynamically re-index all prompt tasks into clean sequential numbers (`TASK 1:`, `TASK 2:`, `TASK 3:`...) with clean Unicode arrow (`→`) flow, ensuring host LLMs follow a clear, logical step order regardless of chunk assembly.
 - ⏱️ **1500ms Debounced Cloud Gist Sync**  
@@ -48,8 +48,8 @@ PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI work
   Transitions between the expanded Spotlight Composer and the minimized Dynamic Island are powered by physical spring overshoot curves (`cubic-bezier(0.34, 1.15, 0.64, 1)`) paired with a micro-scale content crossfade (`scale(0.96) translateY(4px) ➔ scale(1)`), eliminating jarring snap cuts or layout reflows.
 - 📐 **Zero-Overlap Spatial Docking & Sidebar Clamping (<= 460px)**  
   PromptDock dynamically detects the host chat input container across Copilot, Gemini, ChatGPT, and Claude. Connected to a reactive `ResizeObserver`, the HUD anchors **10px above the composer** with runtime horizontal clamping `[8px, viewportWidth - 8px]`. In narrow split screens or Outlook on the Web sidebars, CSS Container Queries (`@container pd-rail (max-width: 460px)`) collapse inactive stepper labels into compact dots (~80px footprint), keeping window controls accessible with zero horizontal overflow.
-- 🎯 **Effort-Minimizing Abklärungs-Triage & Strategic Reasoning (Corporate Media Suite)**  
-  Integrated into `Medienanfrage`: incoming media questions are systematically categorized into 3 tiers (immediately answerable from existing context, deliberate non-escalation of detail traps, and minimal blocker validation as closed yes/no checks). Furthermore, the final output (`O-MEDIA`) delivers a dual structure: a ready-to-send response draft paired with a concise 4-sentence strategic rationale explaining the chosen altitude, structural framing, narrative control (*Themenhoheit*), and deliberately bypassed risk traps.
+- 🎯 **Effort-Minimizing Abklärungs-Triage & Dual-Lock Quality Architecture (Corporate Media Suite)**  
+  Integrated into `Medienanfrage`: incoming media questions are systematically categorized into 3 tiers (immediately answerable from existing context, deliberate non-escalation of detail traps, and minimal blocker validation as closed yes/no checks). Furthermore, the final output (`O-MEDIA`) delivers a dual-lock quality architecture: a publication-ready response draft adhering to approachable, human tone and anti-mirroring guidelines (Lock 1), an immediate 4-sentence strategic rationale, and a mandatory closing 4-point audit (Lock 2: Schema a–d testing political/media resilience, human empathy, zero negative-word mirroring, and proactive own narrative with an automated self-correction mandate).
 - 🛑 **Streaming State Guard & Native Stop Interception**  
   When an AI response begins streaming, PromptDock displays a pulsing amber indicator (`Generiert Antwort...`) and auto-collapses into the 36px capsule. If you click the host chat's native stop button (*"Stop generating"* / *"Stop response"*), PromptDock catches the event and advances directly to your checkpoint without freezing.
 - 🎨 **Redesigned Command Palette & Slide-Up Sheet**  
@@ -99,7 +99,7 @@ Both editions share the same local-first, zero-telemetry architecture. PromptDoc
 
 PromptDock 2.1 includes a vendor-agnostic Corporate Communications & Intelligence recipe suite:
 
-1. **Medienanfrage** (3 Turns: Lagebild & Abklärungs-Triage ➔ Strategie & Format-Abwägung ➔ Medienantwort & Kurzbegründung)
+1. **Medienanfrage** (3 Turns: Lagebild & Abklärungs-Triage ➔ Strategie & Format-Abwägung ➔ Medienantwort, Begründung & 4-Punkte-Check)
 2. **Interview-Vorbereitung** (3 Turns: Briefing ➔ Haltung ➔ Antwortentwurf)
 3. **Wording & Sprachregelung** (2 Turns: Kernanalyse ➔ Leitbotschaften & FAQ)
 4. **Strategischer Sparringspartner** (Herausforderndes Sparring)
@@ -116,6 +116,7 @@ PromptDock 2.1 includes a vendor-agnostic Corporate Communications & Intelligenc
 15. **Tiefenrecherche & Intelligence** (Quellen- & Fakten-Dossier)
 16. **Standort- & Stakeholder-Austausch** (Kompakteinträge)
 17. **Präsentation & Storyboard** (3 Turns: Lagebild, Zielgruppe & Belastbarkeit ➔ Strategie, Argumentation & Storyline ➔ Folien-Storyboard & Konkrete Inputs)
+18. **Medienantwort-Check** (Single-Shot: Qualitäts- & Framing-Prüfung nach Schema a–d ➔ Rotstift & versandfertige Endfassung)
 
 ---
 

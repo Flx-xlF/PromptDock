@@ -298,17 +298,38 @@ Vergleiche den Stand zu Beginn des Zeitfensters mit dem aktuellen Status:
         // --- OUTPUT TEMPLATES (TURN 3 / TURN 2 FINAL) ---
         'O-MEDIA': {
             id: 'O-MEDIA',
-            title: 'Medienantwort & Begründung',
-            text: `TASK: MEDIENANTWORT & KURZBEGRÜNDUNG
-Formuliere auf Basis der festgelegten Strategie, Storyline und Beantwortungs-Architektur den versandfertigen Entwurf der Medienantwort sowie direkt dazu eine prägnante Begründung:
+            title: 'Medienantwort, Begründung & Abschluss-Check',
+            text: `TASK: MEDIENANTWORT, KURZBEGRÜNDUNG & ABSCHLUSS-CHECK
+Formuliere auf Basis der festgelegten Strategie, Storyline und Beantwortungs-Architektur den versandfertigen Entwurf der Medienantwort, begründe ihn knapp und unterziehe ihn dem verbindlichen 4-Punkte-Abschluss-Check:
 
 1. **MEDIENANTWORT (VERSANDFERTIGER ENTWURF):**
-   - **Format & Flughöhe:** Setze das gewählte Format (Summarisch als geschlossenes Statement, Hybrid/Geclustert nach Themenblöcken oder Punkt-für-Punkt) konsequent und ohne Rechtfertigungston um.
+   - **Format & Flughöhe:** Setze das gewählte Format (Summarisch als geschlossenes Statement, Hybrid/Geclustert nach Themenblöcken oder Punkt-für-Punkt) konsequent, souverän und ohne Rechtfertigungston um.
    - **Autonomie & Aufwand-Minimierung:** Stütze den Text strikt auf die bereits gesicherten Fakten, sodass keine neuen Recherche-Schleifen in den Fachbereichen ausgelöst werden. Falls ein einziger harter Blocker-Fakt noch bestätigt werden muss, markiere ihn exakt als «[Kurze Bestätigung durch Fachbereich X: ...]».
-   - **Qualitäts- & Evasion-Check:** Faktisch belastbar, frei von PR-Floskeln, konsistent mit der Haltung; alle berechtigten Informationsbedürfnisse substanziell abgedeckt (kein Vorwurf des Ausweichens).
+   - **Tonalität & Framing-Disziplin:** Schreibe nahbar, menschlich und allgemeinverständlich (keine unterkühlte Behörden- oder PR-Floskelsprache). Übernimm niemals negative Begriffe, Vorwürfe oder hypothetische Konfliktszenarien aus der Anfrage, sondern setze aktiv das eigene Narrativ.
 
 2. **BEGRÜNDUNG DES ENTWURFS (MAX. 4 SÄTZE):**
-   - Liefere direkt neben bzw. unmittelbar zum Antwortentwurf in **maximal 4 prägnanten Sätzen** die Begründung für den gewählten Entwurf: Warum wurden genau diese Flughöhe, Struktur und Formulierung gewählt, wie sichert der Text die Themenhoheit und welche Risiken oder Detailfallen werden damit bewusst umschifft?`
+   - Liefere direkt neben bzw. unmittelbar zum Antwortentwurf in **maximal 4 prägnanten Sätzen** die Begründung für den gewählten Entwurf: Warum wurden genau diese Flughöhe, Struktur und Formulierung gewählt, wie sichert der Text die Themenhoheit und welche Risiken oder Detailfallen werden damit bewusst umschifft?
+
+3. **ABSCHLIESSENDER QUALITÄTS-CHECK DES FINALEN ENTWURFS (SCHEMA a–d):**
+   Prüfe den finalen Entwurf abschliessend Punkt für Punkt gegen dieses Schema (jeweils 1 prägnanter Prüfsatz als Nachweis; falls ein Kriterium im Entwurf noch verletzt ist, überarbeite den Entwurf vor der Ausgabe zwingend):
+   - **a) Medial und politisch belastbar:** Hält jede Aussage einer kritischen Nachprüfung stand, ohne neue Angriffsflächen zu öffnen?
+   - **b) Nahbar, menschlich und verständlich:** Klingt der Text glaubwürdig, empathisch und frei von bürokratischer Distanz?
+   - **c) Keine Wiederholung oder indirekte Bestätigung von Vorwürfen / Hypothesen:** Wurden Unterstellungen, Reizworte und hypothetische Konfliktszenarien der Anfrage konsequent gemieden (auch nicht durch defensive Verneinung wiederholt)?
+   - **d) Eigenes Narrativ:** Transportiert die Antwort aus eigener Kraft unsere Kernbotschaft und Perspektive, statt nur reaktiv Fragen abzuarbeiten?`
+        },
+        'C-MEDIA-CHECK': {
+            id: 'C-MEDIA-CHECK',
+            title: 'Medienantwort-Check (Schema a–d)',
+            text: `TASK: 4-PUNKTE-PRÜFUNG DES MEDIENANTWORT-ENTWURFS (SCHEMA a–d)
+Prüfe den vorliegenden Medienantwort-Entwurf (im aktuellen E-Mail-Verlauf, Anhang oder Chat) kompromisslos anhand der vier Qualitätskriterien und belege deine Diagnose konkret am Text:
+- **a) Antwort ist medial und politisch belastbar:** Hält jede Aussage, Zahl und Formulierung kritischer Nachprüfung durch Medien und Politik stand, ohne neue Angriffsflächen, Widersprüche oder Rechtfertigungsfallen zu öffnen?
+- **b) Antwort ist nahbar, menschlich und verständlich:** Ist der Text zugänglich, glaubwürdig und menschlich formuliert – frei von unterkühlter Behörden-, Juristen- oder PR-Floskelsprache?
+- **c) Vorwürfe und hypothetische Konfliktszenarien werden weder wiederholt noch indirekt bestätigt:** Werden Unterstellungen, negative Reizworte oder Spekulationen aus der Anfrage konsequent gemieden (auch nicht durch defensive Verneinung wie «Der Vorwurf X trifft nicht zu» wiederholt)?
+- **d) Antwort liefert eigenes Narrativ:** Setzt die Antwort aus eigener Kraft unsere Kernbotschaft und Perspektive, statt nur reaktiv das fremde Framing der Anfrage abzuarbeiten?
+
+TASK: ROTSTIFT & VERSANDFERTIGE ENDFASSUNG
+1. **Gezielter Rotstift («Statt X → Besser Y»):** Benenne jede Stelle, die eines der Kriterien a)–d) verletzt, und zeige die konkrete Schärfung.
+2. **Versandfertiger Final-Entwurf:** Gib abschliessend die bereinigte, sofort versandfertige Medienantwort aus, die alle vier Kriterien a)–d) restlos erfüllt (inkl. max. 3 Sätzen Begründung der wichtigsten Anpassung).`
         },
         'O-REPLY': {
             id: 'O-REPLY',
@@ -919,6 +940,21 @@ Extrahiere alle relevanten Themen aus dem vorliegenden E-Mail-Verlauf, den Termi
                 }
             ],
             forks: ['O-TABLE', 'O-QA', 'O-REPLY']
+        },
+
+        // 18. MEDIENANTWORT-CHECK (SINGLE SHOT - SCHEMA a-d)
+        {
+            id: 'recipe-medienantwort-check',
+            name: 'Medienantwort-Check',
+            family: 'review',
+            turns: [
+                {
+                    title: 'QUALITÄTS- & FRAMING-CHECK (SCHEMA a–d)',
+                    role: 'Du bist ein erfahrener Chef-Kommunikator, Mediensprecher und politisch-medialer Schlussredakteur.',
+                    chunks: ['C-MEDIA-CHECK']
+                }
+            ],
+            forks: ['O-QA', 'O-MEDIA']
         }
     ];
 
