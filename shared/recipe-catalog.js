@@ -35,7 +35,7 @@
 Analysiere die Medienanfrage im Mailtext sowie allfällige Anhänge/Links:
 1. **Kernfrage & Teilfragen:** Isoliere das übergeordnete Thema, alle expliziten/impliziten Teilfragen (nummeriert) sowie Fristen/Deadlines.
 2. **Fragen-Typologie & Stossrichtung:** Unterscheide rein sachliche Einzelfragen von kaskadierenden, suggestiven oder manipulativen Fragen. Welches Narrativ (Storyline) verfolgt der Journalist?
-3. **Kritischer Thesen-Check (Steel-Manning):** Prüfe enthaltene Unterstellungen oder Vorannahmen: Was ist der wahre Kern bzw. das stärkste Gegenargument, und welche Annahmen sind faktisch unhaltbar?
+3. **Thesen- & Vorlagen-Check:** Prüfe enthaltene Unterstellungen oder Vorannahmen (wahrer Kern vs. faktisch unhaltbare Annahmen) sowie allfällige im Thread bereits vorliegende interne Antwortentwürfe auf Angriffsflächen.
 
 TASK: ABKLÄRUNGS-TRIAGE (AUFWAND-MINIMIERUNG)
 Beschränke den internen Abklärungsaufwand in den Fachbereichen auf das absolute Minimum. Ordne jede Frage nach dem internen Faktenabgleich einer von drei Kategorien zu:
@@ -55,14 +55,11 @@ Analysiere den vorliegenden E-Mail-Verlauf (Chronologie von unten nach oben beac
         'I-DOC': {
             id: 'I-DOC',
             title: 'Inhalts-Analyse (Dokumentenprüfung)',
-            text: `TASK: INHALTS-ANALYSE
-Analysiere die verlinkte oder angehängte Datei bzw. den Entwurf.
-Erfasse:
-- Inhalt, Zweck und Zielsetzung des Dokuments,
-- zentrale Aussagen und Kernbotschaften,
-- relevante Faktenbehauptungen,
-- sensible oder potenziell kontroverse Aussagen,
-- den kommunikativen und reputativen Kontext.`
+            text: `TASK: DOKUMENTEN- & KONTEXTANALYSE
+Analysiere die verlinkte oder angehängte Datei bzw. den vorliegenden Entwurf:
+- **Zweck, Zielgruppe & Kernbotschaft:** Was will die Vorlage bei wem erreichen und was sind ihre zentralen Aussagen?
+- **Fakten- & Zahlenbehauptungen:** Welche konkreten Daten, Fakten oder Kausalitäten werden postuliert?
+- **Sensible Stellen & Reputationskontext:** Welche Aussagen sind politisch, medial oder intern heikel bzw. potenziell angreifbar?`
         },
         'I-PPT': {
             id: 'I-PPT',
@@ -103,22 +100,12 @@ Analysiere den Suchbegriff/-satz sowie allfällige Dateien. Bestimme:
         },
         'I-TIME': {
             id: 'I-TIME',
-            title: 'Zeitfenster-Vorbereitung',
+            title: 'Zeitfenster-Fokus',
             compile: (params) => {
                 const withTopic = params?.withTopic === true;
-                const headerLines = withTopic
-                    ? `THEMA / PROJEKT: {THEMA}\nZIELGRUPPE / EMPFÄNGER: {PERSON}\nZEITRAUM: {ZEITRAUM}`
-                    : `ZEITRAUM: {ZEITRAUM}`;
-                const topicScope = withTopic
-                    ? `\n- Fokussiere die Auswertung gezielt auf das Thema «{THEMA}» und den Informationsbedarf von «{PERSON}».`
-                    : '';
-                return `${headerLines}
-
-TASK: ZEITFENSTER- & FOKUS-VORBEREITUNG
-Lege die zu analysierenden Zeitabschnitte anhand des angegebenen Zeitraums fest:
-- Hauptarbeitszeitraum (Rückblick & relevante Entwicklungen)
-- Abwesenheitstage / freie Tage bzw. Zwischenzeitraum
-- Aktueller Stand bis heute${topicScope}`;
+                return withTopic
+                    ? `PARAMETER & FOKUS:\n- **Thema / Projekt:** {THEMA}\n- **Zielgruppe / Empfänger:** {PERSON}\n- **Analyse-Zeitraum:** {ZEITRAUM} (inkl. Vergleich Beginn des Zeitfensters bis heute)`
+                    : `PARAMETER & FOKUS:\n- **Analyse-Zeitraum:** {ZEITRAUM} (Rückblick, Entwicklungen in Zwischen-/Abwesenheitstagen und aktueller Stand bis heute)`;
             }
         },
 
@@ -143,10 +130,11 @@ Durchsuche frühere E-Mails, Teams-Chats, Besprechungsnotizen und SharePoint-Dok
             title: 'Recherche (Zeitfenster Microsoft Graph)',
             compile: (params) => {
                 const withTopic = params?.withTopic === true;
-                const topicClause = withTopic ? ` mit engem Bezug zum Thema «{THEMA}»` : '';
-                return `TASK: RECHERCHE VIA MICROSOFT GRAPH
-Durchsuche alle gesendeten und empfangenen E-Mails, Teams-Chats, Kalendereinträge und SharePoint-Aktivitäten innerhalb des definierten Zeitfensters${topicClause}.
-Basiere alle Auswertungen ausschliesslich auf echten Daten aus Microsoft Graph; erfinde keine Einträge und kennzeichne Informationslücken explizit.`;
+                const topicClause = withTopic ? ` mit engem Bezug zum Thema «{THEMA}» und dem Informationsbedarf von «{PERSON}»` : '';
+                return `TASK: AKTIVITÄTS- & KONTEXT-SCAN VIA MICROSOFT GRAPH
+Durchsuche alle gesendeten und empfangenen E-Mails, Teams-Chats, Kalendereinträge und SharePoint-Aktivitäten innerhalb des definierten Zeitraums ({ZEITRAUM})${topicClause}.
+- Erfasse die wichtigsten Entwicklungen, Entscheidungen, offenen Pendenzen und Eskalationen chronologisch.
+- Stütze dich ausschliesslich auf echte Daten aus Microsoft Graph; erfinde keine Einträge hinzu.`;
             }
         },
 
@@ -171,19 +159,17 @@ Hinterfrage das an mich herangetragene Anliegen nüchtern vor einer Entscheidung
         'C-PERSPECTIVE': {
             id: 'C-PERSPECTIVE',
             title: 'Mehrperspektivische Einordnung',
-            text: `TASK: KRITISCHE EINORDNUNG
-Ordne die Themen systematisch aus mehreren Blickwinkeln ein:
-- Wie würde ein kritischer Journalist das Thema aufgreifen?
-- Wie würden politische Stakeholder und Aufsichtsbehörden reagieren?
-- Welche internen Dynamiken und Risiken für die Reputation bestehen?`
+            text: `TASK: KRITISCHE MEHRPERSPEKTIVEN-EINORDNUNG
+Ordne das Thema nüchtern aus drei relevanten Risikoperspektiven ein:
+- **Medien- & Öffentlichkeits-Blick:** Welcher Aufhänger oder Kritikpunkt wäre für Journalisten am attraktivsten?
+- **Politik & Aufsicht:** Welche Fragen, Erwartungen oder Vorbehalte haben Regulatoren und politische Stakeholder?
+- **Interne & Reputative Dynamik:** Welche Folgewirkungen oder Präzedenzfälle entstehen für die Organisation?`
         },
         'C-DRAFT': {
             id: 'C-DRAFT',
             title: 'Antwortvorschläge-Check',
             text: `TASK: ANTWORTVORSCHLÄGE-CHECK
-Hinterfrage allfällige bereits vorhandene Antwortentwürfe auf:
-- faktische Belastbarkeit, argumentative Schwachstellen, mediale Angriffsflächen, unbelegte Aussagen.
-Falls keine Entwürfe vorliegen, diesen Schritt kurz mit «Kein Entwurf vorhanden» überspringen.`
+Prüfe allfällige bereits vorhandene Antwortentwürfe auf faktische Belastbarkeit, argumentative Schwachstellen und mediale Angriffsflächen (falls kein Entwurf vorliegt, kurz überspringen).`
         },
 
         // --- TLDR & HANDOFF ---
@@ -191,13 +177,9 @@ Falls keine Entwürfe vorliegen, diesen Schritt kurz mit «Kein Entwurf vorhande
             id: 'T-TLDR',
             title: 'TL;DR & Lagebild-Synthese',
             compile: (params) => {
-                const mustInclude = params?.mustInclude || 'Kernfrage, zentrale Erkenntnis, wichtigster Vorbehalt/Risiko';
-                return `TASK: TL;DR (LAGEBILD-SYNTHESE)
-Fasse die wesentlichen Erkenntnisse aus Analyse, Recherche und Checks zusammen.
-Qualitätsmassstab:
-- Maximal 5 Zeilen.
-- Pflichtinhalte: ${mustInclude}.
-- Ein Entscheidungsträger muss auf Basis dieses Abschnitts allein handlungsfähig sein.`;
+                const mustInclude = params?.mustInclude || 'Kernfrage, gesicherte Faktenbasis, grösstes Risiko/Vorbehalt';
+                return `TASK: MANAGEMENT-SYNTHESE (TL;DR)
+Bringe das Lagebild in maximal 4–5 prägnanten Bulletpoints (${mustInclude}) so auf den Punkt, dass ein Entscheidungsträger sofort handlungsfähig ist.`;
             }
         },
 
@@ -206,23 +188,20 @@ Qualitätsmassstab:
             id: 'S-FULL',
             title: 'Strategie-Abwägung & Haltung',
             compile: (params) => {
-                const framings = params?.framings || 'proaktiv, defensiv, rein sachlich, einordnend, kontextualisierend, reputationsorientiert';
                 const includeFormatAnalysis = params?.includeFormatAnalysis === true;
                 const formatBlock = includeFormatAnalysis ? `
 
 TASK: BEANTWORTUNGS-ARCHITEKTUR & ABKLÄRUNGS-ÖKONOMIE
-Wäge bei mehreren Fragen ab, welches Format Themenhoheit sichert und internen Abklärungsaufwand minimiert:
-- **Option A (Punkt-für-Punkt):** Nur bei rein sachlichen, unkritischen Einzelfragen mit bereits gesicherten Fakten. Risiko: Übernahme fremden Framings & Detailverzettelung.
-- **Option B (Summarische Antwort):** Zusammenhängendes Statement auf übergeordneter Flughöhe – ideal bei falschen Vorannahmen, suggestiven Fragen oder zur Vermeidung unnötiger interner Detailrecherchen.
+Wäge ab, welches Format Themenhoheit sichert und internen Abklärungsaufwand minimiert:
+- **Option A (Punkt-für-Punkt):** Nur bei rein sachlichen, unkritischen Einzelfragen mit bereits gesicherten Fakten (Risiko: Übernahme fremden Framings & Detailverzettelung).
+- **Option B (Summarische Antwort):** Geschlossenes Statement auf übergeordneter Flughöhe – ideal bei falschen Vorannahmen, suggestiven Fragen oder zur Vermeidung unnötiger Detailrecherchen.
 - **Option C (Hybrid / Geclustert):** Einleitendes Haltungsstatement + gebündelte Beantwortung der Sachfragen in 2–3 Themenblöcken.
-*Entscheide verbindlich (A, B oder C) und begründe, wie diese Flughöhe Fachstellen schont und dennoch alle berechtigten Fragen substanziell abdeckt.*` : '';
+*Entscheide verbindlich (A, B oder C) und begründe kurz, wie diese Flughöhe Fachstellen schont und alle berechtigten Fragen substanziell abdeckt.*` : '';
 
-                return `TASK: STRATEGIE-ABWÄGUNG
-Wäge die Antwortstrategien (${framings}) mit Chancen, Risiken sowie den härtesten Gegenargumenten von Medien oder Politik gegeneinander ab.${formatBlock}
-
-TASK: EMPFOHLENE HALTUNG & STORYLINE
-1. **Grundhaltung:** Lege dich auf die belastbarste Strategie fest und formuliere die Haltung in genau einem prägnanten Satz.
-2. **Storyline & Argumente:** Entwickle den roten Faden und leite daraus priorisierte Haupt- und Unterstützungsargumente ab.`;
+                return `TASK: STRATEGIE-OPTIONEN, HALTUNG & STORYLINE
+1. **Konkrete Strategie-Optionen:** Stelle die 2–3 realistischsten strategischen Handlungs- bzw. Antwortoptionen für diesen konkreten Fall (inkl. Chancen, Risiken und härtestem Gegenargument) knapp gegenüber.
+2. **Empfohlene Grundhaltung (1 Satz):** Lege dich verbindlich auf die stärkste Option fest und formuliere die Haltung in genau einem präzisen Satz.
+3. **Storyline & Hauptargumente:** Skizziere den roten Faden und die 2–3 tragenden, faktenbasierten Hauptargumente.${formatBlock}`;
             }
         },
         'S-LITE': {
@@ -334,145 +313,114 @@ TASK: ROTSTIFT & VERSANDFERTIGE ENDFASSUNG
         'O-REPLY': {
             id: 'O-REPLY',
             title: 'Antwortentwurf (E-Mail)',
-            text: `TASK: ANTWORTENTWURF
-Formuliere auf Basis der Erkenntnisse und der gewählten Haltung einen passenden, versandfertigen Antwortentwurf.
-Die Antwort soll:
-- klar, verständlich und adressatengerecht,
-- faktenbasiert und handlungsauslösend
-sein.`
+            text: `TASK: EMPFOHLENE LINIE & ANTWORTENTWURF
+1. **Empfohlene Reaktionslinie (1 Satz):** Formuliere den Kernentscheid bzw. die empfohlene Haltung für die Antwort in genau einem prägnanten Satz.
+2. **Versandfertiger Antwortentwurf:** Formuliere direkt darunter den adressatengerechten, faktenbasierten und handlungsauslösenden E-Mail-Entwurf.`
         },
         'O-QA': {
             id: 'O-QA',
             title: 'Q+A Tabelle',
-            text: `TASK: Q+A TABELLE
-Erstelle ein kritisches Q+A mit den 8 bis 10 wahrscheinlichsten und heikelsten Fragen eines investigativen Journalisten.
-FORM:
-| FRAGEN | ANTWORTEN | BEGRÜNDUNG |
-|--------|-----------|------------|`
+            text: `TASK: KRITISCHES Q+A (8–10 FRAGEN)
+Erstelle ein kompaktes Q+A mit den 8 bis 10 wahrscheinlichsten und heikelsten Fragen eines kritischen Journalisten inkl. souveräner Antwort und kurzer Begründung der Linie:
+| Kritische Frage | Empfohlene Antwort (zitierfähig) | Begründung / Fokus |
+|-----------------|----------------------------------|--------------------|`
         },
         'O-INTERVIEW': {
             id: 'O-INTERVIEW',
             title: 'Interview- & Medienbriefing',
             text: `TASK: INTERVIEW- UND MEDIENBRIEFING
-Stelle den Output in exakt folgender Struktur dar:
-1. Ziel und Charakter des Gesprächs
-2. Rolle und Positionierung der Vertretung
-3. Die passende Grundhaltung ist: [Prägnanter Satz]
-4. Vier Kernbotschaften
-5. Fragenkatalog mit Antwortempfehlungen:
-| Frage | Begründung (worauf fokussieren, was vermeiden) | Antwortvorschlag |`
+Erstelle das kompakte, sofort einsatzbereite Interview-Briefing in exakt folgender Struktur:
+1. **Ziel, Rahmen & Rolle:** Ziel des Gesprächs und Positionierung unserer Vertretung (2–3 Sätze).
+2. **Grundhaltung (1 Satz):** [Prägnanter Leitsatz für den Auftritt]
+3. **Vier zitierfähige Kernbotschaften:** [Knapp und einprägsam]
+4. **Fragenkatalog mit Antwortempfehlungen:**
+| Kritische Frage | Taktischer Fokus (was betonen / was meiden) | Souveräner Antwortvorschlag |`
         },
         'O-STRATEGY': {
             id: 'O-STRATEGY',
             title: 'Kommunikationsstrategie Dokument',
-            text: `TASK: KOMMUNIKATIONSSTRATEGIE
-Erstelle die vollständige Kommunikationsstrategie exakt in folgender Struktur:
-- KOMMUNIKATIVE HERAUSFORDERUNG
-- KOMMUNIKATIONSZIEL & DEFINITION VON ERFOLG
-- ZIELGRUPPEN & STAKEHOLDER
-- RISIKEN & CHANCEN
-- EMPFOHLENES FRAMING
-- KERNBOTSCHAFTEN (max. 4)
-- STORYLINE (3-5 Sätze)
-- ARGUMENTARIUM (Tabelle: Argument | Begründung | Belegstatus)
-- DO'S & DON'TS
-- EMPFOHLENE KOMMUNIKATIONSMASSNAHMEN (priorisiert mit Zeitpunkt)
-- KRITISCHE FRAGEN & ANTWORTEN`
+            text: `TASK: KOMPAKTE KOMMUNIKATIONSSTRATEGIE
+Erstelle eine fokussierte, entscheidungsreife Kommunikationsstrategie in exakt 6 Kernblöcken:
+1. **HERAUSFORDERUNG & ZIEL:** Ausgangslage, kommunikatives Kernproblem und konkretes Erfolgsziel.
+2. **STRATEGISCHE HALTUNG & FRAMING:** Empfohlene Grundhaltung (1 Leitsatz) und tragendes Narrativ.
+3. **KERNBOTSCHAFTEN (MAX. 4) & STORYLINE:** Zitierfähige Kernbotschaften und roter Faden in 3–5 Sätzen.
+4. **STAKEHOLDER & ARGUMENTARIUM:** Wichtigste Zielgruppen sowie Hauptargumente inkl. Faktenbeleg.
+5. **PRIORISIERTE MASSNAHMEN & TIMING:** Konkreter Fahrplan (Was | Wann | Kanal/Akteur).
+6. **RISIKEN, DO'S/DON'TS & TOP-3 KRITISCHE FRAGEN:** Wichtigste Fallstricke sowie souveräne Kurzantworten auf die 3 heikelsten Fragen.`
         },
         'O-TABLE': {
             id: 'O-TABLE',
             title: 'Rückmeldungstabelle',
             compile: (params) => {
-                const withSummary = params?.withSummary ? `TASK: ZUSAMMENFASSUNG DER ANPASSUNGEN
-Fasse in maximal 5 Sätzen die notwendigsten Auflagen, Begründungen und Änderungen für die Freigabe präzise zusammen.\n\n` : '';
-                return `${withSummary}TASK: RÜCKMELDUNGSTABELLE
-Stelle sämtliche Beanstandungen in folgender Tabelle dar:
-| Textstelle | Prüfdimension (Faktencheck / Logikcheck / Reputationscheck) | Begründung | Vorschlag |
-|------------|-------------------------------------------------------------|------------|-----------|
-WICHTIG: Nur tatsächliche Feststellungen aufführen. Unproblematische Passagen weglassen. Minimalinvasive Anpassungen bevorzugen.`;
+                const withSummary = params?.withSummary ? `1. **ZUSAMMENFASSUNG DER AUFLAGEN (MAX. 4 SÄTZE):** Fasse die wichtigsten Anpassungsauflagen für die Freigabe vorab knapp zusammen.\n2. **RÜCKMELDUNGSTABELLE:** ` : '';
+                return `TASK: RÜCKMELDUNGSTABELLE (KONKRETE KORREKTUREN)
+${withSummary}Führe ausschliesslich tatsächliche Feststellungen und präzise, minimalinvasive Korrekturvorschläge auf (unproblematische Passagen weglassen):
+| Textstelle | Prüfdimension (Fakten / Logik / Reputation) | Begründung | Konkreter Formulierungsvorschlag |
+|------------|---------------------------------------------|------------|----------------------------------|`;
             }
         },
         'O-THEMENPLANUNG': {
             id: 'O-THEMENPLANUNG',
             title: 'Themen- & Redaktionsplanung',
-            text: `TASK: RELEVANZBEURTEILUNG
-Beurteile die Relevanz des Themas anhand folgender Kriterien:
-- Kategorie A: Hohe strategische oder mediale Relevanz, überregionale / nationale Ausstrahlung, potenzielle Krise.
-- Kategorie B: Mittlere Relevanz, regionale oder fachspezifische Ausstrahlung, planbare Berichterstattung.
-- Kategorie C: Geringe Relevanz, rein lokaler oder rein operativer Charakter.
+            text: `TASK: RELEVANZ-EINSTUFUNG & THEMENPLANUNGS-EINTRAG
+Stufe das Thema nach Relevanz ein (**Kategorie A:** hohe strategische/mediale Relevanz oder Krise; **Kategorie B:** mittlere/regionale/fachspezifische Relevanz; **Kategorie C:** geringe/rein operative Relevanz) und erstelle den fertigen Eintrag für das Themenboard:
 
-TASK: THEMENPLANUNGS-EINTRAG ERSTELLEN
-Erstelle auf Basis der Analyse den Eintrag für das Redaktions- und Themenboard exakt im vorgegebenen Format:
-TITEL: [Bereich / Projekt / Standort]: [Kompakter Beschrieb].
+TITEL: [Bereich / Projekt / Standort]: [Kompakter Beschrieb]
 TERMIN: [Datum / Zeit]
-TL;DR: [Vollständiger, management-tauglicher Entscheidungssatz zu Anlass, Kontext, Relevanz und Kernbeschluss.]
-STRATEGISCHE RELEVANZ: [Zwei bis drei Sätze, wie das Thema auf die Gesamtstrategie einzahlt.]
-KOMMUNIKATIONSZIEL: [Zwei bis drei Sätze, was mit der Kommunikation erreicht werden soll.]
-PLANUNGSSTAND: [Ein Satz zu Stand, Datum, Medium/Journalist, nächstem Schritt.]
-ANSPRECHPERSON / FACHBEREICH: [Name, Abteilung/Bereich, Funktion/Rolle.]
-THEMENBOARD-BESCHLUSS: [Einstufung Relevanzkategorie A/B/C mit Begründung in Klammern. Bestätigung der geplanten Massnahme in einem Satz.]`
+TL;DR: [Management-tauglicher Entscheidungssatz zu Anlass, Kontext, Relevanz und Kernbeschluss]
+STRATEGISCHE RELEVANZ: [2–3 Sätze zum Beitrag auf die Gesamtstrategie und Positionierung]
+KOMMUNIKATIONSZIEL: [2–3 Sätze zur angestrebten Wirkung]
+PLANUNGSSTAND: [1 Satz zu Stand, Datum, Medium/Akteur und nächstem Schritt]
+ANSPRECHPERSON / FACHBEREICH: [Name, Bereich, Funktion]
+THEMENBOARD-BESCHLUSS: [Kategorie A/B/C mit Kurzbegründung in Klammern + Bestätigung der Massnahme in 1 Satz]`
         },
         'O-MEETING': {
             id: 'O-MEETING',
             title: 'Meeting-Briefing',
-            text: `TASK: MEETING-BRIEFING
-Strukturiere das Briefing wie folgt:
-MEINE ROLLE IM MEETING: [Was wird erwartet?]
-AKTIV ZU PLATZIERENDE BOTSCHAFTEN:
-- [Botschaft 1]
-- [Botschaft 2]
-HEIKLE PUNKTE / MÖGLICHE FRAGEN:
-- [Punkt 1 + empfohlene Reaktion]
-DO'S: [...]
-DON'TS: [...]`
+            text: `TASK: KOMPAKTES MEETING-BRIEFING
+Strukturiere das Briefing präzise für die direkte Gesprächsvorbereitung:
+- **ZIEL & EMPFOHLENE LINIE (1 SATZ):** [Mein Kernziel und meine Haltung im Termin]
+- **MEINE ROLLE & ERWARTUNG:** [Welcher Entscheid oder Beitrag ist von mir gefragt?]
+- **AKTIV ZU PLATZIERENDE BOTSCHAFTEN (2–3 PUNKTE):** [...]
+- **HEIKLE PUNKTE & GEGENFRAGEN:** [Kritischer Punkt → Souveräne Reaktion]
+- **DO'S & DON'TS:** [Konkrete Gesprächsleitplanken]`
         },
         'O-ACTIONS': {
             id: 'O-ACTIONS',
             title: 'Konkrete Handlungsempfehlungen',
-            text: `TASK: KONKRETE EMPFEHLUNGEN
-Falls kommunikativer Handlungsbedarf besteht:
-- Formuliere konkrete Handlungsempfehlungen,
-- priorisiere diese nach Dringlichkeit,
-- benenne Kommunikationsmassnahmen und deren erwarteten Nutzen.
-Falls kein Handlungsbedarf besteht, begründe dies kurz.`
+            text: `TASK: PRIORISIERTE HANDLUNGSEMPFEHLUNGEN
+Leite aus dem Entscheid konkrete, nach Dringlichkeit priorisierte Kommunikationsmassnahmen (inkl. Zielwirkung und Zuständigkeit) ab – oder begründe knapp, warum bewusst auf aktive Kommunikation verzichtet wird.`
         },
         'O-WEEKLY': {
             id: 'O-WEEKLY',
             title: 'Wochenstart-Bericht',
-            text: `TASK: WOCHENSTART-BERICHT
+            text: `TASK: DELTA-ANALYSE & WOCHENSTART-BERICHT
+Erstelle auf Basis des Microsoft-Graph-Scans direkt die versandfertige Briefing-Vorlage:
 
-E-MAIL-VORLAGE (VERSANDFERTIG FÜR OUTLOOK):
 BETREFF: «Briefing: Status, Delta & Inbox-Triage [Aktuelles Datum]»
 
-## RÜCKBLICK & LEARNINGS
-[Zusammenfassung & strategische Erkenntnisse]
+## RÜCKBLICK & WICHTIGSTE ENTWICKLUNGEN
+[Kompakte Synthese der wichtigsten Vorgänge und Entscheidungen]
 
-## UPDATE ABWESENHEIT
-[Ereignisse während der freien Tage]
+## DELTA-ANALYSE & ESKALATIONEN
+[Planänderungen, näher rückende Fristen und kritische Verschiebungen gegenüber Vorstatus]
 
-## DELTA-ANALYSE
-[Veränderungen & Eskalationen im Vergleich zum Vorstatus]
-
-## INBOX TRIAGE
-| Priorität | Absender | Betreff | Empfohlene Aktion | Begründung |
-|-----------|----------|---------|-------------------|------------|`
+## INBOX- & PENDENZEN-TRIAGE
+| Priorität | Absender / Akteur | Thema / Betreff | Empfohlene Aktion | Kurzbegründung |
+|-----------|-------------------|-----------------|-------------------|----------------|`
         },
         'O-UPDATE': {
             id: 'O-UPDATE',
             title: 'Rückkehrer-Update',
-            text: `TASK: RÜCKKEHRER-UPDATE
-THEMA: {THEMA}
-UPDATE: Für {PERSON} ({ZEITRAUM})
-TL;DR: [Max. 5 Zeilen]
+            text: `TASK: DELTA-ANALYSE & STATUS-UPDATE
+Erstelle ein prägnantes, sofort versandfertiges Status- und Rückkehrer-Briefing:
 
-WICHTIGSTE ENTWICKLUNGEN:
-- ...
-DELTA ZUR AUSGANGSLAGE:
-- ...
-AKTUELLER STAND & NÄCHSTE SCHRITTE:
-- ...
-HANDLUNGSBEDARF:
-- ...`
+THEMA: {THEMA} | FÜR: {PERSON} | ZEITRAUM: {ZEITRAUM}
+TL;DR (KERNENTSCHEID & STATUS): [Max. 3–4 Sätze]
+
+- **WICHTIGSTE ENTWICKLUNGEN:** [Chronologische Kernaussagen aus M365 Graph]
+- **DELTA ZUR AUSGANGSLAGE:** [Was hat sich verändert, verschoben oder zugespitzt?]
+- **AKTUELLER STAND & HANDLUNGSBEDARF:** [Konkrete nächste Schritte und Entscheidungen für {PERSON}]`
         },
         'O-QUESTIONS': {
             id: 'O-QUESTIONS',
@@ -484,14 +432,10 @@ HANDLUNGSBEDARF:
         'O-ARTICLE-OUTLINE': {
             id: 'O-ARTICLE-OUTLINE',
             title: 'Publikationsrahmen & Storyline Outline',
-            text: `TASK: PUBLIKATIONSRAHMEN KLÄREN
-Definiere Publikationsort, Format, Zielgruppe, gewünschte Tonalität und journalistische Darstellungsform.
-
-TASK: AUFHÄNGER & DRAMATURGIE
-Identifiziere den wirkungsvollsten Aufhänger (Person, Konflikt, Wendepunkt, Zahl).
-
-TASK: DETAILLIERTE ARTIKEL-OUTLINE
-Erstelle eine vollständige Gliederung des Artikels mit Zwischenüberschriften, Kernaussagen pro Abschnitt und vorgesehenen Zitaten/Quellen.`
+            text: `TASK: PUBLIKATIONSRAHMEN, AUFHÄNGER & ARTIKEL-OUTLINE
+1. **Publikationsrahmen & Zielgruppe:** Definiere kurz Format, Zielpublikum, Tonalität und journalistische Darstellungsform.
+2. **Aufhänger & Dramaturgie (Hook):** Bestimme den stärksten Einstieg (konkretes Beispiel, Zahl, Wendepunkt oder Spannungsfeld) und den roten Faden.
+3. **Detaillierte Artikel-Gliederung:** Erstelle die Abschnitts-Outline mit sprechenden Zwischenüberschriften, Kernaussagen pro Absatz und vorgesehenen Fakten/Zitaten.`
         },
         'O-ARTICLE-DRAFT': {
             id: 'O-ARTICLE-DRAFT',
@@ -538,7 +482,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                 {
                     title: 'LAGEBILD',
                     role: 'Du bist ein erfahrener Kommunikationsstratege und Mediensprecher.',
-                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { scope: 'media' } }, 'C-DRAFT', 'T-TLDR']
+                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { scope: 'media' } }, 'T-TLDR']
                 },
                 {
                     title: 'STRATEGIE',
@@ -551,7 +495,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                     chunks: ['O-MEDIA']
                 }
             ],
-            forks: ['O-QA', 'O-INTERVIEW', 'O-THEMENPLANUNG']
+            forks: ['O-QA', 'O-INTERVIEW', 'O-THEMENPLANUNG', 'C-MEDIA-CHECK']
         },
 
         // 2. INTERVIEW BEANTWORTEN (3 TURNS)
@@ -568,7 +512,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                 {
                     title: 'STRATEGIE',
                     role: 'Du bist ein erfahrener Kommunikationsstratege.',
-                    chunks: [{ chunkId: 'S-FULL', params: { includeFormatAnalysis: true } }, { chunkId: 'S-MESSAGES', params: { count: 'vier' } }]
+                    chunks: [{ chunkId: 'S-FULL', params: { includeFormatAnalysis: true } }]
                 },
                 {
                     title: 'OUTPUT (BRIEFING)',
@@ -588,7 +532,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                 {
                     title: 'LAGEBILD',
                     role: 'Du bist ein erfahrener Chef-Kommunikator.',
-                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { scope: 'media' } }, 'T-TLDR']
+                    chunks: ['I-MAIL', { chunkId: 'R-FULL', params: { scope: 'media' } }, 'C-REQUEST', 'T-TLDR']
                 },
                 {
                     title: 'WORDING & Q+A',
@@ -638,7 +582,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                 {
                     title: 'STRATEGIE-ABWÄGUNG',
                     role: 'Du bist ein leitender Kommunikationsstratege.',
-                    chunks: ['S-FULL', { chunkId: 'S-MESSAGES', params: { count: 'maximal vier' } }]
+                    chunks: ['S-FULL']
                 },
                 {
                     title: 'KOMMUNIKATIONSSTRATEGIE',
@@ -663,7 +607,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                 {
                     title: 'ANTWORT',
                     role: 'Du bist ein professioneller Kommunikationsberater.',
-                    chunks: ['S-LITE', 'O-REPLY']
+                    chunks: ['O-REPLY']
                 }
             ],
             forks: ['O-STRATEGY']
@@ -683,7 +627,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                 {
                     title: 'BRIEFING',
                     role: 'Du bist ein strategischer Executive Coach.',
-                    chunks: ['S-LITE', 'O-MEETING']
+                    chunks: ['O-MEETING']
                 }
             ]
         },
@@ -722,7 +666,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                 {
                     title: 'DREI-DIMENSIONEN-AUDIT',
                     role: 'Du bist ein Chefredakteur und Fact-Checker.',
-                    chunks: ['A-AUDIT-ALL', 'S-LITE', 'O-TABLE']
+                    chunks: ['A-AUDIT-ALL', 'O-TABLE']
                 }
             ]
         },
@@ -741,7 +685,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                 {
                     title: 'AUDIT & FREIGABE-ENTSCHEID',
                     role: 'Du bist ein Risikomanager und Freigabeverantwortlicher.',
-                    chunks: ['A-AUDIT-ALL', 'S-DECISION', { chunkId: 'O-TABLE', params: { withSummary: true } }]
+                    chunks: ['S-DECISION', 'A-AUDIT-ALL', { chunkId: 'O-TABLE', params: { withSummary: true } }]
                 }
             ]
         },
@@ -760,7 +704,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                 {
                     title: 'THEMENPLANUNGS-EINTRAG',
                     role: 'Du bist Redaktionsleiter der Kommunikationsplanung.',
-                    chunks: ['S-LITE', 'O-THEMENPLANUNG']
+                    chunks: ['O-THEMENPLANUNG']
                 }
             ]
         },
@@ -772,9 +716,9 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
             family: 'create',
             turns: [
                 {
-                    title: 'LAGEBILD & OFFENE FRAGEN',
+                    title: 'LAGEBILD & KERNAUSSAGEN',
                     role: 'Du bist ein leitender Magazin-Redakteur und Co-Autor.',
-                    chunks: ['I-MAIL', 'R-FULL', 'C-THESIS', 'T-TLDR', 'O-QUESTIONS']
+                    chunks: ['I-MAIL', 'R-FULL', 'C-THESIS', 'T-TLDR']
                 },
                 {
                     title: 'OUTLINE & DRAMATURGIE',
@@ -814,7 +758,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                 {
                     title: 'DELTA & INBOX-TRIAGE',
                     role: 'Du bist mein Executive Chief of Staff.',
-                    chunks: ['D-DELTA', 'O-WEEKLY']
+                    chunks: ['O-WEEKLY']
                 }
             ]
         },
@@ -866,7 +810,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                 {
                     title: 'DELTA & BRIEFING',
                     role: 'Du bist ein präziser Intelligence Officer.',
-                    chunks: ['D-DELTA', 'S-LITE', 'O-UPDATE']
+                    chunks: ['O-UPDATE']
                 }
             ]
         },
