@@ -122,7 +122,7 @@ Analysiere den Suchbegriff/-satz sowie allfällige Dateien. Bestimme:
                 return `TASK: RECHERCHE & FAKTENABGLEICH (M365 GRAPH & KONTEXT)
 Durchsuche frühere E-Mails, Teams-Chats, Besprechungsnotizen und SharePoint-Dokumente gezielt nach: ${focus}.
 - Gleiche Behauptungen oder Vorannahmen aus der vorliegenden Anfrage aktiv gegen unabhängige interne M365-Quellen ab, statt sie ungeprüft zu übernehmen.
-- Benenne zu jedem zentralen Fakt kurz die Quelle und markiere offene Punkte als «[Offen / Zu prüfen]».`;
+- **Faktenstatus & Konsistenz:** Ordne jede zentrale Aussage eindeutig einer Verbindlichkeitsstufe zu (*fachlich geprüft und beschlossen* | *geplant oder vorgesehen* | *in Prüfung* | *offen [Zu prüfen]* inkl. Quelle). Vermische diese Grade nicht und weise explizit auf Widersprüche zwischen bestätigten Terminen und angeblich noch offenen Zeitpunkten hin.`;
             }
         },
         'R-TIME': {
@@ -198,9 +198,9 @@ Wäge ab, welches Format Themenhoheit sichert und internen Abklärungsaufwand mi
 - **Option C (Hybrid / Geclustert):** Einleitendes Haltungsstatement + gebündelte Beantwortung der Sachfragen in 2–3 Themenblöcken.
 *Entscheide verbindlich (A, B oder C) und begründe kurz, wie diese Flughöhe Fachstellen schont und alle berechtigten Fragen substanziell abdeckt.*` : '';
 
-                return `TASK: STRATEGIE-OPTIONEN, HALTUNG & STORYLINE
+                return `TASK: STRATEGIE-OPTIONEN, FRAMING-ZIEL & STORYLINE
 1. **Konkrete Strategie-Optionen:** Stelle die 2–3 realistischsten strategischen Handlungs- bzw. Antwortoptionen für diesen konkreten Fall (inkl. Chancen, Risiken und härtestem Gegenargument) knapp gegenüber.
-2. **Empfohlene Grundhaltung (1 Satz):** Lege dich verbindlich auf die stärkste Option fest und formuliere die Haltung in genau einem präzisen Satz.
+2. **Framing-Ziel & Nicht-Festlegung (Leitplanke):** Lege dich verbindlich fest und definiere präzise: Was soll die Antwort erklären, welche Haltung vermittelt sie, und worauf darf sie die Organisation keinesfalls festlegen (Schutz des Lösungsraums)?
 3. **Storyline & Hauptargumente:** Skizziere den roten Faden und die 2–3 tragenden, faktenbasierten Hauptargumente.${formatBlock}`;
             }
         },
@@ -279,18 +279,18 @@ Vergleiche den Stand zu Beginn des Zeitfensters mit dem aktuellen Status:
             id: 'O-MEDIA',
             title: 'Medienantwort, Begründung & Abschluss-Check',
             text: `TASK: MEDIENANTWORT, KURZBEGRÜNDUNG & ABSCHLUSS-CHECK
-Formuliere auf Basis der festgelegten Strategie, Storyline und Beantwortungs-Architektur den versandfertigen Entwurf der Medienantwort, begründe ihn knapp und unterziehe ihn dem verbindlichen 4-Punkte-Abschluss-Check:
+Erstelle auf Basis der festgelegten Strategie und Beantwortungs-Architektur die versandfertige Medienantwort in exakt diesen drei Schritten:
 
-1. **MEDIENANTWORT (VERSANDFERTIGER ENTWURF):**
-   - **Format & Flughöhe:** Setze das gewählte Format (Summarisch als geschlossenes Statement, Hybrid/Geclustert nach Themenblöcken oder Punkt-für-Punkt) konsequent, souverän und ohne Rechtfertigungston um.
-   - **Autonomie & Aufwand-Minimierung:** Stütze den Text strikt auf die bereits gesicherten Fakten, sodass keine neuen Recherche-Schleifen in den Fachbereichen ausgelöst werden. Falls ein einziger harter Blocker-Fakt noch bestätigt werden muss, markiere ihn exakt als «[Kurze Bestätigung durch Fachbereich X: ...]».
-   - **Tonalität & Framing-Disziplin:** Schreibe nahbar, menschlich und allgemeinverständlich (keine unterkühlte Behörden- oder PR-Floskelsprache). Übernimm niemals negative Begriffe, Vorwürfe oder hypothetische Konfliktszenarien aus der Anfrage, sondern setze aktiv das eigene Narrativ.
+1. **FRAMING-ZIEL & BEGRÜNDUNG DER LINIE (VORAB-LEITPLANKE, MAX. 4 SÄTZE):**
+   - Definiere vor dem Entwurf knapp: Was soll die Antwort erklären (und warum auf dieser Flughöhe), welche Haltung vermittelt sie, und **worauf darf sie die Organisation keinesfalls festlegen**? Richte den gesamten nachfolgenden Entwurf strikt an dieser Zielhierarchie aus.
 
-2. **BEGRÜNDUNG DES ENTWURFS (MAX. 4 SÄTZE):**
-   - Liefere direkt neben bzw. unmittelbar zum Antwortentwurf in **maximal 4 prägnanten Sätzen** die Begründung für den gewählten Entwurf: Warum wurden genau diese Flughöhe, Struktur und Formulierung gewählt, wie sichert der Text die Themenhoheit und welche Risiken oder Detailfallen werden damit bewusst umschifft?
+2. **MEDIENANTWORT (VERSANDFERTIGER ENTWURF):**
+   - **Faktenstatus-Disziplin:** Trenne die Verbindlichkeitsgrade (*fachlich geprüft und beschlossen* | *geplant oder vorgesehen* | *in Prüfung* | *offen*) strikt; vermeide jeden Widerspruch zwischen bestätigten Terminen und noch offenen Zeitpunkten. Falls ein einziger Blocker-Fakt noch bestätigt werden muss, markiere ihn exakt als «[Kurze Bestätigung durch Fachbereich X: ...]».
+   - **Notwendige Konkretion (Lösungsraum schützen):** Formuliere so konkret wie für die Beantwortung erforderlich, aber nicht konkreter als der bestätigte Entscheidungsstand. Wo Begriffe zu Massnahmen, Materialien, Nutzungen, Mengen, Terminen oder Ausführungsformen den Lösungsraum unnötig einschränken, verwende zwingend einen verständlichen Oberbegriff.
+   - **Satzfunktion:** Jeder Satz muss eine eindeutige kommunikative Funktion erfüllen (*Bedeutung/Betroffenheit anerkennen* | *gesicherten Sachverhalt nennen* | *Entscheid begründen* | *Haltung erklären* | *bestätigten Ausblick geben* | *offene Ausgestaltung korrekt abgrenzen*). Streiche Wiederholungen und Sätze ohne Informationswert. Behalte kurze Einzelsätze bei, wenn sie unterschiedliche Funktionen erfüllen.
 
 3. **ABSCHLIESSENDER QUALITÄTS-CHECK DES FINALEN ENTWURFS (SCHEMA a–d):**
-   Prüfe den finalen Entwurf abschliessend Punkt für Punkt gegen dieses Schema (jeweils 1 prägnanter Prüfsatz als Nachweis; falls ein Kriterium im Entwurf noch verletzt ist, überarbeite den Entwurf vor der Ausgabe zwingend):
+   Prüfe den Entwurf abschliessend Punkt für Punkt gegen dieses Schema (jeweils 1 Prüfsatz als Nachweis; bei Verstoss den Entwurf oben vor der Ausgabe zwingend korrigieren):
    - **a) Medial und politisch belastbar:** Hält jede Aussage einer kritischen Nachprüfung stand, ohne neue Angriffsflächen zu öffnen?
    - **b) Nahbar, menschlich und verständlich:** Klingt der Text glaubwürdig, empathisch und frei von bürokratischer Distanz?
    - **c) Keine Wiederholung oder indirekte Bestätigung von Vorwürfen / Hypothesen:** Wurden Unterstellungen, Reizworte und hypothetische Konfliktszenarien der Anfrage konsequent gemieden (auch nicht durch defensive Verneinung wiederholt)?
@@ -298,17 +298,24 @@ Formuliere auf Basis der festgelegten Strategie, Storyline und Beantwortungs-Arc
         },
         'C-MEDIA-CHECK': {
             id: 'C-MEDIA-CHECK',
-            title: 'Medienantwort-Check (Schema a–d)',
-            text: `TASK: 4-PUNKTE-PRÜFUNG DES MEDIENANTWORT-ENTWURFS (SCHEMA a–d)
-Prüfe den vorliegenden Medienantwort-Entwurf (im aktuellen E-Mail-Verlauf, Anhang oder Chat) kompromisslos anhand der vier Qualitätskriterien und belege deine Diagnose konkret am Text:
-- **a) Antwort ist medial und politisch belastbar:** Hält jede Aussage, Zahl und Formulierung kritischer Nachprüfung durch Medien und Politik stand, ohne neue Angriffsflächen, Widersprüche oder Rechtfertigungsfallen zu öffnen?
-- **b) Antwort ist nahbar, menschlich und verständlich:** Ist der Text zugänglich, glaubwürdig und menschlich formuliert – frei von unterkühlter Behörden-, Juristen- oder PR-Floskelsprache?
-- **c) Vorwürfe und hypothetische Konfliktszenarien werden weder wiederholt noch indirekt bestätigt:** Werden Unterstellungen, negative Reizworte oder Spekulationen aus der Anfrage konsequent gemieden (auch nicht durch defensive Verneinung wie «Der Vorwurf X trifft nicht zu» wiederholt)?
-- **d) Antwort liefert eigenes Narrativ:** Setzt die Antwort aus eigener Kraft unsere Kernbotschaft und Perspektive, statt nur reaktiv das fremde Framing der Anfrage abzuarbeiten?
+            title: 'Medienantwort-Check (Festlegung 1–4 & Schema a–d)',
+            text: `TASK: ENTSCHEIDUNGS- UND FESTLEGUNGS-CHECK (VORPRÜFUNG 1–4)
+Prüfe vor der sprachlichen Überarbeitung jeden zentralen Inhalt des vorliegenden Medienantwort-Entwurfs nach diesen vier Punkten:
+1. **Faktenstatus:** Ordne jede Aussage eindeutig einer Stufe zu (*fachlich geprüft und beschlossen* | *geplant oder vorgesehen* | *in Prüfung* | *offen*). Vermische diese Verbindlichkeitsgrade nicht und decke Widersprüche zwischen bestätigten Terminen und angeblich noch offenen Zeitpunkten auf.
+2. **Notwendige Konkretion:** Prüfe, ob der Text so konkret wie nötig, aber nicht konkreter als der bestätigte Entscheidungsstand formuliert ist. Wo Begriffe zu Massnahmen, Materialien, Nutzungen, Mengen, Terminen oder Ausführungsformen den verbleibenden Lösungsraum unnötig einschränken, ersetze sie durch einen verständlichen Oberbegriff.
+3. **Satzfunktion:** Prüfe, ob jeder Satz eine eindeutige kommunikative Funktion erfüllt (*Bedeutung oder Betroffenheit anerkennen* | *gesicherten Sachverhalt nennen* | *Entscheid begründen* | *Haltung der Organisation erklären* | *bestätigten Ausblick geben* | *offene Ausgestaltung korrekt abgrenzen*). Streiche Wiederholungen und Sätze ohne zusätzlichen Informationswert; behalte kurze Einzelsätze bei, wenn sie unterschiedliche Funktionen erfüllen.
+4. **Framing-Ziel:** Formuliere vorab in einem Satz die Zielhierarchie: Was soll die Antwort erklären, welche Haltung soll sie vermitteln, und worauf darf sie die Organisation nicht festlegen?
+
+TASK: MEDIALER BELASTBARKEITS- & WIRKUNGS-CHECK (SCHEMA a–d)
+Prüfe den Entwurf zudem kompromisslos anhand der vier Wirkungskriterien:
+- **a) Antwort ist medial und politisch belastbar:** Hält jede Aussage kritischer Nachprüfung stand, ohne neue Angriffsflächen zu öffnen?
+- **b) Antwort ist nahbar, menschlich und verständlich:** Frei von unterkühlter Behörden-, Juristen- oder PR-Floskelsprache?
+- **c) Vorwürfe und hypothetische Konfliktszenarien werden weder wiederholt noch indirekt bestätigt:** Werden Unterstellungen, Reizworte oder Spekulationen der Anfrage konsequent gemieden (auch nicht durch defensive Verneinung wiederholt)?
+- **d) Antwort liefert eigenes Narrativ:** Setzt die Antwort aktiv unsere Kernbotschaft, statt nur reaktiv fremdes Framing abzuarbeiten?
 
 TASK: ROTSTIFT & VERSANDFERTIGE ENDFASSUNG
-1. **Gezielter Rotstift («Statt X → Besser Y»):** Benenne jede Stelle, die eines der Kriterien a)–d) verletzt, und zeige die konkrete Schärfung.
-2. **Versandfertiger Final-Entwurf:** Gib abschliessend die bereinigte, sofort versandfertige Medienantwort aus, die alle vier Kriterien a)–d) restlos erfüllt (inkl. max. 3 Sätzen Begründung der wichtigsten Anpassung).`
+1. **Gezielter Rotstift («Statt X → Besser Y»):** Benenne die konkreten Korrekturen aus Vorprüfung (1–4) und Schema (a–d) – insbesondere wo zu enge Detailbegriffe durch Oberbegriffe ersetzt, Verbindlichkeitsgrade korrigiert oder funktionslose Sätze gestrichen wurden.
+2. **Versandfertiger Final-Entwurf:** Gib die bereinigte, sofort versandfertige Medienantwort aus, die alle Kriterien restlos erfüllt (inkl. max. 3 Sätzen Begründung der wichtigsten Anpassung).`
         },
         'O-REPLY': {
             id: 'O-REPLY',
