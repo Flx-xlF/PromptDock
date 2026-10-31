@@ -25,7 +25,7 @@ PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI work
 - 🛡️ **Source-Grounded Verification & Phase Guardrails**  
   Employs strict source attribution (citing email threads, M365 Graph, or attachments) and gap markers (*«[Offen / Zu prüfen]»*) rather than decorative icons or negative-constraint bans. Turn 2+ and output forks inherit `G_OUTPUT_STYLE`, preserving uncompromising anti-fluff rules and executive tone. Furthermore, non-final turns automatically inject a strict `PHASEN-FOKUS` boundary rule preventing host LLMs from drafting premature final outputs during early analysis steps.
 - 🗜️ **Chrome Sync Quota Hardening & High-Density Compaction**  
-  All 18 recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (e.g. `recipe-medienanfrage` at 7.3 KB, `recipe-freigabe` at 7.1 KB, `recipe-praesentation` at 7.0 KB, `recipe-proofreading` at 6.6 KB). Every turn across all recipes is strictly capped at $\le 4$ high-impact tasks. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_14_milestone_decision_logic`), preventing fatal storage quota exceptions.
+  All 18 recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (e.g. `recipe-medienanfrage` at 7.3 KB, `recipe-freigabe` at 7.3 KB, `recipe-praesentation` at 7.0 KB, `recipe-proofreading` at 6.6 KB). Every turn across all recipes is strictly capped at $\le 4$ high-impact tasks. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_15_catalog_harmonization`), preventing fatal storage quota exceptions.
 - 🔢 **Dynamic Task Header Sequencing & Clean Unicode Flow**  
   Turn and fork compilation engines dynamically re-index all prompt tasks into clean sequential numbers (`TASK 1:`, `TASK 2:`, `TASK 3:`...) with clean Unicode arrow (`→`) flow, ensuring host LLMs follow a clear, logical step order regardless of chunk assembly.
 - ⏱️ **1500ms Debounced Cloud Gist Sync**  
@@ -62,6 +62,12 @@ PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI work
   - **Strategic Concept Pre-Check & Anti-Nitpicking Evidence Threshold:** Pre-checks big-picture concept and organizational core mandate before sentence-level editing; bans speculative factual objections unless directly contradicted by M365 context.
   - **Collegial Feedback Pattern:** Banned patronizing phrasing («muss ersetzt werden», «die Autoren sollten»); enforces the collegial review pattern justifying only the concrete delta (*«Die Formulierung wirkt … Deshalb allenfalls besser so: …»*) with explicit `[Bearbeitungskommentar: ...]` markers for missing facts.
   - **Slide Triage & Redundancy Lock:** Applies a strict 4-way slide triage (*stimmig*, *kleinere Anpassung*, *grössere Anpassung*, *entfernen/Reserve*) and an automated `Redundanz-Sperre` that suppresses repetitive analytical preambles across multi-turn prompts.
+- 🏛️ **Catalog-Wide Operational Harmonization (v2.15)**  
+  Extends the four core cognitive standards across all operational strategy, briefing, and creation templates:
+  - **Outside-In Core Messaging & Standalone Q&A (`S-MESSAGES`, `O-QA`):** Anchors lead-with-action phrasing, bans repeating question accusations, enforces umbrella terms for open details, and guarantees isolated quoteability without insider jargon.
+  - **Bifurcated Strategic Decisions (`S-DECISION`):** Cleanly bifurcates between document/approval options (*Konzept stimmig* vs. *Neugewichtung* vs. *Nichtfreigabe*) and issue/monitoring triggers (*aktive Positionierung* vs. *Q&A-Bereitschaft* vs. *bewusster Verzicht*).
+  - **Non-Commitment Boundaries & Role Clarity in Strategy & Briefings (`O-STRATEGY`, `O-INTERVIEW`, `O-MEETING`):** Explicitly defines *Rote Linien / Nicht-Festlegung*, anchors concrete language rules (*«Nicht X, sondern Y»*), and preserves partner role boundaries without artificial leveling.
+  - **Setting-Calibrated Editorial Drafting (`O-ARTICLE-OUTLINE`, `O-ARTICLE-DRAFT`):** Clarifies publication format (guest commentary vs. corporate/jubilee piece vs. technical article) and prioritizes lively journalistic credibility over sterile PR praise.
 - 🛑 **Streaming State Guard & Native Stop Interception**  
   When an AI response begins streaming, PromptDock displays a pulsing amber indicator (`Generiert Antwort...`) and auto-collapses into the 36px capsule. If you click the host chat's native stop button (*"Stop generating"* / *"Stop response"*), PromptDock catches the event and advances directly to your checkpoint without freezing.
 - 🎨 **Redesigned Command Palette & Slide-Up Sheet**  
@@ -112,17 +118,17 @@ Both editions share the same local-first, zero-telemetry architecture. PromptDoc
 PromptDock 2.1 includes a vendor-agnostic Corporate Communications & Intelligence recipe suite:
 
 1. **Medienanfrage** (3 Turns: Lagebild & Abklärungs-Triage ➔ Strategie & Format-Abwägung ➔ Medienantwort, Begründung & 4-Punkte-Check)
-2. **Interview-Vorbereitung** (3 Turns: Briefing ➔ Haltung ➔ Antwortentwurf)
-3. **Wording & Sprachregelung** (2 Turns: Kernanalyse ➔ Leitbotschaften & FAQ)
+2. **Interview-Vorbereitung** (3 Turns: Briefing ➔ Haltung & Rote Linien ➔ Interview-Briefing mit Outside-in Q&A)
+3. **Wording & Sprachregelung** (2 Turns: Kernanalyse ➔ Outside-in Kernbotschaften & Kritisches Q&A)
 4. **Strategischer Sparringspartner** (Herausforderndes Sparring)
-5. **Kommunikationsstrategie** (3 Turns: Lagebild ➔ Positionierung ➔ Massnahmenplan)
+5. **Kommunikationsstrategie** (3 Turns: Lagebild ➔ Positionierung & Nicht-Festlegung ➔ 6-Säulen-Strategie)
 6. **E-Mail & Stakeholder-Antwort** (2 Turns: Anliegen, Meilenstein-Kontext & Fakten ➔ Antwortentwurf nach den 4 Goldenen Email-Regeln)
-7. **Meeting-Vorbereitung & Protokoll** (Agenda/Protokoll ➔ Briefing)
-8. **Themenanalyse & Issue-Monitoring** (Recherche ➔ Risikobewertung)
+7. **Meeting-Vorbereitung & Protokoll** (Agenda/Protokoll ➔ Briefing mit Entscheidungslogik & Nicht-Festlegung)
+8. **Themenanalyse & Issue-Monitoring** (Recherche & Faktenlage ➔ Risikobewertung & Handlungsbedarfsentscheid)
 9. **Proofreading & Redigat** (2 Turns: Setting, Zielpublikum & Faktengrenzen ➔ 3D-Audit mit kollegialem Feedback; Forks zu E-Mail & Q+A)
 10. **Freigabe-Audit & Governance** (2 Turns: Setting & Lagebild ➔ Konzept-Pre-Check, 3D-Audit & Freigabeentscheid; Forks zu E-Mail & Q+A)
 11. **Themen- & Redaktionsplanung** (Analyse ➔ Themenboard-Eintrag)
-12. **Artikel & Storytelling** (Recherche ➔ Storyline ➔ Artikelentwurf)
+12. **Artikel & Storytelling** (Recherche ➔ Publikationssetting & Outline ➔ Artikelentwurf mit journalistischer Glaubwürdigkeit)
 13. **Wochenstart Briefing** (Executive Activity Scan & Delta)
 14. **Projekt- & Status-Update** (Kompaktes Reporting)
 15. **Tiefenrecherche & Intelligence** (Quellen- & Fakten-Dossier)

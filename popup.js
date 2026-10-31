@@ -300,10 +300,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (loaded && loaded.length > 0) {
         prompts = loaded;
 
-        // One-time catalog sync & high-signal compaction upgrade (v2.14)
+        // One-time catalog sync & high-signal compaction upgrade (v2.15)
         try {
-            const local = await ext.storage.local.get(['v2_1_praesentation_seeded', 'v2_14_milestone_decision_logic']);
-            if ((!local?.v2_1_praesentation_seeded || !local?.v2_14_milestone_decision_logic) && Catalog?.RECIPES) {
+            const local = await ext.storage.local.get(['v2_1_praesentation_seeded', 'v2_15_catalog_harmonization']);
+            if ((!local?.v2_1_praesentation_seeded || !local?.v2_15_catalog_harmonization) && Catalog?.RECIPES) {
                 let changed = false;
                 for (const catRecipe of Catalog.RECIPES) {
                     const compiledExpress = Catalog.compileExpress ? Catalog.compileExpress(catRecipe) : '';
@@ -341,7 +341,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         v2_11_proofreading_outside_in: true,
                         v2_12_strategy_alignment_triage: true,
                         v2_13_publication_setting_audit: true,
-                        v2_14_milestone_decision_logic: true
+                        v2_14_milestone_decision_logic: true,
+                        v2_15_catalog_harmonization: true
                     });
                 }
             }

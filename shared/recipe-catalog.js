@@ -216,16 +216,18 @@ Wäge die Handlungsoptionen kurz ab, lege dich fest und formuliere die empfohlen
             title: 'Kernbotschaften',
             compile: (params) => {
                 const count = params?.count || 'drei';
-                return `TASK: KERNBOTSCHAFTEN
-Formuliere ${count} prägnante, zitierfähige Kernbotschaften, die die definierte Haltung transportieren.`;
+                return `TASK: KERNBOTSCHAFTEN (OUTSIDE-IN & ZITIERFÄHIG)
+Formuliere ${count} prägnante, isoliert zitierfähige Kernbotschaften (Outside-in: Ziel, Nutzen und eigenes Handlungsnarrativ zuerst; ohne Vorwegnahme offener Entscheide oder unbelegte Versprechen).`;
             }
         },
         'S-DECISION': {
             id: 'S-DECISION',
             title: 'Strategische Vorprüfung & Entscheid',
-            text: `TASK: STRATEGISCHE KONZEPT-VORPRÜFUNG & ENTSCHEID
-Beurteile vor dem Detailaudit zuerst auf Gesamtebene: Passt das bestehende Konzept zum Publikationssetting und Kommunikationsauftrag (**a: Konzept stimmig / punktuelle Anpassung genügt** | **b: inhaltliche Neugewichtung der Rolle/Leistung nötig** | **c: grundlegende Überarbeitung / alternatives Konzept bzw. Handlungsbedarf Ja/Nein**)?
-Bewerte kurz die Optionen, lege dich verbindlich fest und formuliere den Kernentscheid in genau einem prägnanten Satz.`
+            text: `TASK: STRATEGISCHE VORPRÜFUNG & ENTSCHEID
+Beurteile zuerst auf Gesamtebene die realistischen Optionen:
+- **Bei Dokumenten-/Freigabeprüfung:** Passt das Konzept zum Publikationssetting und zur Rolle unserer Organisation (*Konzept stimmig / punktuelle Schärfung* vs. *inhaltliche Neugewichtung* vs. *grundlegende Überarbeitung / Nichtfreigabe*)?
+- **Bei Themen-/Issue-Analyse:** Besteht kommunikativer Handlungsbedarf (*aktive Positionierung* vs. *reaktive Bereitschaft / Q&A* vs. *bewusster Verzicht*)?
+Bewerte kurz Vor- und Nachteile, lege dich verbindlich fest und formuliere den Kernentscheid in genau einem prägnanten Satz.`
         },
         'S-ALIGN': {
             id: 'S-ALIGN',
@@ -335,10 +337,10 @@ TASK: ROTSTIFT & VERSANDFERTIGE ENDFASSUNG
         'O-QA': {
             id: 'O-QA',
             title: 'Q+A Tabelle',
-            text: `TASK: KRITISCHES Q+A (8–10 FRAGEN)
-Erstelle ein kompaktes Q+A mit den 8 bis 10 wahrscheinlichsten und heikelsten Fragen eines kritischen Journalisten inkl. souveräner Antwort und kurzer Begründung der Linie:
-| Kritische Frage | Empfohlene Antwort (zitierfähig) | Begründung / Fokus |
-|-----------------|----------------------------------|--------------------|`
+            text: `TASK: KRITISCHES Q+A (8–10 FRAGEN, OUTSIDE-IN & ZITIERFÄHIG)
+Erstelle ein kompaktes Q+A mit den 8–10 heikelsten Fragen (Journalisten, Behörden, Stakeholder). *Qualitätsregeln für jede Antwort:* (a) **Outside-in:** Ziel, Schutzgut und eigenes Handlungsnarrativ zuerst, betriebliche Rahmenbedingungen sachlich danach (nie als Ausrede); (b) **Keine Vorwurfswiederholung** aus der Frage; (c) **Faktenstatus & Oberbegriffe:** Keine unbelegten Zeit-/Erfüllungsversprechen («so rasch wie möglich»), bei offener Ausgestaltung verständliche Oberbegriffe nutzen; (d) **Isoliert zitierbar** ohne Fachwissen:
+| Kritische Frage | Empfohlene Antwort (Outside-in & isoliert zitierbar) | Begründung der Linie / Abgrenzung |
+|-----------------|------------------------------------------------------|-----------------------------------|`
         },
         'O-INTERVIEW': {
             id: 'O-INTERVIEW',
@@ -346,22 +348,22 @@ Erstelle ein kompaktes Q+A mit den 8 bis 10 wahrscheinlichsten und heikelsten Fr
             text: `TASK: INTERVIEW- UND MEDIENBRIEFING
 Erstelle das kompakte, sofort einsatzbereite Interview-Briefing in exakt folgender Struktur:
 1. **Ziel, Rahmen & Rolle:** Ziel des Gesprächs und Positionierung unserer Vertretung (2–3 Sätze).
-2. **Grundhaltung (1 Satz):** [Prägnanter Leitsatz für den Auftritt]
-3. **Vier zitierfähige Kernbotschaften:** [Knapp und einprägsam]
-4. **Fragenkatalog mit Antwortempfehlungen:**
-| Kritische Frage | Taktischer Fokus (was betonen / was meiden) | Souveräner Antwortvorschlag |`
+2. **Grundhaltung & Rote Linie (Nicht-Festlegung):** [Prägnanter Leitsatz + klare Grenze, worauf wir uns im Gespräch keinesfalls festlegen]
+3. **Vier zitierfähige Kernbotschaften (Outside-in):** [Knapp, nahbar und ohne Fachwissen verständlich]
+4. **Fragenkatalog mit Antwortempfehlungen:** (Antworten strikt *Outside-in*: Ziel & Handlung vor Rahmenbedingungen; keine Vorwürfe wiederholen; keine unbelegten Zeitversprechen; Oberbegriffe bei offenen Punkten)
+| Kritische Frage | Taktischer Fokus (was betonen / was meiden) | Souveräner Antwortvorschlag (zitierfähig) |`
         },
         'O-STRATEGY': {
             id: 'O-STRATEGY',
             title: 'Kommunikationsstrategie Dokument',
             text: `TASK: KOMPAKTE KOMMUNIKATIONSSTRATEGIE
 Erstelle eine fokussierte, entscheidungsreife Kommunikationsstrategie in exakt 6 Kernblöcken:
-1. **HERAUSFORDERUNG & ZIEL:** Ausgangslage, kommunikatives Kernproblem und konkretes Erfolgsziel.
-2. **STRATEGISCHE HALTUNG & FRAMING:** Empfohlene Grundhaltung (1 Leitsatz) und tragendes Narrativ.
-3. **KERNBOTSCHAFTEN (MAX. 4) & STORYLINE:** Zitierfähige Kernbotschaften und roter Faden in 3–5 Sätzen.
-4. **STAKEHOLDER & ARGUMENTARIUM:** Wichtigste Zielgruppen sowie Hauptargumente inkl. Faktenbeleg.
-5. **PRIORISIERTE MASSNAHMEN & TIMING:** Konkreter Fahrplan (Was | Wann | Kanal/Akteur).
-6. **RISIKEN, DO'S/DON'TS & TOP-3 KRITISCHE FRAGEN:** Wichtigste Fallstricke sowie souveräne Kurzantworten auf die 3 heikelsten Fragen.`
+1. **HERAUSFORDERUNG, ENTSCHEIDUNGSSTAND & ZIEL:** Sachverhalt (getrennt nach *gesichertem Bedarf/Stand*, *bisheriger Präferenz* und *offenen Fragen*) sowie konkretes Kommunikationsziel.
+2. **STRATEGISCHE LEITLINIE & NICHT-FESTLEGUNG:** Tragender Leitsatz (1 Satz), eigenes Narrativ und klare Grenze, worauf die Kommunikation die Organisation nicht vorzeitig festlegen darf.
+3. **KERNBOTSCHAFTEN & MAX. 5 VERBINDLICHE SPRACHREGELN:** Bis zu 4 zitierfähige Botschaften (Outside-in) plus konkrete Sprach-/Inhaltsregeln («Nicht ‹X›, sondern ‹Y›»).
+4. **STAKEHOLDER, ROLLENKLARHEIT & ARGUMENTARIUM:** Zielgruppen, saubere Rollentrennung externer Partner (z.B. Stadt, Kanton, Ämter – ohne künstliche Vereinnahmung) und faktenbelegte Hauptargumente.
+5. **PRIORISIERTE MASSNAHMEN & MEILENSTEIN-LOGIK:** Konkreter Fahrplan (Was | Wann/Meilenstein | Kanal/Akteur).
+6. **RISIKEN, DO'S/DON'TS & TOP-3 KRITISCHE FRAGEN:** Wichtigste Fallstricke sowie souveräne, isoliert zitierbare Kurzantworten auf die 3 heikelsten Fragen.`
         },
         'O-TABLE': {
             id: 'O-TABLE',
@@ -402,11 +404,11 @@ THEMENBOARD-BESCHLUSS: [Kategorie A/B/C mit Kurzbegründung in Klammern + Bestä
             title: 'Meeting-Briefing',
             text: `TASK: KOMPAKTES MEETING-BRIEFING
 Strukturiere das Briefing präzise für die direkte Gesprächsvorbereitung:
-- **ZIEL & EMPFOHLENE LINIE (1 SATZ):** [Mein Kernziel und meine Haltung im Termin]
-- **MEINE ROLLE & ERWARTUNG:** [Welcher Entscheid oder Beitrag ist von mir gefragt?]
-- **AKTIV ZU PLATZIERENDE BOTSCHAFTEN (2–3 PUNKTE):** [...]
-- **HEIKLE PUNKTE & GEGENFRAGEN:** [Kritischer Punkt → Souveräne Reaktion]
-- **DO'S & DON'TS:** [Konkrete Gesprächsleitplanken]`
+- **ZIEL, LINIE & NICHT-FESTLEGUNG (1–2 SÄTZE):** [Mein Kernziel im Termin + rote Linie, worauf ich mich nicht vorzeitig festlegen lasse]
+- **MEINE ROLLE & ENTSCHEIDUNGSLOGIK:** [Welcher Entscheid/Beitrag ist gefragt und welcher sachliche Meilenstein gilt vor allfälligen Zusagen?]
+- **AKTIV ZU PLATZIERENDE BOTSCHAFTEN (2–3 PUNKTE, OUTSIDE-IN):** [...]
+- **HEIKLE PUNKTE & GEGENFRAGEN:** [Kritischer Punkt → Souveräne, sachlich begründete Reaktion ohne Vorfreigabe]
+- **DO'S & DON'TS:** [Konkrete Gesprächs- und Wording-Leitplanken]`
         },
         'O-ACTIONS': {
             id: 'O-ACTIONS',
@@ -455,21 +457,20 @@ TL;DR (KERNENTSCHEID & STATUS): [Max. 3–4 Sätze]
         'O-ARTICLE-OUTLINE': {
             id: 'O-ARTICLE-OUTLINE',
             title: 'Publikationsrahmen & Storyline Outline',
-            text: `TASK: PUBLIKATIONSRAHMEN, AUFHÄNGER & ARTIKEL-OUTLINE
-1. **Publikationsrahmen & Zielgruppe:** Definiere kurz Format, Zielpublikum, Tonalität und journalistische Darstellungsform.
-2. **Aufhänger & Dramaturgie (Hook):** Bestimme den stärksten Einstieg (konkretes Beispiel, Zahl, Wendepunkt oder Spannungsfeld) und den roten Faden.
+            text: `TASK: PUBLIKATIONSSETTING, ROLLENPASSUNG & ARTIKEL-OUTLINE
+1. **Publikationssetting & Rollen-Einordnung:** Kläre Format (z.B. Gastbeitrag, Paid Content, Jubiläums-/Unternehmenspublikation, Fachartikel), Zielpublikum sowie die korrekte Einordnung der übergeordneten Rolle und Gesamtleistung unserer Organisation.
+2. **Aufhänger & Dramaturgie (Hook):** Bestimme den stärksten Einstieg (konkretes Beispiel, Beobachtung vor Ort, Zahl oder Spannungsfeld) und den roten Faden.
 3. **Detaillierte Artikel-Gliederung:** Erstelle die Abschnitts-Outline mit sprechenden Zwischenüberschriften, Kernaussagen pro Absatz und vorgesehenen Fakten/Zitaten.`
         },
         'O-ARTICLE-DRAFT': {
             id: 'O-ARTICLE-DRAFT',
             title: 'Vollständiger Artikelentwurf',
             text: `TASK: VOLLSTÄNDIGER ARTIKELENTWURF
-Verfasse direkt den vollständigen, publikationsreifen Artikel auf Basis der erstellten Outline und der gesicherten Recherche (allfällige noch offene Detailpunkte als «[Offen: ...]» im Text markieren).
+Verfasse direkt den vollständigen, publikationsreifen Artikel auf Basis der Outline und der gesicherten Recherche (offene Punkte als «[Offen: ...]» markieren).
 Qualitätskriterien:
-- Fesselnder Einstieg (Lead),
-- Stringenter roter Faden ohne Brüche,
-- Anschauliche Sprache, absolut frei von KI-Floskeln,
-- Faktengetreu und zitierfähig.`
+- **Glaubwürdigkeit vor PR-Sterilität:** Fesselnder Einstieg (Lead) und anschauliche, lebendige Sprache ohne Eigenlob-Floskeln oder KI-Phrasen.
+- **Faktenstatus & Notwendige Konkretion:** Gesicherte Tatsachen strikt von Prüfoptionen/Planungsannahmen trennen; bei offener Ausgestaltung verständliche Oberbegriffe nutzen; keine unbelegten Versprechen.
+- **Konsistente Einordnung:** Unsere Kernrolle und Leistung im Gesamtsystem organisch sichtbar machen, unterschiedliche Rollen externer Partner sauber wahren.`
         },
         'O-PPT-STORYBOARD': {
             id: 'O-PPT-STORYBOARD',
