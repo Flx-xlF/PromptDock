@@ -23,7 +23,8 @@
     // Compact style & quality discipline for Turn 2+ (Strategy & Output drafting) and Forks
     const G_OUTPUT_STYLE = `QUALITÄTS- & STILVORGABE:
 - Keine leeren Phrasen, Füllwörter oder KI-typischen Formulierungen. Präzise, adressatengerechte Sprache.
-- Fakten- und Strategietreue: Stütze dich strikt auf die gesicherten Erkenntnisse; markiere offene Punkte bei Bedarf mit «[Offen / Zu prüfen]».`;
+- Fakten- und Strategietreue: Stütze dich strikt auf die gesicherten Erkenntnisse; markiere offene Punkte bei Bedarf mit «[Offen / Zu prüfen]».
+- Redundanz-Sperre: Wiederhole bereits in Vorstufen festgelegte Analysen oder Herleitungen nicht erneut, sondern wende sie direkt auf das konkrete Arbeitsprodukt an.`;
 
     // Atomic Chunk Definitions
     const CHUNKS = {
@@ -48,35 +49,35 @@ Beschränke den internen Abklärungsaufwand in den Fachbereichen auf das absolut
             title: 'Inhalts-Analyse (E-Mail/Vorgang)',
             text: `TASK: INHALTS-, THREAD- & AUFTRAGSANALYSE (OUTLOOK)
 Analysiere den vorliegenden E-Mail-Verlauf (Chronologie von unten nach oben beachten) sowie allfällige verlinkte SharePoint-/OneDrive-Dokumente oder Dateianhänge:
-- **Aktueller Auftrag & Erwartung (oberste Nachricht):** Wer verlangt von mir konkret welche Antwortleistung, Entscheidung, Freigabe oder Einschätzung (inkl. Kern- und Teilfragen)?
-- **Thread-Historie & Positionen:** Was ist im bisherigen Verlauf sachlich passiert und welche Festlegungen wurden bereits getroffen?
-- **Gesicherte Fakten & Akteure:** Welche belastbaren Daten/Zahlen liegen im Thread oder in Anhängen vor, und welche Schlüsselpersonen (Absender, CC, Einheiten) sind involviert?`
+- **Unmittelbares Anliegen & Entscheidungsbedürfnis (oberste Nachricht):** Was will die anfragende Person *jetzt* konkret entscheiden oder klären (z.B. vorläufige Tendenzaussage zur eigenen Aufwands-/Planungssicherheit vs. definitive Freigabe vs. Prozessauskunft)?
+- **Thread-Historie & Entscheidungslogik:** Was ist bisher passiert, welche Festlegungen gelten bereits und von welchem konkreten Meilenstein, Stichtag oder Leistungsnachweis hängt eine belastbare Aussage ab?
+- **Gesicherte Fakten & Akteure:** Welche belastbaren Daten, Termine oder Formular-/Vertragsvorgaben liegen vor, und welche Schlüsselpersonen sind involviert?`
         },
         'I-DOC': {
             id: 'I-DOC',
-            title: 'Inhalts-Analyse (Dokumentenprüfung)',
-            text: `TASK: DOKUMENTEN- & KONTEXTANALYSE
-Analysiere die verlinkte oder angehängte Datei bzw. den vorliegenden Entwurf:
-- **Zweck, Zielgruppe & Kernbotschaft:** Was will die Vorlage bei wem erreichen und was sind ihre zentralen Aussagen?
-- **Fakten- & Zahlenbehauptungen:** Welche konkreten Daten, Fakten oder Kausalitäten werden postuliert?
-- **Sensible Stellen & Reputationskontext:** Welche Aussagen sind politisch, medial oder intern heikel bzw. potenziell angreifbar?`
+            title: 'Inhalts-Analyse (Dokumenten-, Setting- & Folienprüfung)',
+            text: `TASK: PUBLIKATIONSSETTING, ZIELPUBLIKUM & FAKTENGRENZEN-ANALYSE
+Analysiere die verlinkte/angehängte Datei (Textentwurf, Beitrag, Präsentation, Q&A) samt E-Mail-Verlauf:
+1. **Publikationssetting & Drei-Stufen-Zielpublikum:**
+   - **Setting & Auftrag:** Kläre vorab Format und Absenderinteresse (*Behörden-/Gremienvorlage* vs. *Paid Content / Jubiläums- oder Unternehmenspublikation / Partnerschaft* vs. *unabhängiger Medienbeitrag*). *(Falls im Thread nicht erkennbar, weise explizit darauf hin, damit es für Schritt 2 gesteuert werden kann).*
+   - **Zielpublika:** (a) **Primäres Zielpublikum** (inkl. Erwartung an Vollzugsstand/Nachweise bzw. Lesewert), (b) **Sekundäres Zielpublikum** (Medien/Öffentlichkeit – verständlich & isoliert zitierbar), (c) **Empfänger unserer Rückmeldung** (Absender/Verfassende im Thread).
+2. **Strategische Konzept- & Rollenpassung:** Passt das Text-/Folienkonzept grundsätzlich zum Publikationssetting und wird die eigentliche Kernrolle bzw. Gesamtleistung unserer Organisation zutreffend eingeordnet (statt verkürzt oder verzerrt dargestellt)?
+3. **Faktengrenzen & Risiken:** Trenne gesicherte Tatsachen/Beobachtungen von unbelegten Kausalitäten, fehlenden Vollzugsständen und unbelegten Zeit-/Optionsversprechen.`
         },
         'I-PPT': {
             id: 'I-PPT',
             title: 'Kontext-, Zielgruppen- & Deck-Analyse (Präsentation)',
             text: `TASK: MODUS, ZIELGRUPPE & ENTSCHEIDUNGS-PSYCHOLOGIE
 Analysiere den E-Mail-Verlauf sowie verlinkte/angehängte Dokumente oder Folien (SharePoint, OneDrive, Anhang):
-1. **Arbeitsmodus:** Bestimme, ob **MODUS A (Neukonzeption/Outline aus Kontext ohne bestehende PPT)** oder **MODUS B (Review & Umbau eines verlinkten/angehängten Foliendecks)** vorliegt.
-2. **Gremium & Mandat:** Wer ist das Zielpublikum, nach welcher Logik entscheidet es, und welcher exakte Beschluss/Effekt muss am Ende stehen?
-3. **Der «Elefant im Raum»:** Welcher unausgesprochene Vorbehalt, Zielkonflikt, Kosten- oder Risikopunkt blockiert die Zustimmung am stärksten?
+1. **Arbeitsmodus:** Bestimme, ob **MODUS A (Neukonzeption aus Kontext ohne bestehende PPT)** oder **MODUS B (Originalnahes Review/Upgrade eines bestehenden Foliendecks inkl. allfälliger Q&A-Folien)** vorliegt.
+2. **Zielpublika (Primär vs. Sekundär):** Wer ist das primäre Zielpublikum (z.B. Gremium, Behörde/Amt – welche Nachweise, Zuständigkeiten und konkreten Vollzugsstände erwartet es?) und wie wirkt die Vorlage sekundär auf Öffentlichkeit/Medien?
+3. **Der «Elefant im Raum»:** Welcher Vorbehalt, Zielkonflikt oder fehlende Umsetzungsnachweis gefährdet die Akzeptanz am stärksten?
 
-TASK: DRAMATURGIE- (SCQA) & BELASTBARKEITS-PRÜFUNG (LEAK-TEST)
-- **SCQA- & Substanz-Diagnose:**
-  * *Bei MODUS A:* Extrahiere die tragfähigen Fakten, Zahlen und offenen Lücken für Situation (S), Handlungsdruck/Komplikation (C), Kernfrage (Q) und Kernantrag (A).
-  * *Bei MODUS B:* Prüfe das Deck Folie für Folie auf Brüche im roten Faden, schwache Themen-Titel («Status», «Hintergrund» statt aktiver Action Titles), Textwüsten und redundante Folien.
-- **Politische & mediale Verwundbarkeit (Leak- & Gegner-Test):**
-  * Welche Aussagen, Zahlen oder Formulierungen wären bei einer Indiskretion (Medien-Leak, Öffentlichkeitsgesetz, politische Anfrage) ohne mündliche Tonspur angreifbar oder skandalisierbar?
-  * Was ist das härteste Gegenargument (Steel Man) einer kritischen Aufsichts-, Politik- oder Medieninstanz?`
+TASK: SUBSTANZ-, VOLLZUGS- & BELASTBARKEITS-PRÜFUNG (LEAK-TEST)
+- **Substanz- & Faktengrenzen-Diagnose:**
+  * *Bei MODUS A:* Extrahiere die gesicherten Fakten, Zahlen und offenen Lücken für Situation (S), Komplikation (C), Kernfrage (Q) und Antrag (A).
+  * *Bei MODUS B:* Prüfe Folie für Folie (inkl. Q&A) direkt gegen den Originaltext auf Wiederholungen, fehlenden konkreten Umsetzungsstand, Inside-out-Prozesssprache und unbelegte Kausalitäten oder Zeitversprechen.
+- **Outside-in- & Leak-Test:** Welche Aussagen wären isoliert zitiert (Medien-Leak, Öffentlichkeitsgesetz, Aufsicht) ohne Fachwissen unverständlich, rechtfertigend oder als unbelegtes Versprechen angreifbar?`
         },
         'I-MEET': {
             id: 'I-MEET',
@@ -150,11 +151,11 @@ Prüfe die zentralen Thesen und Vorannahmen auf ihre tatsächliche Belastbarkeit
         },
         'C-REQUEST': {
             id: 'C-REQUEST',
-            title: 'Kritischer Sachverhalts-Check',
-            text: `TASK: KRITISCHER SACHVERHALTS- & REALITÄTS-CHECK
+            title: 'Kritischer Sachverhalts- & Entscheidungslogik-Check',
+            text: `TASK: KRITISCHER SACHVERHALTS- & ENTSCHEIDUNGSLOGIK-CHECK
 Hinterfrage das an mich herangetragene Anliegen nüchtern vor einer Entscheidung oder Antwort:
-- **Kern & Berechtigung (Steel Man):** Was ist der berechtigte Kern des Anliegens und auf welchen ungesicherten Annahmen fusst es?
-- **Gegenargumente & Blinde Flecken:** Welche Risiken, Zielkonflikte, Präzedenzwirkungen oder relevanten Gegenpositionen werden im Anliegen ausgeblendet?`
+- **Kern & Berechtigung (Steel Man):** Was ist das legitime Planungs- oder Informationsbedürfnis des Absenders – und welche ungesicherten Annahmen stecken darin?
+- **Materielle Voraussetzung & Vorfreigabe-Risiko:** Falls eine Zusage oder Prüfung erst nach einem künftigen Meilenstein (z.B. Inbetriebnahme, Abnahme, Entscheid) möglich ist: Was ist der **sachliche Hauptgrund** dafür (z.B. Nachweis, dass die Leistung die vereinbarten Anforderungen erfüllt), und wie geben wir faire Orientierung ohne unbeabsichtigte Vorfreigabe oder Präzedenzwirkung?`
         },
         'C-PERSPECTIVE': {
             id: 'C-PERSPECTIVE',
@@ -221,10 +222,10 @@ Formuliere ${count} prägnante, zitierfähige Kernbotschaften, die die definiert
         },
         'S-DECISION': {
             id: 'S-DECISION',
-            title: 'Handlungsoptionen & Entscheid',
-            text: `TASK: HANDLUNGSOPTIONEN & EMPFEHLUNG
-Zeige die realistischen Handlungsoptionen auf (z.B. Freigabe ohne Auflagen, Freigabe mit Anpassungen, Überarbeitung, Nichtfreigabe bzw. kommunikativer Handlungsbedarf Ja/Nein) und bewerte kurz Vor- und Nachteile.
-Lege dich verbindlich fest und formuliere die empfohlene Haltung bzw. den Kernentscheid in genau einem prägnanten Satz.`
+            title: 'Strategische Vorprüfung & Entscheid',
+            text: `TASK: STRATEGISCHE KONZEPT-VORPRÜFUNG & ENTSCHEID
+Beurteile vor dem Detailaudit zuerst auf Gesamtebene: Passt das bestehende Konzept zum Publikationssetting und Kommunikationsauftrag (**a: Konzept stimmig / punktuelle Anpassung genügt** | **b: inhaltliche Neugewichtung der Rolle/Leistung nötig** | **c: grundlegende Überarbeitung / alternatives Konzept bzw. Handlungsbedarf Ja/Nein**)?
+Bewerte kurz die Optionen, lege dich verbindlich fest und formuliere den Kernentscheid in genau einem prägnanten Satz.`
         },
         'S-ALIGN': {
             id: 'S-ALIGN',
@@ -237,33 +238,36 @@ Analysiere die strategische Relevanz des Vorhabens:
         },
         'S-PPT-STRATEGY': {
             id: 'S-PPT-STRATEGY',
-            title: 'Präsentations-Strategie, Argumentation & Horizontale Storyline',
-            text: `TASK: STRATEGISCHE WEGWAHL & DRAMATURGIE
-Triff auf Basis des Lagebilds eine klare Richtungsentscheidung:
-- **Bei bestehendem Deck (MODUS B):** Entscheide begründet zwischen **Weg 1: Gezieltes Folien-Upgrade** (Struktur behalten, Titel in scharfe Action Titles umwandeln, Textwüsten auf 3–4 Kernaussagen kürzen, heikle Stellen abdichten) und **Weg 2: Strukturelles Redesign** (Neubau entlang einer 5–8-Folien-Entscheidungsdramaturgie + Backup).
-- **Bei Neukonzeption (MODUS A):** Wähle und begründe die wirksamste Dramaturgie für das Zielpublikum:
-  1. *BLUF / Entscheidungs-Dramaturgie:* Kernantrag zuerst → 3 Begründungssäulen → Risikominimierung & Umsetzung (für zeitknappe Gremien/GL).
-  2. *Problem-Lösungs-Spannungsbogen (SCQA):* Handlungsdruck/Kosten des Nichtstuns → Optionenvergleich → Zieloption (bei Skepsis oder Richtungsentscheid).
-  3. *Einordnungs- & Vertrauens-Dramaturgie:* Gemeinsame Ziele & Faktenbasis → Abwägung der Zielkonflikte → Leitplanken & nächste Schritte (bei politisch/emotional heiklen Themen).
+            title: 'Präsentations-Leitlinie, Prüfkriterien & Folien-Triage',
+            text: `TASK: PROZESSDIAGNOSE & STRATEGISCHE LEITLINIE
+Prüfe zuerst, ob eine neue Strategie nötig ist oder ob eine erkennbare Linie vorliegt, die konsequent auf die Folien abgeglichen werden muss (wähle den kürzesten belastbaren Weg ohne redundante Zwischenprodukte):
+- **Strategische Leitlinie (1 Satz):** Formuliere den tragenden Leitsatz, der den zentralen Zielkonflikt löst (z.B. *gesicherter Bedarf* → *bisherige Vorzugsevaluation* → *ergebnisoffene Machbarkeits-/Detailprüfung*, ohne spätere Entscheide vorwegzunehmen).
+- **Dramaturgie-Entscheid:** Wähle bei *MODUS A (Neukonzeption)* die stärkste Dramaturgie (BLUF, SCQA oder Einordnungs-Dramaturgie); entscheide bei *MODUS B (bestehendes Deck)* zwischen *fokussiertem Strategieabgleich am bestehenden Deck* und *strukturellem Redesign*.
 
-TASK: LEITBOTSCHAFT & 3 TRAGENDE ARGUMENTATIONSSÄULEN
-1. **Leitbotschaft (Governing Thought):** Formuliere die zentrale Gesamtaussage bzw. Beschlussempfehlung in genau einem präzisen, politisch und medial unangreifbaren Satz.
-2. **Die 3 Argumentationssäulen:** Entwickle die 3 stärksten Hauptargumente und weise pro Säule knapp nach: (a) **Faktenbeleg aus dem Kontext**, (b) **Zielgruppen-Hebel (ausgeräumter Vorbehalt)**, (c) **Politische & mediale Belastbarkeit**.
+TASK: VERDICHTETE PRÜFKRITERIEN (MAX. 5 SPRACH- & INHALTSREGELN)
+Übersetze die Leitlinie in höchstens 5 verbindliche Prüfkriterien (inkl. konkreter Sprachregeln «Nicht ‹X›, sondern ‹Y›»):
+1. **Stufen-Trennung:** Bedarf, bisherige Evaluation/Präferenz und offenen Realisierungsentscheid strikt trennen; Prüfoptionen (z.B. Mehrfachnutzung) niemals als Versprechen oder Kompensation führen.
+2. **Rollen- & Mandatsklarheit:** Unterschiedliche Rollen und Interessen externer Partner (z.B. Stadt, Kanton, Ämter) sauber wahren, statt sie durch ein künstliches «Wir sind uns einig»-Framing zu nivellieren.
 
-TASK: HORIZONTALE STORYLINE (DIE ACTION-TITLE-KETTE)
-Entwirf das Rückgrat der Präsentation als fortlaufende, nummerierte Liste aller geplanten **Action Titles (ganze, aktive Aussagesätze pro Folie)**.
-*Qualitätsgesetz:* Nacheinander gelesen müssen diese Action Titles allein eine lückenlose, logisch zwingende Geschichte ergeben – ohne gedankliche Sprünge und ohne generische Themen-Überschriften.`
+TASK: FOLIEN-TRIAGE & HORIZONTALE STORYLINE
+- **Bei MODUS A:** Entwirf die fortlaufende Liste aller **Action Titles (ganze, aktive Aussagesätze pro Folie)** als lückenlose Storyline.
+- **Bei MODUS B:** Klassifiziere jede Folie verbindlich nach Eingriffstiefe (**stimmig** | **kleinere Anpassung** | **grössere Anpassung** | **entfernen/Reserve**). Bereinige Vermischungen von Hauptpräsentation, Regiefolien, Dubletten und Varianten – lege dich jeweils verbindlich auf **eine** Variante fest (keine offenen Optionslisten).`
         },
         'A-AUDIT-ALL': {
             id: 'A-AUDIT-ALL',
-            title: '3D-Audit (Fakten, Logik, Reputation)',
-            text: `TASK: SYSTEMATISCHES DREI-DIMENSIONEN-AUDIT
-Prüfe die Vorlage rigoros in drei Dimensionen:
-1. FAKTENCHECK: Sachliche Richtigkeit, Vollständigkeit, Aktualität und korrekte Einordnung von Zahlen, Daten und Zusammenhängen (Abgleich mit E-Mail-Verlauf und Microsoft Graph/SharePoint).
-2. LOGIKCHECK: Innere Konsistenz, Nachvollziehbarkeit, unbegründete Schlussfolgerungen, Widersprüche und gedankliche Sprünge.
-3. REPUTATIONSCHECK: Perspektive eines kritischen Journalisten, politischen Gegners oder skeptischen Stakeholders (negative Framings, Angriffsflächen, Risiken für die Glaubwürdigkeit).
+            title: '3D-Audit (Setting-Kalibrierung, Faktengrenzen, Outside-in)',
+            text: `TASK: SETTING-GERECHTES DREI-DIMENSIONEN-AUDIT (OHNE SCHEIN-BEANSTANDUNGEN)
+Gewichte alle Beanstandungen strikt nach dem konkreten Publikationsauftrag (tragfähige Passagen unverändert belassen, nur entscheidungsrelevante Änderungen vorschlagen):
+1. **FAKTENGRENZEN, EVIDENZ-SCHWELLE & VOLLZUG:**
+   - **Keine Schein-Beanstandungen:** Beanstande Zahlen, Jahreszahlen oder Grössenordnungen nur dann, wenn eine interne Quelle (Mail/SharePoint/Graph) ihnen nachweislich widerspricht – erzeuge keine spekulativen Pedanterie-Einwände.
+   - **Entscheidungsstufen & Vollzug:** Trenne *gesicherten Bedarf/Beobachtung*, *bisherige Präferenz* und *offene Machbarkeit* (Prüfoptionen nie als Versprechen; keine unbelegten Zeitversprechen wie «so rasch wie möglich» ausser als Verfügungs-Zitat; fehlenden Vollzugsstand als Bearbeitungskommentar markieren).
+2. **KONZEPT-, ROLLEN- & TERMINOLOGIE-KONSISTENZ:**
+   - Stelle sicher, dass die übergeordnete Rolle und Kernleistung unserer Organisation im Gesamtkontext korrekt eingeordnet ist (keine verkürzte Darstellung von Teilbereichen). Bereinige Dubletten/Varianten (verbindlich auf **eine** Variante festlegen) und halte Schlüsselbegriffe konsistent (\`Nicht «X», sondern «Y»\`).
+3. **SETTING-ANGEMESSENHEIT, OUTSIDE-IN & ZITIERFÄHIGKEIT:**
+   - **Glaubwürdigkeit vor PR-Sterilität:** Bei Paid Content, Jubiläums-, Gast- oder Magazinbeiträgen ist lebendige journalistische Sprache und sachlich gedeckte kritische Distanz erwünscht – bekämpfe keinen legitimen journalistischen Stil als «Reputationsrisiko», sondern greife nur dort ein, wo kritische Framings ohne Kontext verstärkt oder Kernleistungen ausgeblendet werden.
+   - **Outside-in & Partner-Rollen:** **Ziel, Nutzen & Handlung** zuerst, Rahmenbedingungen danach. Unterschiedliche Rollen externer Partner (Stadt, Kanton, Ämter) sauber trennen.
 
-WICHTIG: Gib die Einzelbefunde nicht als doppelte Vorab-Fliesstextliste aus, sondern führe alle konkreten Beanstandungen und minimalinvasiven Korrekturvorschläge direkt in der nachfolgenden Rückmeldungstabelle zusammen.`
+WICHTIG: Gib keine doppelte Vorab-Mängelliste aus, sondern führe die Ergebnisse direkt in der nachfolgenden Ausgabelogik zusammen.`
         },
         'D-DELTA': {
             id: 'D-DELTA',
@@ -321,8 +325,12 @@ TASK: ROTSTIFT & VERSANDFERTIGE ENDFASSUNG
             id: 'O-REPLY',
             title: 'Antwortentwurf (E-Mail)',
             text: `TASK: EMPFOHLENE LINIE & ANTWORTENTWURF
-1. **Empfohlene Reaktionslinie (1 Satz):** Formuliere den Kernentscheid bzw. die empfohlene Haltung für die Antwort in genau einem prägnanten Satz.
-2. **Versandfertiger Antwortentwurf:** Formuliere direkt darunter den adressatengerechten, faktenbasierten und handlungsauslösenden E-Mail-Entwurf.`
+1. **Empfohlene Reaktionslinie (1 Satz):** Formuliere den Kernentscheid bzw. die empfohlene Haltung (inkl. allfälliger Bedingung und Abgrenzung gegen eine Vorfreigabe) in genau einem prägnanten Satz.
+2. **Versandfertiger Antwortentwurf:** Formuliere direkt darunter den präzisen, direkt versandfertigen E-Mail-Entwurf nach diesen vier Regeln:
+   - **Anliegens-Fokus:** Beantworte exakt das, was die anfragende Person für ihren aktuellen Entscheidungsschritt braucht (z.B. Verständnis für das Planungsbedürfnis + klare Tendenzaussage unter Prüfvorbehalt, aber ohne faktische Vorfreigabe oder Zusage-Automatismus).
+   - **Sachgrund hinter Meilensteinen:** Falls eine Prüfung erst nach einem künftigen Stichtag/Meilenstein (mit Datum) erfolgt, benenne knapp den materiellen Grund (z.B. Feststellung nach Inbetriebnahme/Abnahme, ob die Arbeiten die vereinbarten Anforderungen erfüllen) statt blosser Prozessbürokratie.
+   - **Objektive Aussensprache:** Übersetze subjektive interne Kriterien («wenn alle zufrieden sind», «in der Regel kein Problem») in sachlich überprüfbare externe Kriterien («sofern die ausgeführten Arbeiten die vereinbarten Anforderungen erfüllen»).
+   - **Keine Nebenbedingungs-Kaskaden:** Nenne nur Voraussetzungen, die den aktuellen Schritt unmittelbar steuern; decke nachgelagerte Detail- oder Formularpflichten kompakt per Verweis auf bestehende Vorgaben/Formulare ab, statt sie einzeln aufzuzählen.`
         },
         'O-QA': {
             id: 'O-QA',
@@ -357,13 +365,21 @@ Erstelle eine fokussierte, entscheidungsreife Kommunikationsstrategie in exakt 6
         },
         'O-TABLE': {
             id: 'O-TABLE',
-            title: 'Rückmeldungstabelle',
-            compile: (params) => {
-                const withSummary = params?.withSummary ? `1. **ZUSAMMENFASSUNG DER AUFLAGEN (MAX. 4 SÄTZE):** Fasse die wichtigsten Anpassungsauflagen für die Freigabe vorab knapp zusammen.\n2. **RÜCKMELDUNGSTABELLE:** ` : '';
-                return `TASK: RÜCKMELDUNGSTABELLE (KONKRETE KORREKTUREN)
-${withSummary}Führe ausschliesslich tatsächliche Feststellungen und präzise, minimalinvasive Korrekturvorschläge auf (unproblematische Passagen weglassen):
-| Textstelle | Prüfdimension (Fakten / Logik / Reputation) | Begründung | Konkreter Formulierungsvorschlag |
-|------------|---------------------------------------------|------------|----------------------------------|`;
+            title: 'Kurzrückmeldung & Detailtabelle (Beilage)',
+            compile: () => {
+                return `TASK: VERSANDFERTIGE KURZRÜCKMELDUNG & DETAILTABELLE ALS BEILAGE
+Liefere das Ergebnis in exakt zwei direkt nutzbaren Teilen:
+
+1. **VERSANDFERTIGE KURZRÜCKMELDUNG AN ABSENDER / AUTORENSCHAFT:**
+   Formuliere eine kurze, direkt im E-Mail-Verlauf versandfertige Rückmeldung an die anfragende Person mit: (a) **Urteil zur strategischen Passung & Freigabe** (passt das Konzept zum Publikationssetting oder braucht es eine Neugewichtung?), (b) den **2–3 priorisierten Hauptanpassungsfeldern** im Gesamtbild (z.B. Einordnung der Organisationsrolle, Faktengrenzen).
+
+2. **DETAILTABELLE ALS BEILAGE (NUR ENTSCHEIDUNGSRELEVANTE ABWEICHUNGEN):**
+   Führe ausschliesslich Stellen auf, bei denen echter Handlungsbedarf besteht (stimmige Passagen und irrelevante Kleinigkeiten weglassen). Klassifiziere in Spalte 2 die **Eingriffstiefe** (*zwingende Anpassung* | *empfohlene Schärfung* | *entfernen/Reserve*) und lege dich bei Varianten auf **eine** Version fest:
+   - **Kollegial-redaktioneller Stil (Spalte 3):** Keine Direktansprache («Sie/ihr»), nicht belehrend («muss ersetzt werden»). Begründe **nur die konkrete Abweichung zum Original** (1 Begründung pro Stelle/Folie im Muster: *«Die Formulierung wirkt … Das ‹…› blendet X aus / nimmt Y vorweg. Würde … klarer einordnen. Deshalb allenfalls besser so:»*).
+   - **Fehlende Angaben (Spalte 4):** Als **«[Bearbeitungskommentar: Konkreten Umsetzungsstand / Kontext zu X ergänzen]»** markieren, niemals erfinden.
+
+| Stelle & Originalformulierung | Eingriffstiefe & Prüfpunkt | Kollegiale Begründung der Abweichung | Konkreter Formulierungsvorschlag («Deshalb allenfalls besser so:») / Bearbeitungskommentar |
+|---|---|---|---|`;
             }
         },
         'O-THEMENPLANUNG': {
@@ -458,18 +474,15 @@ Qualitätskriterien:
         'O-PPT-STORYBOARD': {
             id: 'O-PPT-STORYBOARD',
             title: 'Folien-Storyboard & Konkrete Folien-Inputs',
-            text: `TASK: AUSGEARBEITETES FOLIEN-STORYBOARD & KONKRETE FOLIEN-INPUTS
-Setze die Strategie und die horizontale Action-Title-Kette in ein sofort nutzbares Folien-Konzept um. Verzichte auf generische Platzhalter oder banale Deko-Tipps («Icons einfügen») und arbeite ausschliesslich mit den konkreten Fakten und Zahlen des Falls.
-
-Gliedere jede Folie nach folgendem Schema:
+            text: `TASK: FOLIEN-FÜR-FOLIEN-ABGLEICH & KONKRETE TEXTVORSCHLÄGE
+Setze die Leitlinie und die Prüfkriterien direkt auf Folienebene um (ohne Wiederholung der Voranalyse). *Effizienz-Regel für MODUS B:* Folien mit dem Urteil **«stimmig»** oder **«entfernen/Reserve»** in 1 Zeile abhandeln; arbeite den vollen Textvorschlag nur für Folien mit Änderungsbedarf aus:
 ---
-### FOLIE [Nr.]: [Dramaturgische Funktion – bei MODUS B zusätzlich Bezug zur Ist-Folie, z.B. «Ersetzt Folie 3–4» / «Überarbeitung Folie 2» / «Neu»]
-- **ACTION TITLE (Headline):** [Vollständiger, aktiver Aussagesatz mit der Kernbotschaft – keine Schlagworte wie «Ausgangslage» oder «Status»]
-- **DRUCKREIFER FOLIENINHALT (MAX. 3–4 KERNAUSSAGEN):**
-  * [Ausformulierte, kontextgesättigte Stichpunkte im konkreten Wortlaut inkl. Zahlen/Belegen; fehlende Einzeldaten als «[Datenpunkt X ergänzen]» markieren]
-  * [Jede Aussage muss den **Leak-Test** bestehen: auch ohne mündliche Tonspur sachlich unangreifbar, politisch ausgewogen und medial nicht skandalisierbar]
-- **BEWEIS- & STRUKTURLOGIK:** [Inhaltliche Beweisführung auf der Folie, z.B. Status quo vs. Zielbild, Optionen-Matrix nach 3 Kriterien, Kausalkette Ursache → Wirkung → Massnahme]
-- **ZIELGRUPPEN-HEBEL & ROTSTIFT:** [Welchen Einwand räumt die Folie aus – und was muss gegenüber dem Entwurf bzw. heiklen Formulierungen konkret gestrichen oder geschärft werden («Statt X → Besser Y»)?]
+### FOLIE [Nr.] (bzw. Q&A): [Originaltitel | Eingriffstiefe: stimmig / kleinere Anpassung / grössere Anpassung / entfernen bzw. Reserve]
+- **ACTION TITLE / KERNAUSSAGE:** [Aktiver Aussagesatz; tragfähige Originaltitel nur so weit wie nötig schärfen]
+- **FINALER TEXTVORSCHLAG (OUTSIDE-IN & LEAK-FEST):**
+  * [Direkt übernehmbarer Wortlaut: **Ziel/Bedarf & Handlung zuerst**, Rahmenbedingungen sachlich danach. Bedarf, Vorzugsbewertung und offenen Entscheid strikt trennen; Rollen externer Partner wahren; keine unbelegten Zeit-/Optionsversprechen]
+  * [Bei fehlendem Vollzugsstand/Nachweis explizit als «[Bearbeitungskommentar: Konkreten Umsetzungsstand/Nachweis zu X ergänzen]» markieren]
+- **BEGRÜNDUNG DER ABWEICHUNG (KOLLEGIAL-REDAKTIONELL, 1 PRO FOLIE / Q&A):** [Direkt an die Autorenschaft weitergebbar, ohne Direktansprache/Belehrung, nur Abweichung zum Original begründen: «Die Originalformulierung ‹…› wirkt … Würde … Deshalb allenfalls besser so.»]
 ---
 
 TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
@@ -675,7 +688,8 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                     role: 'Du bist ein Chefredakteur und Fact-Checker.',
                     chunks: ['A-AUDIT-ALL', 'O-TABLE']
                 }
-            ]
+            ],
+            forks: ['O-REPLY', 'O-QA']
         },
 
         // 10. FREIGABE-ANFRAGE (2 TURNS - USER DIRECTIVE: ALL 3 CHECKS!)
@@ -694,7 +708,8 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                     role: 'Du bist ein Risikomanager und Freigabeverantwortlicher.',
                     chunks: ['S-DECISION', 'A-AUDIT-ALL', { chunkId: 'O-TABLE', params: { withSummary: true } }]
                 }
-            ]
+            ],
+            forks: ['O-REPLY', 'O-QA']
         },
 
         // 11. THEMEN- & REDAKTIONSPLANUNG (2 TURNS)

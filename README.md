@@ -25,7 +25,7 @@ PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI work
 - 🛡️ **Source-Grounded Verification & Phase Guardrails**  
   Employs strict source attribution (citing email threads, M365 Graph, or attachments) and gap markers (*«[Offen / Zu prüfen]»*) rather than decorative icons or negative-constraint bans. Turn 2+ and output forks inherit `G_OUTPUT_STYLE`, preserving uncompromising anti-fluff rules and executive tone. Furthermore, non-final turns automatically inject a strict `PHASEN-FOKUS` boundary rule preventing host LLMs from drafting premature final outputs during early analysis steps.
 - 🗜️ **Chrome Sync Quota Hardening & High-Density Compaction**  
-  All 18 recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (e.g. `recipe-medienanfrage` at 7.3 KB, `recipe-praesentation` at 7.1 KB, `recipe-medienantwort-check` at 3.5 KB). Every turn across all recipes is strictly capped at $\le 4$ high-impact tasks. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_10_festlegungs_check`), preventing fatal storage quota exceptions.
+  All 18 recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (e.g. `recipe-medienanfrage` at 7.3 KB, `recipe-freigabe` at 7.1 KB, `recipe-praesentation` at 7.0 KB, `recipe-proofreading` at 6.6 KB). Every turn across all recipes is strictly capped at $\le 4$ high-impact tasks. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_14_milestone_decision_logic`), preventing fatal storage quota exceptions.
 - 🔢 **Dynamic Task Header Sequencing & Clean Unicode Flow**  
   Turn and fork compilation engines dynamically re-index all prompt tasks into clean sequential numbers (`TASK 1:`, `TASK 2:`, `TASK 3:`...) with clean Unicode arrow (`→`) flow, ensuring host LLMs follow a clear, logical step order regardless of chunk assembly.
 - ⏱️ **1500ms Debounced Cloud Gist Sync**  
@@ -54,6 +54,14 @@ PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI work
   2. **Notwendige Konkretion (Lösungsraum schützen):** Formulates as specifically as required, but never more specific than confirmed status—substituting clear umbrella terms (*Oberbegriffe*) for premature detail commitments.
   3. **Satzfunktion:** Enforces that every single sentence fulfills an unambiguous communication role (acknowledgment, fact, decision rationale, organizational stance, confirmed outlook, or boundary delimitation) without bureaucratic filler.
   4. **Framing-Ziel & Nicht-Festlegung:** Emits explicit non-commitment boundaries prior to generating the draft, safeguarding organizational maneuverability. Concludes with a mandatory 4-point impact audit (Schema a–d) and automated self-correction.
+- 📬 **Milestone Decision Logic & Executive Email Directness (v2.14)**  
+  Embedded into `E-Mail & Stakeholder-Antwort` (`I-MAIL`, `C-REQUEST`, `O-REPLY`): identifies the sender's immediate orientation/decision need, isolates the substantive milestone prerequisite behind waiting periods to prevent accidental de facto pre-approvals (*Vorfreigaben*), and enforces the 4 Golden Rules of email directness: (1) Anliegens-Fokus without commitment automatism, (2) material justification behind target dates, (3) objective external criteria rather than subjective internal language, and (4) bundling secondary checklist cascades into compact form/guideline references.
+- 📑 **Three-Tier Audience, Setting Calibration & Collegial Review (v2.11–v2.13)**  
+  Engineered into `Proofreading & Redigat`, `Freigabe-Audit`, and `Präsentation & Storyboard`:
+  - **Three-Tier Audience & Setting Calibration:** Differentiates primary authority/board readers, secondary public/media impact, and internal authors while calibrating reviews against the publication setting (*Behördenvorlage* vs. *Paid Content/Corporate* vs. *Medienbeitrag*).
+  - **Strategic Concept Pre-Check & Anti-Nitpicking Evidence Threshold:** Pre-checks big-picture concept and organizational core mandate before sentence-level editing; bans speculative factual objections unless directly contradicted by M365 context.
+  - **Collegial Feedback Pattern:** Banned patronizing phrasing («muss ersetzt werden», «die Autoren sollten»); enforces the collegial review pattern justifying only the concrete delta (*«Die Formulierung wirkt … Deshalb allenfalls besser so: …»*) with explicit `[Bearbeitungskommentar: ...]` markers for missing facts.
+  - **Slide Triage & Redundancy Lock:** Applies a strict 4-way slide triage (*stimmig*, *kleinere Anpassung*, *grössere Anpassung*, *entfernen/Reserve*) and an automated `Redundanz-Sperre` that suppresses repetitive analytical preambles across multi-turn prompts.
 - 🛑 **Streaming State Guard & Native Stop Interception**  
   When an AI response begins streaming, PromptDock displays a pulsing amber indicator (`Generiert Antwort...`) and auto-collapses into the 36px capsule. If you click the host chat's native stop button (*"Stop generating"* / *"Stop response"*), PromptDock catches the event and advances directly to your checkpoint without freezing.
 - 🎨 **Redesigned Command Palette & Slide-Up Sheet**  
@@ -108,18 +116,18 @@ PromptDock 2.1 includes a vendor-agnostic Corporate Communications & Intelligenc
 3. **Wording & Sprachregelung** (2 Turns: Kernanalyse ➔ Leitbotschaften & FAQ)
 4. **Strategischer Sparringspartner** (Herausforderndes Sparring)
 5. **Kommunikationsstrategie** (3 Turns: Lagebild ➔ Positionierung ➔ Massnahmenplan)
-6. **E-Mail & Stakeholder-Antwort** (2 Turns: Analyse ➔ Antwortentwurf)
+6. **E-Mail & Stakeholder-Antwort** (2 Turns: Anliegen, Meilenstein-Kontext & Fakten ➔ Antwortentwurf nach den 4 Goldenen Email-Regeln)
 7. **Meeting-Vorbereitung & Protokoll** (Agenda/Protokoll ➔ Briefing)
 8. **Themenanalyse & Issue-Monitoring** (Recherche ➔ Risikobewertung)
-9. **Proofreading & Redigat** (Textanalyse ➔ Optimierter Text)
-10. **Freigabe-Audit & Governance** (Lagebild ➔ 3-fach Audit ➔ Freigabeentscheid)
+9. **Proofreading & Redigat** (2 Turns: Setting, Zielpublikum & Faktengrenzen ➔ 3D-Audit mit kollegialem Feedback; Forks zu E-Mail & Q+A)
+10. **Freigabe-Audit & Governance** (2 Turns: Setting & Lagebild ➔ Konzept-Pre-Check, 3D-Audit & Freigabeentscheid; Forks zu E-Mail & Q+A)
 11. **Themen- & Redaktionsplanung** (Analyse ➔ Themenboard-Eintrag)
 12. **Artikel & Storytelling** (Recherche ➔ Storyline ➔ Artikelentwurf)
 13. **Wochenstart Briefing** (Executive Activity Scan & Delta)
 14. **Projekt- & Status-Update** (Kompaktes Reporting)
 15. **Tiefenrecherche & Intelligence** (Quellen- & Fakten-Dossier)
 16. **Standort- & Stakeholder-Austausch** (Kompakteinträge)
-17. **Präsentation & Storyboard** (3 Turns: Lagebild, Zielgruppe & Belastbarkeit ➔ Strategie, Argumentation & Storyline ➔ Folien-Storyboard & Konkrete Inputs)
+17. **Präsentation & Storyboard** (3 Turns: Lagebild & Deck-Analyse ➔ 5-Kriterien-Strategie & Folien-Triage ➔ Storyboard mit Outside-in-Logik)
 18. **Medienantwort-Check** (Single-Shot: Vorprüfung nach Entscheidungs- & Festlegungs-Check 1–4 ➔ Medialer Belastbarkeits-Check a–d ➔ Rotstift & versandfertige Endfassung)
 
 ---
