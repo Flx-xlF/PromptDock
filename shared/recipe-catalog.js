@@ -120,10 +120,10 @@ Analysiere den Suchbegriff/-satz sowie allfällige Dateien. Bestimme:
                     ? 'bisherige mediale Berichterstattung, öffentlich verfügbare Fakten, frühere Stellungnahmen und historische Kontexte'
                     : 'relevante Hintergrundfakten, Projektstände, bisherige Entscheidungen, Sprachregelungen und organisatorische Zusammenhänge';
                 const focus = params?.focus || defaultFocus;
-                return `TASK: RECHERCHE & FAKTENABGLEICH (M365 GRAPH & KONTEXT)
-Durchsuche frühere E-Mails, Teams-Chats, Besprechungsnotizen und SharePoint-Dokumente gezielt nach: ${focus}.
-- Gleiche Behauptungen oder Vorannahmen aus der vorliegenden Anfrage aktiv gegen unabhängige interne M365-Quellen ab, statt sie ungeprüft zu übernehmen.
-- **Faktenstatus & Konsistenz:** Ordne jede zentrale Aussage eindeutig einer Verbindlichkeitsstufe zu (*fachlich geprüft und beschlossen* | *geplant oder vorgesehen* | *in Prüfung* | *offen [Zu prüfen]* inkl. Quelle). Vermische diese Grade nicht und weise explizit auf Widersprüche zwischen bestätigten Terminen und angeblich noch offenen Zeitpunkten hin.`;
+                return `TASK: RECHERCHE & FAKTENABGLEICH (M365 GRAPH & #KOM-ANKER)
+Durchsuche E-Mails, Teams-Chats (priorisiere dabei mit «#KOM-ANKER» markierte Notizen, Links und Screenshots im Self-Chat), Besprechungsnotizen und SharePoint gezielt nach: ${focus}.
+- Gleiche Vorannahmen der Anfrage aktiv gegen unabhängige M365-Quellen und «#KOM-ANKER»-Referenzen ab, statt sie ungeprüft zu übernehmen.
+- **Faktenstatus & Konsistenz:** Ordne jede zentrale Aussage eindeutig einer Stufe zu (*fachlich geprüft und beschlossen* | *geplant oder vorgesehen* | *in Prüfung* | *offen [Zu prüfen]* inkl. Quelle). Vermische diese Grade nicht und decke Termin-Widersprüche auf.`;
             }
         },
         'R-TIME': {
@@ -625,35 +625,10 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                     chunks: ['O-REPLY']
                 }
             ],
-            forks: ['O-STRATEGY', 'O-ACTIONS']
+            forks: ['O-STRATEGY', 'O-ACTIONS', 'O-QA']
         },
 
-        // 5. STRATEGIE ENTWICKELN (3 TURNS)
-        {
-            id: 'recipe-strategie',
-            name: 'Strategie entwickeln',
-            family: 'respond',
-            turns: [
-                {
-                    title: 'LAGEBILD',
-                    role: 'Du bist ein leitender Kommunikationsstratege.',
-                    chunks: ['I-MAIL', 'R-FULL', 'C-REQUEST', 'T-TLDR']
-                },
-                {
-                    title: 'STRATEGIE-ABWÄGUNG',
-                    role: 'Du bist ein leitender Kommunikationsstratege.',
-                    chunks: ['S-FULL']
-                },
-                {
-                    title: 'KOMMUNIKATIONSSTRATEGIE',
-                    role: 'Du bist ein leitender Kommunikationsstratege.',
-                    chunks: ['O-STRATEGY']
-                }
-            ],
-            forks: ['O-QA', 'O-REPLY']
-        },
-
-        // 6. EMAIL BEANTWORTEN (2 TURNS)
+        // 5. EMAIL BEANTWORTEN (2 TURNS)
         {
             id: 'recipe-email',
             name: 'Email beantworten',
@@ -712,41 +687,21 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
             forks: ['O-STRATEGY', 'O-THEMENPLANUNG']
         },
 
-        // 9. PROOFREADING (2 TURNS)
-        {
-            id: 'recipe-proofreading',
-            name: 'Proofreading',
-            family: 'review',
-            turns: [
-                {
-                    title: 'LAGEBILD',
-                    role: 'Du bist ein Chefredakteur und Fact-Checker.',
-                    chunks: ['I-DOC', 'R-FULL', 'T-TLDR']
-                },
-                {
-                    title: 'DREI-DIMENSIONEN-AUDIT',
-                    role: 'Du bist ein Chefredakteur und Fact-Checker.',
-                    chunks: ['A-AUDIT-ALL', 'O-TABLE']
-                }
-            ],
-            forks: ['O-REPLY', 'O-QA']
-        },
-
-        // 10. FREIGABE-ANFRAGE (2 TURNS - USER DIRECTIVE: ALL 3 CHECKS!)
+        // 8. TEXTPRÜFUNG & FREIGABE (2 TURNS)
         {
             id: 'recipe-freigabe',
-            name: 'Freigabe-Anfrage',
+            name: 'Textprüfung & Freigabe',
             family: 'review',
             turns: [
                 {
                     title: 'LAGEBILD',
-                    role: 'Du bist ein Risikomanager und Freigabeverantwortlicher.',
+                    role: 'Du bist ein Chefredakteur, Fact-Checker und Freigabeverantwortlicher.',
                     chunks: ['I-DOC', 'R-FULL', 'T-TLDR']
                 },
                 {
-                    title: 'AUDIT & FREIGABE-ENTSCHEID',
-                    role: 'Du bist ein Risikomanager und Freigabeverantwortlicher.',
-                    chunks: ['S-DECISION', 'A-AUDIT-ALL', { chunkId: 'O-TABLE', params: { withSummary: true } }]
+                    title: 'DREI-DIMENSIONEN-AUDIT & FREIGABE',
+                    role: 'Du bist ein Chefredakteur, Fact-Checker und Freigabeverantwortlicher.',
+                    chunks: ['A-AUDIT-ALL', 'O-TABLE']
                 }
             ],
             forks: ['O-REPLY', 'O-QA']

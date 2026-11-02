@@ -300,15 +300,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (loaded && loaded.length > 0) {
         prompts = loaded;
 
-        // One-time catalog sync & high-signal compaction upgrade (v2.20)
+        // One-time catalog sync & high-signal compaction upgrade (v2.21)
         try {
-            const local = await ext.storage.local.get(['v2_1_praesentation_seeded', 'v2_20_social_post_recipe']);
-            if ((!local?.v2_1_praesentation_seeded || !local?.v2_20_social_post_recipe) && Catalog?.RECIPES) {
+            const local = await ext.storage.local.get(['v2_1_praesentation_seeded', 'v2_21_kom_anker_and_quota_relief']);
+            if ((!local?.v2_1_praesentation_seeded || !local?.v2_21_kom_anker_and_quota_relief) && Catalog?.RECIPES) {
                 let changed = false;
+                const deprecatedIds = new Set(['recipe-proofreading', 'recipe-strategie']);
+                const deprecatedNames = new Set(['Proofreading', 'Strategie entwickeln']);
+                const beforeLen = prompts.length;
+                prompts = prompts.filter(p => p.isCustomRecipe || (!deprecatedIds.has(p.recipeId) && !deprecatedNames.has(p.name)));
+                if (prompts.length !== beforeLen) changed = true;
+
                 for (const catRecipe of Catalog.RECIPES) {
                     const compiledExpress = Catalog.compileExpress ? Catalog.compileExpress(catRecipe) : '';
-                    const idx = prompts.findIndex(p => p.recipeId === catRecipe.id || p.name === catRecipe.name);
+                    const idx = prompts.findIndex(p => p.recipeId === catRecipe.id || p.name === catRecipe.name || (catRecipe.id === 'recipe-freigabe' && p.name === 'Freigabe-Anfrage'));
                     if (idx >= 0 && !prompts[idx].isCustomRecipe) {
+                        prompts[idx].name = catRecipe.name;
                         prompts[idx].recipeId = catRecipe.id;
                         prompts[idx].content = compiledExpress;
                         changed = true;
@@ -347,7 +354,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         v2_17_outlook_archetypes_grounding: true,
                         v2_18_express_oneshot_parity: true,
                         v2_19_catalog_cohesion: true,
-                        v2_20_social_post_recipe: true
+                        v2_20_social_post_recipe: true,
+                        v2_21_kom_anker_and_quota_relief: true
                     });
                 }
             }
