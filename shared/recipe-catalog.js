@@ -35,8 +35,8 @@
             text: `TASK: FRAGENKATALOG, TYPOLOGIE & THESEN-CHECK
 Analysiere die Medienanfrage im Mailtext sowie allfällige Anhänge/Links:
 1. **Kernfrage & Teilfragen:** Isoliere das übergeordnete Thema, alle expliziten/impliziten Teilfragen (nummeriert) sowie Fristen/Deadlines.
-2. **Fragen-Typologie & Stossrichtung:** Unterscheide rein sachliche Einzelfragen von kaskadierenden, suggestiven oder manipulativen Fragen. Welches Narrativ (Storyline) verfolgt der Journalist?
-3. **Thesen- & Vorlagen-Check:** Prüfe enthaltene Unterstellungen oder Vorannahmen (wahrer Kern vs. faktisch unhaltbare Annahmen) sowie allfällige im Thread bereits vorliegende interne Antwortentwürfe auf Angriffsflächen.
+2. **Fragen-Typologie & Stossrichtung:** Handelt es sich um eine sachliche Routineanfrage oder um kaskadierende, suggestive bzw. kritische Fragen? Welches Narrativ (Storyline) verfolgt der Journalist?
+3. **Zuständigkeits-, Thesen- & Rohmaterial-Check:** Liegen Eigentum, Verfahrenslead oder Auftrag bei uns oder bei Dritten (z.B. Bund, Gemeinde, Kanton, Partner, Mieter)? Prüfe Vorannahmen der Anfrage sowie mitgelieferte Fach-Inputs/Entwürfe im Thread auf internen Jargon, unnötige Exposition und Angriffsflächen.
 
 TASK: ABKLÄRUNGS-TRIAGE (AUFWAND-MINIMIERUNG)
 Beschränke den internen Abklärungsaufwand in den Fachbereichen auf das absolute Minimum. Ordne jede Frage nach dem internen Faktenabgleich einer von drei Kategorien zu:
@@ -48,10 +48,10 @@ Beschränke den internen Abklärungsaufwand in den Fachbereichen auf das absolut
             id: 'I-MAIL',
             title: 'Inhalts-Analyse (E-Mail/Vorgang)',
             text: `TASK: INHALTS-, THREAD- & AUFTRAGSANALYSE (OUTLOOK)
-Analysiere den vorliegenden E-Mail-Verlauf (Chronologie von unten nach oben beachten) sowie allfällige verlinkte SharePoint-/OneDrive-Dokumente oder Dateianhänge:
-- **Unmittelbares Anliegen & Entscheidungsbedürfnis (oberste Nachricht):** Was will die anfragende Person *jetzt* konkret entscheiden oder klären (z.B. vorläufige Tendenzaussage zur eigenen Aufwands-/Planungssicherheit vs. definitive Freigabe vs. Prozessauskunft)?
-- **Thread-Historie & Entscheidungslogik:** Was ist bisher passiert, welche Festlegungen gelten bereits und von welchem konkreten Meilenstein, Stichtag oder Leistungsnachweis hängt eine belastbare Aussage ab?
-- **Gesicherte Fakten & Akteure:** Welche belastbaren Daten, Termine oder Formular-/Vertragsvorgaben liegen vor, und welche Schlüsselpersonen sind involviert?`
+Analysiere den E-Mail-Verlauf (Chronologie von unten nach oben) sowie allfällige Anhänge/Dokumente nach den drei Ebenen **Sache, Ermessen und Form**:
+- **Eigentlicher Auftrag & Adressatenkreis:** Sucht die anfragende Person eine **interne Einschätzung/Linie** («Was meinst du? Soll man überhaupt reagieren?»), eine **Direktantwort** oder einen **direkt verwendbaren Textentwurf für Dritte** (z.B. Anwohnende/Betroffene, Behörden/Partner, Lieferanten)?
+- **Zuständigkeit, Verfahrenslead & Historie:** Was ist bisher passiert, bei wem liegt der Verfahrenslead bzw. Auftrag (z.B. Bund, Gemeinde, Partner vs. unsere Rolle), und von welchem konkreten Meilenstein oder Entscheid hängt eine Aussage ab?
+- **Rohmaterial vs. gesicherte Fakten:** Welche Angaben im Thread sind belastbare Fakten/Termine – und wo enthält mitgeliefertes Fach-Rohmaterial internen Jargon, ungesicherte Zahlen oder Formulierungen, die uns unnötig exponieren?`
         },
         'I-DOC': {
             id: 'I-DOC',
@@ -59,7 +59,7 @@ Analysiere den vorliegenden E-Mail-Verlauf (Chronologie von unten nach oben beac
             text: `TASK: PUBLIKATIONSSETTING, ZIELPUBLIKUM & FAKTENGRENZEN-ANALYSE
 Analysiere die verlinkte/angehängte Datei (Textentwurf, Beitrag, Präsentation, Q&A) samt E-Mail-Verlauf:
 1. **Publikationssetting & Drei-Stufen-Zielpublikum:**
-   - **Setting & Auftrag:** Kläre vorab Format und Absenderinteresse (*Behörden-/Gremienvorlage* vs. *Paid Content / Jubiläums- oder Unternehmenspublikation / Partnerschaft* vs. *unabhängiger Medienbeitrag*). *(Falls im Thread nicht erkennbar, weise explizit darauf hin, damit es für Schritt 2 gesteuert werden kann).*
+   - **Setting & Auftrag:** Kläre vorab Format und Absenderinteresse (*Behörden-/Gremienvorlage* vs. *Paid Content / Jubiläums- oder Unternehmenspublikation / Partnerschaft* vs. *unabhängiger Medienbeitrag*; falls nicht eindeutig erkennbar, naheliegendste Einordnung transparent als Annahme benennen).
    - **Zielpublika:** (a) **Primäres Zielpublikum** (inkl. Erwartung an Vollzugsstand/Nachweise bzw. Lesewert), (b) **Sekundäres Zielpublikum** (Medien/Öffentlichkeit – verständlich & isoliert zitierbar), (c) **Empfänger unserer Rückmeldung** (Absender/Verfassende im Thread).
 2. **Strategische Konzept- & Rollenpassung:** Passt das Text-/Folienkonzept grundsätzlich zum Publikationssetting und wird die eigentliche Kernrolle bzw. Gesamtleistung unserer Organisation zutreffend eingeordnet (statt verkürzt oder verzerrt dargestellt)?
 3. **Faktengrenzen & Risiken:** Trenne gesicherte Tatsachen/Beobachtungen von unbelegten Kausalitäten, fehlenden Vollzugsständen und unbelegten Zeit-/Optionsversprechen.`
@@ -151,11 +151,11 @@ Prüfe die zentralen Thesen und Vorannahmen auf ihre tatsächliche Belastbarkeit
         },
         'C-REQUEST': {
             id: 'C-REQUEST',
-            title: 'Kritischer Sachverhalts- & Entscheidungslogik-Check',
-            text: `TASK: KRITISCHER SACHVERHALTS- & ENTSCHEIDUNGSLOGIK-CHECK
-Hinterfrage das an mich herangetragene Anliegen nüchtern vor einer Entscheidung oder Antwort:
-- **Kern & Berechtigung (Steel Man):** Was ist das legitime Planungs- oder Informationsbedürfnis des Absenders – und welche ungesicherten Annahmen stecken darin?
-- **Materielle Voraussetzung & Vorfreigabe-Risiko:** Falls eine Zusage oder Prüfung erst nach einem künftigen Meilenstein (z.B. Inbetriebnahme, Abnahme, Entscheid) möglich ist: Was ist der **sachliche Hauptgrund** dafür (z.B. Nachweis, dass die Leistung die vereinbarten Anforderungen erfüllt), und wie geben wir faire Orientierung ohne unbeabsichtigte Vorfreigabe oder Präzedenzwirkung?`
+            title: 'Kritischer Sachverhalts-, Ermessens- & Expositions-Check',
+            text: `TASK: KRITISCHER SACHVERHALTS-, ERMESSENS- & EXPOSITIONS-CHECK
+Prüfe das Anliegen nüchtern auf **Sache, Ermessen und Form**:
+- **Berechtigung & Anliegen (Steel Man):** Was ist das legitime Bedürfnis der Anfragenden bzw. Betroffenen (z.B. Planungssicherheit, Betroffenheit vor Ort) – und welche falschen Annahmen oder internen Jargon-Fallen stecken im Vorlauf?
+- **Ermessen, Präzedenz & Vorbehalt:** Stehen Aufwand und Ertrag im Verhältnis? Wo drohen Präzedenzfälle, falsche Deutungen, eine Vorfreigabe vor einem zwingenden Meilenstein (z.B. Inbetriebnahme/Behördenentscheid) oder eine falsche Rollenzuweisung (unsere Organisation als vermeintliche Auslöserin statt Auftrag/Verfahrenslead Dritter)?`
         },
         'C-PERSPECTIVE': {
             id: 'C-PERSPECTIVE',
@@ -192,17 +192,17 @@ Bringe das Lagebild in maximal 4–5 prägnanten Bulletpoints (${mustInclude}) s
                 const includeFormatAnalysis = params?.includeFormatAnalysis === true;
                 const formatBlock = includeFormatAnalysis ? `
 
-TASK: BEANTWORTUNGS-ARCHITEKTUR & ABKLÄRUNGS-ÖKONOMIE
-Wäge ab, welches Format Themenhoheit sichert und internen Abklärungsaufwand minimiert:
-- **Option A (Punkt-für-Punkt):** Nur bei rein sachlichen, unkritischen Einzelfragen mit bereits gesicherten Fakten (Risiko: Übernahme fremden Framings & Detailverzettelung).
-- **Option B (Summarische Antwort):** Geschlossenes Statement auf übergeordneter Flughöhe – ideal bei falschen Vorannahmen, suggestiven Fragen oder zur Vermeidung unnötiger Detailrecherchen.
-- **Option C (Hybrid / Geclustert):** Einleitendes Haltungsstatement + gebündelte Beantwortung der Sachfragen in 2–3 Themenblöcken.
-*Entscheide verbindlich (A, B oder C) und begründe kurz, wie diese Flughöhe Fachstellen schont und alle berechtigten Fragen substanziell abdeckt.*` : '';
+TASK: BEANTWORTUNGS-ARCHITEKTUR & PROPORTIONALITÄT
+Wähle das Format, das Themenhoheit sichert und den Aufwand proportional hält:
+- **Option A (Punkt-für-Punkt):** Bei rein sachlichen, unkritischen Einzelfragen mit klarer Faktenlage.
+- **Option B (Kompakte Gesamteinordnung):** Geschlossenes Statement aus eigener Perspektive – ideal, um ein eigenes Narrativ zu setzen, falsche Prämissen/Negativ-Frames abzulösen oder Detailverzettelung zu vermeiden.
+- **Option C (Hybrid / Geclustert):** Kurze übergeordnete Einordnung + gebündelte Beantwortung der Sachfragen.
+*Entscheide verbindlich (A, B oder C) passend zur Tragweite der Anfrage.*` : '';
 
-                return `TASK: STRATEGIE-OPTIONEN, FRAMING-ZIEL & STORYLINE
-1. **Konkrete Strategie-Optionen:** Stelle die 2–3 realistischsten strategischen Handlungs- bzw. Antwortoptionen für diesen konkreten Fall (inkl. Chancen, Risiken und härtestem Gegenargument) knapp gegenüber.
-2. **Framing-Ziel & Nicht-Festlegung (Leitplanke):** Lege dich verbindlich fest und definiere präzise: Was soll die Antwort erklären, welche Haltung vermittelt sie, und worauf darf sie die Organisation keinesfalls festlegen (Schutz des Lösungsraums)?
-3. **Storyline & Hauptargumente:** Skizziere den roten Faden und die 2–3 tragenden, faktenbasierten Hauptargumente.${formatBlock}`;
+                return `TASK: STRATEGIE-OPTIONEN, FRAMING-ZIEL & EIGENES NARRATIV
+1. **Strategie-Optionen (proportional zur Anfrage):** Stelle die 2–3 sinnvollsten Reaktionsoptionen (inkl. Chancen, Risiken und stärkstem Einwand) knapp gegenüber.
+2. **Framing-Ziel & Schutzgrenzen (Leitplanke):** Lege dich verbindlich fest: Welches **eigene, sachlich überzeugende Narrativ** setzen wir aktiv (statt Vorwürfe oder negative Frames der Anfrage zu reproduzieren), und wo wahren wir strikt unsere Grenzen (Schutz des offenen Lösungsraums, Vertraulichkeit bei Verträgen/Verhandlungen, Abgrenzung fremder Zuständigkeiten)?
+3. **Storyline & Hauptargumente:** Skizziere den roten Faden in klarer, verständlicher Logik (*Was gilt / Was tun wir → Warum ist das sachlich sinnvoll → Wie geht es weiter*).${formatBlock}`;
             }
         },
         'S-LITE': {
@@ -223,11 +223,13 @@ Formuliere ${count} prägnante, isoliert zitierfähige Kernbotschaften (Outside-
         'S-DECISION': {
             id: 'S-DECISION',
             title: 'Strategische Vorprüfung & Entscheid',
-            text: `TASK: STRATEGISCHE VORPRÜFUNG & ENTSCHEID
-Beurteile zuerst auf Gesamtebene die realistischen Optionen:
-- **Bei Dokumenten-/Freigabeprüfung:** Passt das Konzept zum Publikationssetting und zur Rolle unserer Organisation (*Konzept stimmig / punktuelle Schärfung* vs. *inhaltliche Neugewichtung* vs. *grundlegende Überarbeitung / Nichtfreigabe*)?
-- **Bei Themen-/Issue-Analyse:** Besteht kommunikativer Handlungsbedarf (*aktive Positionierung* vs. *reaktive Bereitschaft / Q&A* vs. *bewusster Verzicht*)?
-Bewerte kurz Vor- und Nachteile, lege dich verbindlich fest und formuliere den Kernentscheid in genau einem prägnanten Satz.`
+            compile: (params) => {
+                const isIssue = params?.mode === 'issue';
+                const focusLine = isIssue
+                    ? 'Beurteile zuerst auf Gesamtebene, ob kommunikativer Handlungsbedarf besteht (*aktive Positionierung* vs. *reaktive Bereitschaft / Q&A* vs. *bewusster Verzicht*):'
+                    : 'Beurteile zuerst auf Gesamtebene, ob das vorliegende Konzept zum Publikationssetting und zur Rolle unserer Organisation passt (*Konzept stimmig / punktuelle Schärfung* vs. *inhaltliche Neugewichtung* vs. *grundlegende Überarbeitung / Nichtfreigabe*):';
+                return `TASK: STRATEGISCHE VORPRÜFUNG & ENTSCHEID\n${focusLine}\nBewerte kurz Vor- und Nachteile, lege dich verbindlich fest und formuliere den Kernentscheid in genau einem prägnanten Satz.`;
+            }
         },
         'S-ALIGN': {
             id: 'S-ALIGN',
@@ -263,8 +265,8 @@ Gewichte alle Beanstandungen strikt nach dem konkreten Publikationsauftrag (trag
 1. **FAKTENGRENZEN, EVIDENZ-SCHWELLE & VOLLZUG:**
    - **Keine Schein-Beanstandungen:** Beanstande Zahlen, Jahreszahlen oder Grössenordnungen nur dann, wenn eine interne Quelle (Mail/SharePoint/Graph) ihnen nachweislich widerspricht – erzeuge keine spekulativen Pedanterie-Einwände.
    - **Entscheidungsstufen & Vollzug:** Trenne *gesicherten Bedarf/Beobachtung*, *bisherige Präferenz* und *offene Machbarkeit* (Prüfoptionen nie als Versprechen; keine unbelegten Zeitversprechen wie «so rasch wie möglich» ausser als Verfügungs-Zitat; fehlenden Vollzugsstand als Bearbeitungskommentar markieren).
-2. **KONZEPT-, ROLLEN- & TERMINOLOGIE-KONSISTENZ:**
-   - Stelle sicher, dass die übergeordnete Rolle und Kernleistung unserer Organisation im Gesamtkontext korrekt eingeordnet ist (keine verkürzte Darstellung von Teilbereichen). Bereinige Dubletten/Varianten (verbindlich auf **eine** Variante festlegen) und halte Schlüsselbegriffe konsistent (\`Nicht «X», sondern «Y»\`).
+2. **ROLLENKLARHEIT, ZUSPITZUNGEN & TERMINOLOGIE:**
+   - Korrigiere insbesondere falsche Rollenzuweisungen (Verfahrenslead/Auftraggeber klar benennen, damit unsere Organisation nicht fälschlich als Auslöserin dasteht; Kernrolle im Gesamtsystem korrekt einordnen), unnötige Zuspitzungen und vage Andeutungen von Problemen. Bereinige Dubletten/Varianten (verbindlich auf **eine** Variante festlegen) und halte Schlüsselbegriffe konsistent (\`Nicht «X», sondern «Y»\`).
 3. **SETTING-ANGEMESSENHEIT, OUTSIDE-IN & ZITIERFÄHIGKEIT:**
    - **Glaubwürdigkeit vor PR-Sterilität:** Bei Paid Content, Jubiläums-, Gast- oder Magazinbeiträgen ist lebendige journalistische Sprache und sachlich gedeckte kritische Distanz erwünscht – bekämpfe keinen legitimen journalistischen Stil als «Reputationsrisiko», sondern greife nur dort ein, wo kritische Framings ohne Kontext verstärkt oder Kernleistungen ausgeblendet werden.
    - **Outside-in & Partner-Rollen:** **Ziel, Nutzen & Handlung** zuerst, Rahmenbedingungen danach. Unterschiedliche Rollen externer Partner (Stadt, Kanton, Ämter) sauber trennen.
@@ -285,32 +287,32 @@ Vergleiche den Stand zu Beginn des Zeitfensters mit dem aktuellen Status:
             id: 'O-MEDIA',
             title: 'Medienantwort, Begründung & Abschluss-Check',
             text: `TASK: MEDIENANTWORT, KURZBEGRÜNDUNG & ABSCHLUSS-CHECK
-Erstelle auf Basis der festgelegten Strategie und Beantwortungs-Architektur die versandfertige Medienantwort in exakt diesen drei Schritten:
+Erstelle auf Basis der festgelegten Strategie die versandfertige Medienantwort in exakt diesen drei Schritten:
 
-1. **FRAMING-ZIEL & BEGRÜNDUNG DER LINIE (VORAB-LEITPLANKE, MAX. 4 SÄTZE):**
-   - Definiere vor dem Entwurf knapp: Was soll die Antwort erklären (und warum auf dieser Flughöhe), welche Haltung vermittelt sie, und **worauf darf sie die Organisation keinesfalls festlegen**? Richte den gesamten nachfolgenden Entwurf strikt an dieser Zielhierarchie aus.
+1. **FRAMING-ZIEL & LEITPLANKE (VORAB, MAX. 3 SÄTZE):**
+   - Definiere vor dem Entwurf knapp: Welches **eigene, überzeugende Narrativ** soll hängen bleiben, welche Haltung vermittelt die Antwort, und **was lassen wir aus den internen Inputs bewusst weg** (Schutz von Lösungsraum, Vertraulichkeit, fremder Zuständigkeit)?
 
 2. **MEDIENANTWORT (VERSANDFERTIGER ENTWURF):**
-   - **Faktenstatus-Disziplin:** Trenne die Verbindlichkeitsgrade (*fachlich geprüft und beschlossen* | *geplant oder vorgesehen* | *in Prüfung* | *offen*) strikt; vermeide jeden Widerspruch zwischen bestätigten Terminen und noch offenen Zeitpunkten. Falls ein einziger Blocker-Fakt noch bestätigt werden muss, markiere ihn exakt als «[Kurze Bestätigung durch Fachbereich X: ...]».
-   - **Notwendige Konkretion (Lösungsraum schützen):** Formuliere so konkret wie für die Beantwortung erforderlich, aber nicht konkreter als der bestätigte Entscheidungsstand. Wo Begriffe zu Massnahmen, Materialien, Nutzungen, Mengen, Terminen oder Ausführungsformen den Lösungsraum unnötig einschränken, verwende zwingend einen verständlichen Oberbegriff.
-   - **Satzfunktion:** Jeder Satz muss eine eindeutige kommunikative Funktion erfüllen (*Bedeutung/Betroffenheit anerkennen* | *gesicherten Sachverhalt nennen* | *Entscheid begründen* | *Haltung erklären* | *bestätigten Ausblick geben* | *offene Ausgestaltung korrekt abgrenzen*). Streiche Wiederholungen und Sätze ohne Informationswert. Behalte kurze Einzelsätze bei, wenn sie unterschiedliche Funktionen erfüllen.
+   - **Direkt, menschlich & eigenes Narrativ:** Komm sofort und verständlich auf den Punkt – in natürlicher, nahbarer Sprache ohne Behörden- oder PR-Floskeln. Wiederhole oder verneine niemals Vorwürfe, Reizworte oder negative Frames aus der Anfrage, sondern erkläre aus eigener Kraft sachlich und nachvollziehbar, was gilt, warum es sinnvoll ist und wie es weitergeht. Halte die Länge proportional zur Anfrage.
+   - **Faktenstatus & notwendige Konkretion:** Trenne Verbindlichkeitsgrade (*beschlossen* | *geplant* | *in Prüfung* | *offen*) strikt ohne Termin-Widersprüche (allfälligen Einzel-Blocker als «[Kurze Bestätigung durch Fachbereich X: ...]» markieren). Formuliere so konkret wie nötig, aber schütze offenen Lösungsraum durch verständliche Oberbegriffe statt einengender Detailbegriffe.
+   - **Klare Satzfunktion:** Jeder Satz erfüllt genau eine Funktion (*Einordnung/Betroffenheit* | *gesicherter Sachstand/Zuständigkeit* | *sachlicher Grund/Haltung* | *Ausblick/Alternative* | *offene Prüfung abgrenzen*). Keine Vermischung verschiedener Stufen im selben Satz, keine Füllsätze.
 
-3. **ABSCHLIESSENDER QUALITÄTS-CHECK DES FINALEN ENTWURFS (SCHEMA a–d):**
-   Prüfe den Entwurf abschliessend Punkt für Punkt gegen dieses Schema (jeweils 1 Prüfsatz als Nachweis; bei Verstoss den Entwurf oben vor der Ausgabe zwingend korrigieren):
-   - **a) Medial und politisch belastbar:** Hält jede Aussage einer kritischen Nachprüfung stand, ohne neue Angriffsflächen zu öffnen?
-   - **b) Nahbar, menschlich und verständlich:** Klingt der Text glaubwürdig, empathisch und frei von bürokratischer Distanz?
-   - **c) Keine Wiederholung oder indirekte Bestätigung von Vorwürfen / Hypothesen:** Wurden Unterstellungen, Reizworte und hypothetische Konfliktszenarien der Anfrage konsequent gemieden (auch nicht durch defensive Verneinung wiederholt)?
-   - **d) Eigenes Narrativ:** Transportiert die Antwort aus eigener Kraft unsere Kernbotschaft und Perspektive, statt nur reaktiv Fragen abzuarbeiten?`
+3. **ABSCHLIESSENDER QUALITÄTS-CHECK (SCHEMA a–d):**
+   Prüfe den Entwurf gegen dieses Schema (je 1 kurzer Prüfsatz; bei Verstoss den Entwurf oben vor der Ausgabe direkt korrigieren):
+   - **a) Medial & politisch belastbar:** Faktenfest, zuständigkeitskonform und ohne unnötige Selbstbindung?
+   - **b) Nahbar, menschlich & verständlich:** Natürlich, zugänglich und frei von bürokratischer Distanz?
+   - **c) Keine Reproduktion negativer Frames:** Frei von wiederholten/verneinten Vorwürfen, Reizworten oder Hypothesen der Anfrage?
+   - **d) Eigenes Narrativ:** Überzeugt die Antwort aus eigener Logik und Perspektive, statt nur reaktiv Fragen abzuarbeiten?`
         },
         'C-MEDIA-CHECK': {
             id: 'C-MEDIA-CHECK',
             title: 'Medienantwort-Check (Festlegung 1–4 & Schema a–d)',
             text: `TASK: ENTSCHEIDUNGS- UND FESTLEGUNGS-CHECK (VORPRÜFUNG 1–4)
 Prüfe vor der sprachlichen Überarbeitung jeden zentralen Inhalt des vorliegenden Medienantwort-Entwurfs nach diesen vier Punkten:
-1. **Faktenstatus:** Ordne jede Aussage eindeutig einer Stufe zu (*fachlich geprüft und beschlossen* | *geplant oder vorgesehen* | *in Prüfung* | *offen*). Vermische diese Verbindlichkeitsgrade nicht und decke Widersprüche zwischen bestätigten Terminen und angeblich noch offenen Zeitpunkten auf.
-2. **Notwendige Konkretion:** Prüfe, ob der Text so konkret wie nötig, aber nicht konkreter als der bestätigte Entscheidungsstand formuliert ist. Wo Begriffe zu Massnahmen, Materialien, Nutzungen, Mengen, Terminen oder Ausführungsformen den verbleibenden Lösungsraum unnötig einschränken, ersetze sie durch einen verständlichen Oberbegriff.
-3. **Satzfunktion:** Prüfe, ob jeder Satz eine eindeutige kommunikative Funktion erfüllt (*Bedeutung oder Betroffenheit anerkennen* | *gesicherten Sachverhalt nennen* | *Entscheid begründen* | *Haltung der Organisation erklären* | *bestätigten Ausblick geben* | *offene Ausgestaltung korrekt abgrenzen*). Streiche Wiederholungen und Sätze ohne zusätzlichen Informationswert; behalte kurze Einzelsätze bei, wenn sie unterschiedliche Funktionen erfüllen.
-4. **Framing-Ziel:** Formuliere vorab in einem Satz die Zielhierarchie: Was soll die Antwort erklären, welche Haltung soll sie vermitteln, und worauf darf sie die Organisation nicht festlegen?
+1. **Framing-Ziel, Zuständigkeit & Vertraulichkeit:** Formuliere vorab in einem Satz die Zielhierarchie: Welches eigene Narrativ und welche Haltung soll die Antwort vermitteln, liegt die Zuständigkeit tatsächlich bei uns (oder bei Dritten), und worauf darf sie uns nicht festlegen (Lösungsraum, Vertraulichkeit)?
+2. **Faktenstatus:** Ordne jede Aussage eindeutig einer Stufe zu (*fachlich geprüft und beschlossen* | *geplant oder vorgesehen* | *in Prüfung* | *offen*). Vermische diese Verbindlichkeitsgrade nicht und decke Termin-Widersprüche auf.
+3. **Notwendige Konkretion:** Prüfe, ob der Text so konkret wie nötig, aber nicht konkreter als der bestätigte Entscheidungsstand ist. Ersetze Begriffe, die den offenen Lösungsraum unnötig einengen, durch verständliche Oberbegriffe.
+4. **Satzfunktion:** Prüfe, ob jeder Satz eine eindeutige Funktion erfüllt (*Einordnung/Betroffenheit* | *gesicherter Sachstand* | *sachlicher Grund/Haltung* | *bestätigter Ausblick* | *offene Prüfung abgrenzen*). Streiche Füllsätze und Wiederholungen.
 
 TASK: MEDIALER BELASTBARKEITS- & WIRKUNGS-CHECK (SCHEMA a–d)
 Prüfe den Entwurf zudem kompromisslos anhand der vier Wirkungskriterien:
@@ -325,14 +327,19 @@ TASK: ROTSTIFT & VERSANDFERTIGE ENDFASSUNG
         },
         'O-REPLY': {
             id: 'O-REPLY',
-            title: 'Antwortentwurf (E-Mail)',
-            text: `TASK: EMPFOHLENE LINIE & ANTWORTENTWURF
-1. **Empfohlene Reaktionslinie (1 Satz):** Formuliere den Kernentscheid bzw. die empfohlene Haltung (inkl. allfälliger Bedingung und Abgrenzung gegen eine Vorfreigabe) in genau einem prägnanten Satz.
-2. **Versandfertiger Antwortentwurf:** Formuliere direkt darunter den präzisen, direkt versandfertigen E-Mail-Entwurf nach diesen vier Regeln:
-   - **Anliegens-Fokus:** Beantworte exakt das, was die anfragende Person für ihren aktuellen Entscheidungsschritt braucht (z.B. Verständnis für das Planungsbedürfnis + klare Tendenzaussage unter Prüfvorbehalt, aber ohne faktische Vorfreigabe oder Zusage-Automatismus).
-   - **Sachgrund hinter Meilensteinen:** Falls eine Prüfung erst nach einem künftigen Stichtag/Meilenstein (mit Datum) erfolgt, benenne knapp den materiellen Grund (z.B. Feststellung nach Inbetriebnahme/Abnahme, ob die Arbeiten die vereinbarten Anforderungen erfüllen) statt blosser Prozessbürokratie.
-   - **Objektive Aussensprache:** Übersetze subjektive interne Kriterien («wenn alle zufrieden sind», «in der Regel kein Problem») in sachlich überprüfbare externe Kriterien («sofern die ausgeführten Arbeiten die vereinbarten Anforderungen erfüllen»).
-   - **Keine Nebenbedingungs-Kaskaden:** Nenne nur Voraussetzungen, die den aktuellen Schritt unmittelbar steuern; decke nachgelagerte Detail- oder Formularpflichten kompakt per Verweis auf bestehende Vorgaben/Formulare ab, statt sie einzeln aufzuzählen.`
+            title: 'Antwortentwurf (E-Mail / Textblock für Dritte)',
+            text: `TASK: EMPFOHLENE LINIE & VERSANDFERTIGER E-MAIL-ENTWURF
+Liefere das Ergebnis passend zum Auftrag (interne Einschätzung, Direktantwort oder Textblock für Dritte):
+
+1. **Interne Einordnung & Empfehlung (Ich-Form, 1–3 Sätze):**
+   - Gib eine klare Empfehlung («Aus meiner Sicht…») mit den 2–3 tragenden Gründen (z.B. Aufwand/Ertrag, Präzedenz/Gleichbehandlung, Zuständigkeit/Verfahrenslead, oder was aus dem Rohmaterial bewusst weggelassen wurde) und dem konkreten nächsten Schritt.
+
+2. **Versandfertiger Textblock / E-Mail-Entwurf:**
+   - **Bei Texten an Externe / Betroffene / Partner:**
+     * *Aufbau & Ton:* Bei Betroffenen/Anwohnenden zuerst Verständnis zeigen ohne Schuldeingeständnis («Wir können nachvollziehen…»), dann gesicherte Fakten/Zeitfenster und eine nachvollziehbare sachliche Begründung (mit Nutzen bzw. objektivem Grund); getrennte Themen getrennt beantworten.
+     * *Jargonfrei & objektive Kriterien:* Übersetze Business-Rohmaterial und interne Kriterien in natürliche, verständliche Aussensprache (z.B. «sofern die Arbeiten die vereinbarten Anforderungen erfüllen» statt «wenn alle zufrieden sind»; nachgelagerte Formularpflichten nur kompakt per Verweis bündeln).
+     * *Vorbehalt statt Zusage:* Wahrung des Spielraums durch saubere Vorbehalte («nach heutigem Planungsstand», «voraussichtlich», «Die Termine können sich noch verändern») bzw. Nennung des materiellen Meilensteins vor einer Prüfung/Entscheidung.
+   - **Bei rein interner Abstimmung / Anlass-Koordination:** Klare Haltung, offene Punkte mit Zuständigkeit und Frist zuordnen, bei Konflikten lösungsorientierten Ablauf (z.B. zuerst klärendes Gespräch, dann Mail) vorschlagen.`
         },
         'O-QA': {
             id: 'O-QA',
@@ -667,7 +674,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                 {
                     title: 'BEURTEILUNG & EMPFEHLUNG',
                     role: 'Du bist ein Senior Issue Manager.',
-                    chunks: ['S-DECISION', 'O-ACTIONS']
+                    chunks: [{ chunkId: 'S-DECISION', params: { mode: 'issue' } }, 'O-ACTIONS']
                 }
             ],
             forks: ['O-STRATEGY', 'O-THEMENPLANUNG']
@@ -1050,11 +1057,16 @@ Extrahiere alle relevanten Themen aus dem vorliegenden E-Mail-Verlauf, den Termi
         variableValues = variableValues || {};
         const isMultiStep = Array.isArray(recipe.turns) && recipe.turns.length > 1;
         const execInstruction = isMultiStep
-            ? 'Führe diesen mehrstufigen Workflow komplett in einer einzigen Antwort aus: Halte die Vorstufen (Analyse & Strategie) kompakt in prägnanten Stichpunkten, damit das Hauptgewicht auf dem direkt nutzbaren Endresultat im letzten Schritt liegt.'
+            ? 'Führe diesen mehrstufigen Workflow komplett in einer einzigen Antwort aus (80/20-Fokus): Behandle die Vorstufen (Analyse & Strategie) als ultra-kompaktes Prüf-Gate (max. 5–8 Stichpunkte insgesamt; direkter Entscheid für die beste Option statt langer Variantenvergleiche; keine doppelten Folien-/Textdurchläufe vorab). Wiederhole Herleitungen aus den Vorstufen im letzten Schritt nicht erneut (Redundanz-Sperre), sondern lege 80 % des Gewichts auf das direkt versandfertige Endresultat.'
             : 'Führe diesen Auftrag direkt und präzise aus.';
         const header = `${recipe.name.toUpperCase()} (EXPRESS-MODUS)\n${execInstruction}`;
         const turnTexts = recipe.turns.map((_, i) => compileTurn(recipe, i, { variableValues, isExpress: true }));
-        return [header, ...turnTexts].join('\n\n---\n\n');
+        const joined = [header, ...turnTexts].join('\n\n---\n\n');
+        let expressTaskCounter = 0;
+        return joined.replace(/^TASK(?:\s+\d+)?:/gm, () => {
+            expressTaskCounter += 1;
+            return `TASK ${expressTaskCounter}:`;
+        });
     }
 
     /**
