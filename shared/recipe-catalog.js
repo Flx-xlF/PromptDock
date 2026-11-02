@@ -49,7 +49,7 @@ Beschränke den internen Abklärungsaufwand in den Fachbereichen auf das absolut
             title: 'Inhalts-Analyse (E-Mail/Vorgang)',
             text: `TASK: INHALTS-, THREAD- & AUFTRAGSANALYSE (OUTLOOK)
 Analysiere den E-Mail-Verlauf (Chronologie von unten nach oben) sowie allfällige Anhänge/Dokumente nach den drei Ebenen **Sache, Ermessen und Form**:
-- **Eigentlicher Auftrag & Adressatenkreis:** Sucht die anfragende Person eine **interne Einschätzung/Linie** («Was meinst du? Soll man überhaupt reagieren?»), eine **Direktantwort** oder einen **direkt verwendbaren Textentwurf für Dritte** (z.B. Anwohnende/Betroffene, Behörden/Partner, Lieferanten)?
+- **Eigentlicher Auftrag & Adressatenkreis:** Worin besteht das eigentliche Ziel (**interne Einschätzung/Linie** «Was meinst du?», **Direktantwort**, **verwendbarer Textblock/Wording für Dritte** wie Betroffene/Partner/Behörden oder **Beitrag/Planung**) und für wen ist das Resultat bestimmt?
 - **Zuständigkeit, Verfahrenslead & Historie:** Was ist bisher passiert, bei wem liegt der Verfahrenslead bzw. Auftrag (z.B. Bund, Gemeinde, Partner vs. unsere Rolle), und von welchem konkreten Meilenstein oder Entscheid hängt eine Aussage ab?
 - **Rohmaterial vs. gesicherte Fakten:** Welche Angaben im Thread sind belastbare Fakten/Termine – und wo enthält mitgeliefertes Fach-Rohmaterial internen Jargon, ungesicherte Zahlen oder Formulierungen, die uns unnötig exponieren?`
         },
@@ -207,17 +207,18 @@ Wähle das Format, das Themenhoheit sichert und den Aufwand proportional hält:
         },
         'S-LITE': {
             id: 'S-LITE',
-            title: 'Haltung & Handlungsrichtung',
-            text: `TASK: EMPFOHLENE HALTUNG
-Wäge die Handlungsoptionen kurz ab, lege dich fest und formuliere die empfohlene Haltung bzw. den Kernentscheid in genau einem Satz.`
+            title: 'Haltung, Narrativ & Schutzgrenzen',
+            text: `TASK: EMPFOHLENE HALTUNG & SCHUTZGRENZEN
+Formuliere in 1–2 prägnanten Sätzen unsere empfohlene Haltung, das **eigene sachliche Narrativ** und die **Schutzgrenzen** (worauf wir uns bewusst nicht vorab festlegen: z.B. offener Lösungsraum, laufende Verfahren/Entscheide Dritter, Vertraulichkeit).`
         },
         'S-MESSAGES': {
             id: 'S-MESSAGES',
-            title: 'Kernbotschaften',
+            title: 'Sprachregelung (Basistext) & Kernbotschaften',
             compile: (params) => {
                 const count = params?.count || 'drei';
-                return `TASK: KERNBOTSCHAFTEN (OUTSIDE-IN & ZITIERFÄHIG)
-Formuliere ${count} prägnante, isoliert zitierfähige Kernbotschaften (Outside-in: Ziel, Nutzen und eigenes Handlungsnarrativ zuerst; ohne Vorwegnahme offener Entscheide oder unbelegte Versprechen).`;
+                return `TASK: DIREKT VERWENDBARE SPRACHREGELUNG & KERNBOTSCHAFTEN
+1. **Kompakter Basistext (1 Absatz):** Formuliere einen direkt verwendbaren, menschlich und unbürokratisch geschriebenen Sprachregelungs-Block aus eigener Perspektive (*Was gilt / Was tun wir → Warum ist das sinnvoll → Wie geht es weiter*, inkl. sauberem Planungs-Vorbehalt bei offenen Punkten).
+2. **Kernbotschaften (${count} Punkte, Outside-in):** Verdichte die Linie auf ${count} prägnante, isoliert zitierfähige Kernbotschaften ohne Fach-Jargon oder unbelegte Versprechen.`;
             }
         },
         'S-DECISION': {
@@ -226,9 +227,9 @@ Formuliere ${count} prägnante, isoliert zitierfähige Kernbotschaften (Outside-
             compile: (params) => {
                 const isIssue = params?.mode === 'issue';
                 const focusLine = isIssue
-                    ? 'Beurteile zuerst auf Gesamtebene, ob kommunikativer Handlungsbedarf besteht (*aktive Positionierung* vs. *reaktive Bereitschaft / Q&A* vs. *bewusster Verzicht*):'
+                    ? 'Prüfe anhand von *Aufwand vs. Ertrag*, *Gleichbehandlung/Präzedenzwirkung*, *Deutungs-/Expositionsrisiko* und *Verfahrenslead*, ob kommunikativer Handlungsbedarf besteht (*aktive Positionierung* vs. *reaktive Bereitschaft / Q&A* vs. *bewusster Verzicht*):'
                     : 'Beurteile zuerst auf Gesamtebene, ob das vorliegende Konzept zum Publikationssetting und zur Rolle unserer Organisation passt (*Konzept stimmig / punktuelle Schärfung* vs. *inhaltliche Neugewichtung* vs. *grundlegende Überarbeitung / Nichtfreigabe*):';
-                return `TASK: STRATEGISCHE VORPRÜFUNG & ENTSCHEID\n${focusLine}\nBewerte kurz Vor- und Nachteile, lege dich verbindlich fest und formuliere den Kernentscheid in genau einem prägnanten Satz.`;
+                return `TASK: STRATEGISCHE VORPRÜFUNG & ENTSCHEID\n${focusLine}\nWäge kurz die 2–3 ausschlaggebenden Gründe ab, lege dich verbindlich fest und formuliere den Kernentscheid in genau einem prägnanten Satz.`;
             }
         },
         'S-ALIGN': {
@@ -344,21 +345,21 @@ Liefere das Ergebnis passend zum Auftrag (interne Einschätzung, Direktantwort o
         'O-QA': {
             id: 'O-QA',
             title: 'Q+A Tabelle',
-            text: `TASK: KRITISCHES Q+A (8–10 FRAGEN, OUTSIDE-IN & ZITIERFÄHIG)
-Erstelle ein kompaktes Q+A mit den 8–10 heikelsten Fragen (Journalisten, Behörden, Stakeholder). *Qualitätsregeln für jede Antwort:* (a) **Outside-in:** Ziel, Schutzgut und eigenes Handlungsnarrativ zuerst, betriebliche Rahmenbedingungen sachlich danach (nie als Ausrede); (b) **Keine Vorwurfswiederholung** aus der Frage; (c) **Faktenstatus & Oberbegriffe:** Keine unbelegten Zeit-/Erfüllungsversprechen («so rasch wie möglich»), bei offener Ausgestaltung verständliche Oberbegriffe nutzen; (d) **Isoliert zitierbar** ohne Fachwissen:
-| Kritische Frage | Empfohlene Antwort (Outside-in & isoliert zitierbar) | Begründung der Linie / Abgrenzung |
-|-----------------|------------------------------------------------------|-----------------------------------|`
+            text: `TASK: KRITISCHES Q+A (PROPORTIONAL, OUTSIDE-IN & ZITIERFÄHIG)
+Erstelle ein kompaktes Q+A mit den 4–8 wichtigsten kritischen Fragen (Journalisten, Betroffene, Behörden/Partner – Anzahl proportional zum Thema). *Qualitätsregeln für jede Antwort:* (a) **Direkt, menschlich & eigenes Narrativ (Outside-in):** Natürliche, unbürokratische Sprache (frei von internem Fach-Jargon); Ziel und eigenes Handlungsnarrativ zuerst, niemals Vorwürfe oder negative Frames wiederholen; (b) **Zuständigkeit & Vorbehalt:** Fremden Verfahrenslead/Auftrag klar abgrenzen; bei offenen Verfahren/Entscheiden Prozessschritte, verständliche Oberbegriffe und saubere Planungs-Vorbehalte («nach heutigem Planungsstand», «voraussichtlich») statt vorweggenommener Ergebnisse, Zahlen oder Termine nutzen; (c) **Isoliert zitierbar**:
+| Kritische Frage | Empfohlene Antwort (menschlich, eigenes Narrativ & isoliert zitierbar) | Begründung der Linie / Schutzgrenze |
+|-----------------|------------------------------------------------------------------------|-------------------------------------|`
         },
         'O-INTERVIEW': {
             id: 'O-INTERVIEW',
             title: 'Interview- & Medienbriefing',
             text: `TASK: INTERVIEW- UND MEDIENBRIEFING
 Erstelle das kompakte, sofort einsatzbereite Interview-Briefing in exakt folgender Struktur:
-1. **Ziel, Rahmen & Rolle:** Ziel des Gesprächs und Positionierung unserer Vertretung (2–3 Sätze).
-2. **Grundhaltung & Rote Linie (Nicht-Festlegung):** [Prägnanter Leitsatz + klare Grenze, worauf wir uns im Gespräch keinesfalls festlegen]
-3. **Vier zitierfähige Kernbotschaften (Outside-in):** [Knapp, nahbar und ohne Fachwissen verständlich]
-4. **Fragenkatalog mit Antwortempfehlungen:** (Antworten strikt *Outside-in*: Ziel & Handlung vor Rahmenbedingungen; keine Vorwürfe wiederholen; keine unbelegten Zeitversprechen; Oberbegriffe bei offenen Punkten)
-| Kritische Frage | Taktischer Fokus (was betonen / was meiden) | Souveräner Antwortvorschlag (zitierfähig) |`
+1. **Ziel, Rahmen & Rolle:** Ziel des Gesprächs, unsere Rolle (inkl. Abgrenzung bei fremdem Verfahrenslead/Auftrag) und Tonalität (2–3 Sätze).
+2. **Eigenes Narrativ & Schutzgrenzen (Nicht-Festlegung):** [Tragender Leitsatz aus eigener Perspektive + klare Grenze zu offenen Verfahren, Vertraulichkeit und Vorbehalten]
+3. **Drei bis vier zitierfähige Kernbotschaften (Outside-in):** [Knapp, menschlich-nahbar und frei von internem Jargon]
+4. **Fragenkatalog mit Antwortempfehlungen:** (Natürliche gesprochene Sprache; eigenes Narrativ statt Wiederholung/Verneinung von Vorwürfen; Prozessschritte, Oberbegriffe und Planungs-Vorbehalte bei offenen Entscheiden)
+| Kritische Frage | Taktischer Fokus (was setzen / was weglassen) | Souveräner Antwortvorschlag (mündlich & zitierfähig) |`
         },
         'O-STRATEGY': {
             id: 'O-STRATEGY',
@@ -411,17 +412,17 @@ THEMENBOARD-BESCHLUSS: [Kategorie A/B/C mit Kurzbegründung in Klammern + Bestä
             title: 'Meeting-Briefing',
             text: `TASK: KOMPAKTES MEETING-BRIEFING
 Strukturiere das Briefing präzise für die direkte Gesprächsvorbereitung:
-- **ZIEL, LINIE & NICHT-FESTLEGUNG (1–2 SÄTZE):** [Mein Kernziel im Termin + rote Linie, worauf ich mich nicht vorzeitig festlegen lasse]
-- **MEINE ROLLE & ENTSCHEIDUNGSLOGIK:** [Welcher Entscheid/Beitrag ist gefragt und welcher sachliche Meilenstein gilt vor allfälligen Zusagen?]
+- **ZIEL, LINIE & NICHT-FESTLEGUNG (1–2 SÄTZE):** [Kernziel im Termin + rote Linie, worauf wir uns vorab nicht festlegen]
+- **ROLLE, VERFAHRENSLEAD & ENTSCHEIDUNGSLOGIK:** [Unser Mandat vs. Lead Dritter + sachlicher Meilenstein vor allfälligen Zusagen]
 - **AKTIV ZU PLATZIERENDE BOTSCHAFTEN (2–3 PUNKTE, OUTSIDE-IN):** [...]
-- **HEIKLE PUNKTE & GEGENFRAGEN:** [Kritischer Punkt → Souveräne, sachlich begründete Reaktion ohne Vorfreigabe]
-- **DO'S & DON'TS:** [Konkrete Gesprächs- und Wording-Leitplanken]`
+- **HEIKLE PUNKTE & REAKTION:** [Kritischer Punkt → Sachlich begründete Reaktion; bei Konflikten zuerst klärendes Gespräch vor schriftlicher Eskalation]
+- **PENDENZEN & NÄCHSTE SCHRITTE:** [Konkrete Zuordnung: Was | Wer (namentlich) | Bis wann]`
         },
         'O-ACTIONS': {
             id: 'O-ACTIONS',
             title: 'Konkrete Handlungsempfehlungen',
-            text: `TASK: PRIORISIERTE HANDLUNGSEMPFEHLUNGEN
-Leite aus dem Entscheid konkrete, nach Dringlichkeit priorisierte Kommunikationsmassnahmen (inkl. Zielwirkung und Zuständigkeit) ab – oder begründe knapp, warum bewusst auf aktive Kommunikation verzichtet wird.`
+            text: `TASK: PRIORISIERTE MASSNAHMEN & NÄCHSTE SCHRITTE
+Leite aus dem Entscheid konkrete, priorisierte Schritte mit klarer Zuordnung (**Was | Wer | Bis wann**) ab – bei kurzfristigen Irritationen oder Konflikten nach dem Ablauf «zuerst klärendes Gespräch/Telefonat, dann schriftlich» (bzw. skizziere bei Verzicht auf aktive Kommunikation kurz die reaktive Sprachregelung auf Anfrage).`
         },
         'O-WEEKLY': {
             id: 'O-WEEKLY',
@@ -478,6 +479,37 @@ Qualitätskriterien:
 - **Glaubwürdigkeit vor PR-Sterilität:** Fesselnder Einstieg (Lead) und anschauliche, lebendige Sprache ohne Eigenlob-Floskeln oder KI-Phrasen.
 - **Faktenstatus & Notwendige Konkretion:** Gesicherte Tatsachen strikt von Prüfoptionen/Planungsannahmen trennen; bei offener Ausgestaltung verständliche Oberbegriffe nutzen; keine unbelegten Versprechen.
 - **Konsistente Einordnung:** Unsere Kernrolle und Leistung im Gesamtsystem organisch sichtbar machen, unterschiedliche Rollen externer Partner sauber wahren.`
+        },
+        'O-POST': {
+            id: 'O-POST',
+            title: 'Social Media Post (Challenge / Entwurf & Visual-Briefing)',
+            compile: () => {
+                return `ZIELKANAL / ABSENDER: {KANAL_PERSON}
+
+TASK: KURZ-FEEDBACK (BEI ENTWURFS-CHALLENGE) & POSITIONIERUNGS-LINIE
+1. **Einordnung an Anfragende (Ich-Form, 2–3 Sätze):**
+   - *Falls im Thread bereits ein Post-Entwurf vorliegt:* Benenne kollegial («Aus meiner Sicht…»), was am Entwurf trägt und welche 2–3 Punkte wir schärfen sollten (z.B. Einstieg konkreter statt «Ich freue mich»-Floskel, internen Projekt-Jargon in Publikumsnutzen übersetzen, Rolle der integrierten Bahn oder Partner-Lead von Stadt/Kanton/Architektur sauberer einordnen, offene Planungsstände nicht als beschlossen darstellen).
+   - *Falls ein neuer Post entsteht:* Begründe kurz den gewählten Aufhänger (Hook), das eigene Narrativ und was aus dem Rohmaterial bewusst weggelassen wird (Vertraulichkeit, ungesicherte Zahlen/Termine).
+2. **Stimm- & Kanal-Kalibrierung:** Passe Perspektive und Tonfall exakt an die Zielperson bzw. den Kanal an:
+   - *Geschäftsleitung / Executive Board (Thought Leadership):* Integrierte Gesamtsicht – Infrastruktur als Mobilitätsdrehscheibe und Visitenkarte, Einklang von Kernbetrieb und nachhaltiger Arealentwicklung, bezahlbarer Raum, Kreislaufwirtschaft/Klima, frühzeitige Partnerallianzen, Wertschätzung für Teams vor Ort.
+   - *Projektentwicklung & Baukultur (Development):* Qualitätsvolle Arealentwicklung mit hoher Baukultur (Studienaufträge, Wettbewerbe, Partizipation), Innovation konkret erlebbar machen, Dreiklang aus Ökologie, Wirtschaft und Gesellschaft im engen Schulterschluss mit Städten und Gemeinden.
+   - *Bewirtschaftung & Betrieb (Property & Asset Management):* Standorte als lebendige Treffpunkte und Begegnungsorte statt reiner Durchgangszonen, Aufenthaltsqualität, Lokalkolorit & Regionalität im Mieter-Mix, intelligente Mehrfachnutzung gegen Leerstände, Alltagskomfort für Nutzende und Reisende.
+   - *Unternehmenskanal / Social Media (Instagram / LinkedIn):* Visuell-nahbares Storytelling auf Augenhöhe der Community – konkretes Detail vor Ort oder Blick hinter die Kulissen, direkter Alltagsnutzen, knappe Caption mit echter Community-Frage.
+
+TASK: PUBLIKATIONSREIFE POST-VARIANTEN & VISUAL-BRIEFING
+Erstelle zwei direkt verwendbare Textfassungen sowie den Bild-/Asset-Hinweis:
+
+### 1. HAUPTENTWURF (SUBSTANZ & STORYTELLING)
+- **Starker Hook (Zeile 1–2):** Konkrete Beobachtung vor Ort, spannende Frage oder greifbarer Wandel – strikt ohne hohle LinkedIn-Floskeln («Ich freue mich sehr…», «Ein weiterer Meilenstein…», Raketen-Emojis).
+- **Körper (Outside-in & menschlich):** Konkreter Mehrwert für Nutzende, Quartier oder Umwelt zuerst; unsere Organisation und Einheiten organisch als Teil des Gesamtsystems zeigen; Faktenstatus und Planungs-Vorbehalte («nach heutigem Stand») sauber wahren; Partner (@Stadt, @Planer, Teams) fair würdigen.
+- **Abschluss & Hashtags:** Glaubwürdiger Schlusssatz oder echte Diskussionsfrage + max. 3–5 präzise Hashtags.
+
+### 2. ALTERNATIVE (POINTIERTE KURZFASSUNG)
+- Kompakter, schnell scannbarer Post mit alternativem Einstieg (ideal für Mobile-Feeds oder Carousel-/Reel-Begleittext).
+
+### 3. BILD- & ASSET-EMPFEHLUNG
+- Welches konkrete Bild-/Videomotiv (z.B. echte Szene mit Menschen/Baufortschritt vor Ort, Vorher/Nachher-Carousel, kurzes Statement-Reel statt steriler Visualisierung) die Aussage am besten trägt.`;
+            }
         },
         'O-PPT-STORYBOARD': {
             id: 'O-PPT-STORYBOARD',
@@ -929,6 +961,42 @@ Extrahiere alle relevanten Themen aus dem vorliegenden E-Mail-Verlauf, den Termi
                 }
             ],
             forks: ['O-QA', 'O-MEDIA']
+        },
+
+        // 19. SOCIAL MEDIA POST (LINKEDIN / INSTAGRAM) (2 TURNS)
+        {
+            id: 'recipe-social-post',
+            name: 'Social Media Post',
+            family: 'create',
+            variables: [
+                {
+                    key: 'KANAL_PERSON',
+                    name: 'KANAL_PERSON',
+                    label: 'Kanal / Absender (optional)',
+                    description: 'Leer lassen für automatische Erkennung aus dem Mailverlauf oder gezielt vorgeben',
+                    placeholder: 'z.B. Geschäftsleitung, Projektentwicklung, Bewirtschaftung, Social-Media-Kanal...',
+                    default: 'Gemäss E-Mail-Verlauf (Executive Persona / Fachbereichsleitung / Unternehmenskanal)',
+                    required: false
+                }
+            ],
+            turns: [
+                {
+                    title: 'LAGEBILD & ENTWURFS-CHALLENGE',
+                    role: 'Du bist ein erfahrener Executive Social-Media-Stratege und Ghostwriter.',
+                    chunks: [
+                        'I-MAIL',
+                        { chunkId: 'R-FULL', params: { focus: 'Projektkontext, bisherige Positionierungen, Partnerrollen (Stadt/Kanton/Planer), Faktenstand und verfügbare Bild-/Video-Assets' } },
+                        'C-REQUEST',
+                        'T-TLDR'
+                    ]
+                },
+                {
+                    title: 'POST-ENTWURF & VISUAL-BRIEFING',
+                    role: 'Du bist ein erstklassiger Executive Ghostwriter und Social-Media-Redakteur.',
+                    chunks: ['O-POST']
+                }
+            ],
+            forks: ['O-REPLY', 'O-QA', 'O-ARTICLE-DRAFT']
         }
     ];
 

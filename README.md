@@ -25,7 +25,7 @@ PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI work
 - 🛡️ **Source-Grounded Verification & Phase Guardrails**  
   Employs strict source attribution (citing email threads, M365 Graph, or attachments) and gap markers (*«[Offen / Zu prüfen]»*) rather than decorative icons or negative-constraint bans. Turn 2+ and output forks inherit `G_OUTPUT_STYLE`, preserving uncompromising anti-fluff rules and executive tone. Furthermore, non-final turns automatically inject a strict `PHASEN-FOKUS` boundary rule preventing host LLMs from drafting premature final outputs during early analysis steps.
 - 🗜️ **Chrome Sync Quota Hardening & High-Density Compaction**  
-  All 18 recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (e.g. `recipe-freigabe` at 7.4 KB, `recipe-medienanfrage` at 7.3 KB, `recipe-praesentation` at 7.2 KB, `recipe-proofreading` at 6.9 KB). Every turn across all recipes is strictly capped at $\le 4$ high-impact tasks. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_18_express_oneshot_parity`), preventing fatal storage quota exceptions.
+  All 19 recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (e.g. `recipe-freigabe` at 7.4 KB, `recipe-medienanfrage` at 7.3 KB, `recipe-praesentation` at 7.2 KB, `recipe-social-post` at 7.0 KB, `recipe-proofreading` at 6.9 KB). Every turn across all recipes is strictly capped at $\le 4$ high-impact tasks. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_20_social_post_recipe`), preventing fatal storage quota exceptions.
 - 🔢 **Dynamic Task Header Sequencing & Clean Unicode Flow**  
   Turn and fork compilation engines dynamically re-index all prompt tasks into clean sequential numbers (`TASK 1:`, `TASK 2:`, `TASK 3:`...) with clean Unicode arrow (`→`) flow, ensuring host LLMs follow a clear, logical step order regardless of chunk assembly.
 - ⏱️ **1500ms Debounced Cloud Gist Sync**  
@@ -74,6 +74,12 @@ PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI work
   - **Procedural Lead & Raw Material Screening:** Verifies legal authority and procedural lead (federal/cantonal/municipal/partner jurisdiction vs. own role) to avoid false exposure as the sole instigator; filters raw business inputs for internal jargon, premature commitments, or unnecessary self-exposure.
   - **Two-Layer Email Output Architecture (`O-REPLY`):** Delivers Layer 1 (concise 1–3 sentence internal recommendation in 1st person with decisive reasons and next steps) alongside Layer 2 (publication-ready, jargon-free text block with empathy-before-facts, objective criteria, and milestone caveats for affected parties or internal coordination).
   - **Media Narrative Upfront Clarity (`I-MEDIA`, `O-MEDIA`, `C-MEDIA-CHECK`):** Reorders media output to establish upfront clarity, accessible human tone, and an active own narrative, completely avoiding defensive negation of negative question frames.
+- 📱 **Executive Social Media Ghostwriting & Visual Briefing (v2.20)**  
+  New Recipe #19 (`recipe-social-post`): A 2-turn workflow engineered for LinkedIn and Instagram ghostwriting:
+  - **Draft Critique & Challenge:** When an existing draft is in the thread, delivers a collegial 2–3 sentence assessment on what works, what to sharpen, and what internal project jargon to drop before publishing.
+  - **Persona & Channel Calibration:** Tailors perspective and tone to specific leadership archetypes (Executive Board thought leadership, project development/Baukultur, property/community quality, or visual corporate community storytelling).
+  - **Dual Ready-to-Publish Variants:** Outputs Variant 1 (substantive storytelling with strong hook, outside-in audience value, and zero LinkedIn clichés like «Ich freue mich sehr…») plus Variant 2 (a punchy, compact alternative for fast-scrolling mobile feeds).
+  - **Visual Asset Briefing:** Supplies concrete recommendations for real photo, carousel, or short video assets grounded in the project context.
 - 🛑 **Streaming State Guard & Native Stop Interception**  
   When an AI response begins streaming, PromptDock displays a pulsing amber indicator (`Generiert Antwort...`) and auto-collapses into the 36px capsule. If you click the host chat's native stop button (*"Stop generating"* / *"Stop response"*), PromptDock catches the event and advances directly to your checkpoint without freezing.
 - 🎨 **Redesigned Command Palette & Slide-Up Sheet**  
@@ -125,7 +131,7 @@ PromptDock 2.1 includes a vendor-agnostic Corporate Communications & Intelligenc
 
 1. **Medienanfrage** (3 Turns: Lagebild & Abklärungs-Triage ➔ Strategie & Format-Abwägung ➔ Medienantwort, Begründung & 4-Punkte-Check)
 2. **Interview-Vorbereitung** (3 Turns: Briefing ➔ Haltung & Rote Linien ➔ Interview-Briefing mit Outside-in Q&A)
-3. **Wording & Sprachregelung** (2 Turns: Kernanalyse ➔ Outside-in Kernbotschaften & Kritisches Q&A)
+3. **Wording & Basistext** (2 Turns: Kernanalyse ➔ Outside-in Basistext, Kernbotschaften & Kritisches Q&A)
 4. **Strategischer Sparringspartner** (Herausforderndes Sparring)
 5. **Kommunikationsstrategie** (3 Turns: Lagebild ➔ Positionierung & Nicht-Festlegung ➔ 6-Säulen-Strategie)
 6. **E-Mail & Stakeholder-Antwort** (2 Turns: Anliegen, Meilenstein-Kontext & Fakten ➔ Antwortentwurf nach den 4 Goldenen Email-Regeln)
@@ -141,6 +147,7 @@ PromptDock 2.1 includes a vendor-agnostic Corporate Communications & Intelligenc
 16. **Standort- & Stakeholder-Austausch** (Kompakteinträge)
 17. **Präsentation & Storyboard** (3 Turns: Lagebild & Deck-Analyse ➔ 5-Kriterien-Strategie & Folien-Triage ➔ Storyboard mit Outside-in-Logik)
 18. **Medienantwort-Check** (Single-Shot: Vorprüfung nach Entscheidungs- & Festlegungs-Check 1–4 ➔ Medialer Belastbarkeits-Check a–d ➔ Rotstift & versandfertige Endfassung)
+19. **Social Media Post** (2 Turns: Lagebild & Entwurfs-Challenge ➔ 2 Post-Varianten & Visual-Briefing; Forks zu E-Mail, Q+A & Artikel)
 
 ---
 

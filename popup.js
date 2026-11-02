@@ -300,10 +300,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (loaded && loaded.length > 0) {
         prompts = loaded;
 
-        // One-time catalog sync & high-signal compaction upgrade (v2.18)
+        // One-time catalog sync & high-signal compaction upgrade (v2.20)
         try {
-            const local = await ext.storage.local.get(['v2_1_praesentation_seeded', 'v2_18_express_oneshot_parity']);
-            if ((!local?.v2_1_praesentation_seeded || !local?.v2_18_express_oneshot_parity) && Catalog?.RECIPES) {
+            const local = await ext.storage.local.get(['v2_1_praesentation_seeded', 'v2_20_social_post_recipe']);
+            if ((!local?.v2_1_praesentation_seeded || !local?.v2_20_social_post_recipe) && Catalog?.RECIPES) {
                 let changed = false;
                 for (const catRecipe of Catalog.RECIPES) {
                     const compiledExpress = Catalog.compileExpress ? Catalog.compileExpress(catRecipe) : '';
@@ -312,7 +312,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         prompts[idx].recipeId = catRecipe.id;
                         prompts[idx].content = compiledExpress;
                         changed = true;
-                    } else if ((catRecipe.id === 'recipe-praesentation' || catRecipe.id === 'recipe-medienantwort-check') && idx < 0) {
+                    } else if ((catRecipe.id === 'recipe-praesentation' || catRecipe.id === 'recipe-medienantwort-check' || catRecipe.id === 'recipe-social-post') && idx < 0) {
                         prompts.push({
                             id: (prompts.length + 1).toString(),
                             name: catRecipe.name,
@@ -345,7 +345,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         v2_15_catalog_harmonization: true,
                         v2_16_medien_narrative_grounding: true,
                         v2_17_outlook_archetypes_grounding: true,
-                        v2_18_express_oneshot_parity: true
+                        v2_18_express_oneshot_parity: true,
+                        v2_19_catalog_cohesion: true,
+                        v2_20_social_post_recipe: true
                     });
                 }
             }
