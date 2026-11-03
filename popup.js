@@ -300,10 +300,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (loaded && loaded.length > 0) {
         prompts = loaded;
 
-        // One-time catalog sync & high-signal compaction upgrade (v2.21)
+        // One-time catalog sync & high-signal compaction upgrade (v2.22)
         try {
-            const local = await ext.storage.local.get(['v2_1_praesentation_seeded', 'v2_21_kom_anker_and_quota_relief']);
-            if ((!local?.v2_1_praesentation_seeded || !local?.v2_21_kom_anker_and_quota_relief) && Catalog?.RECIPES) {
+            const local = await ext.storage.local.get(['v2_1_praesentation_seeded', 'v2_22_unleash_and_challenge']);
+            if ((!local?.v2_1_praesentation_seeded || !local?.v2_22_unleash_and_challenge) && Catalog?.RECIPES) {
                 let changed = false;
                 const deprecatedIds = new Set(['recipe-proofreading', 'recipe-strategie']);
                 const deprecatedNames = new Set(['Proofreading', 'Strategie entwickeln']);
@@ -355,7 +355,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         v2_18_express_oneshot_parity: true,
                         v2_19_catalog_cohesion: true,
                         v2_20_social_post_recipe: true,
-                        v2_21_kom_anker_and_quota_relief: true
+                        v2_21_kom_anker_and_quota_relief: true,
+                        v2_22_unleash_and_challenge: true
                     });
                 }
             }

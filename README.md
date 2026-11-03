@@ -18,6 +18,12 @@
 
 PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI workflow cockpit & cross-device execution bridge** — engineered right inside your browser:
 
+- 🖋️ **Editorial Liberation & Redaktions-Challenge Architecture (v2.22)**  
+  Eliminates rigid sentence-level dogmas and mechanical abstraction commands across media and executive workflows:
+  - **Natural Context & Everyday Logic (`O-MEDIA`, `O-QA`, `O-INTERVIEW`, `O-ARTICLE-DRAFT`):** Replaces rigid templates (*«Jeder Satz erfüllt genau eine Funktion»*) and blanket abstraction triggers with natural phrasing guidance—grounding statements in tangible everyday operational context and safeguarding only genuinely open future decisions.
+  - **3-Step Redaktions-Challenge & Dual-Variant Output (`C-MEDIA-CHECK`):** Upgrades `Medienantwort-Check` to a complete diagnostic challenge: (1) *Sachverhalts- & Risiko-Analyse* (triage, substance vs. tonal risk), (2) *Ruthless Redaktions-Challenge* (flagging sterility, banality traps, and unaddressed questions that trigger follow-up calls), and (3) *Two publication-ready variants* (*Variante 1: Sympathisch & substanziell [Empfehlung]* vs. *Variante 2: Entschärft [Minimal-invasiv]*).
+  - **Single-Click Steering Chip (`content.js`):** Adds the `+ Ohne Rückfrage lösen` chip to the HUD Spotlight Composer, steering the model to resolve inquiries substantially and warmly without triggering internal clarification cascades.
+  - **Chrome Sync Quota Relief:** Storage consumption lowered further to **75,968 B (~74.2 KB)**, expanding safe headroom to **26,432 B (~25.8 KB / 25.8%)** under the 102.4 KB sync quota, with migration flag `v2_22_unleash_and_challenge`.
 - ⚓ **#KOM-ANKER Grounding & Chrome Sync Quota Consolidation (v2.21)**  
   High-signal Microsoft Graph grounding combined with storage optimization:
   - **#KOM-ANKER Prioritization (`R-FULL`):** Directs Microsoft 365 BizChat and Copilot to search E-Mails, SharePoint, and Teams chats, explicitly prioritizing notes, links, and screenshots tagged with `#KOM-ANKER` in self-chats for instantaneous factual anchoring.
@@ -30,7 +36,7 @@ PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI work
 - 🛡️ **Source-Grounded Verification & Phase Guardrails**  
   Employs strict source attribution (citing email threads, M365 Graph, or attachments) and gap markers (*«[Offen / Zu prüfen]»*) rather than decorative icons or negative-constraint bans. Turn 2+ and output forks inherit `G_OUTPUT_STYLE`, preserving uncompromising anti-fluff rules and executive tone. Furthermore, non-final turns automatically inject a strict `PHASEN-FOKUS` boundary rule preventing host LLMs from drafting premature final outputs during early analysis steps.
 - 🗜️ **Chrome Sync Quota Hardening & High-Density Compaction**  
-  All 17 active recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (e.g. `recipe-medienanfrage` at 7.2 KB, `recipe-praesentation` at 7.2 KB, `recipe-social-post` at 7.0 KB, `recipe-freigabe` at 6.9 KB, `recipe-interview` at 5.8 KB) and total sync storage stays well below the 102,400-byte ceiling (~79 KB total, 79.9%). Every turn across all recipes is strictly capped at $\le 4$ high-impact tasks. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_21_kom_anker_and_quota_relief`), preventing fatal storage quota exceptions.
+  All 17 active recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (e.g. `recipe-medienanfrage` at 7.2 KB, `recipe-social-post` at 7.0 KB, `recipe-praesentation` at 6.8 KB, `recipe-freigabe` at 6.1 KB, `recipe-interview` at 5.8 KB) and total sync storage stays well below the 102,400-byte ceiling (~76 KB total, 74.2%). Every turn across all recipes is strictly capped at $\le 4$ high-impact tasks. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_22_unleash_and_challenge`), preventing fatal storage quota exceptions.
 - 🔢 **Dynamic Task Header Sequencing & Clean Unicode Flow**  
   Turn and fork compilation engines dynamically re-index all prompt tasks into clean sequential numbers (`TASK 1:`, `TASK 2:`, `TASK 3:`...) with clean Unicode arrow (`→`) flow, ensuring host LLMs follow a clear, logical step order regardless of chunk assembly.
 - ⏱️ **1500ms Debounced Cloud Gist Sync**  
@@ -46,7 +52,7 @@ PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI work
 - 🚊 **In-Chat Rail UX ("Rail, Checkpoint, Fork")**  
   Complex corporate communication, audit, and strategic tasks are split into discrete cognitive turns (*Turn 1: Research / Situation Analysis* ➔ *Turn 2: Strategy / Audit* ➔ *Turn 3: Output Synthesis*). A floating stepper rail sits directly above the chat input, showing your current step and workflow progress.
 - 🎙️ **2-Zone Spotlight Composer**  
-  The expanded HUD is organized into two dedicated zones: a compact top row of quick steering modifier chips (*+ Fakten korrigieren*, *+ Tiefer recherchieren*, *+ Haltung vorgeben*) and a unified full-width input container with an integrated primary `Weiter ➔` CTA (`⌥⇧→`). The steering input spans the full card width, eliminating truncated placeholders.
+  The expanded HUD is organized into two dedicated zones: a compact top row of quick steering modifier chips (*+ Fakten korrigieren*, *+ Tiefer recherchieren*, *+ Haltung vorgeben*, *+ Ohne Rückfrage lösen*) and a unified full-width input container with an integrated primary `Weiter ➔` CTA (`⌥⇧→`). The steering input spans the full card width, eliminating truncated placeholders.
 - 🏝️ **Dynamic Island 36px Capsule**  
   A single-line, 36px minimized status capsule featuring live turn status, workflow name, a pulsing streaming indicator, and compact quick actions. It never wraps and keeps your chat conversation completely unobscured.
 - 🌊 **Spring-Physics Morph & Scale Crossfade**  
@@ -149,7 +155,7 @@ PromptDock 2.1 includes a vendor-agnostic Corporate Communications & Intelligenc
 13. **Tiefenrecherche & Intelligence** (Quellen- & Fakten-Dossier)
 14. **Standort- & Stakeholder-Austausch** (Kompakteinträge)
 15. **Präsentation & Storyboard** (3 Turns: Lagebild & Deck-Analyse ➔ 5-Kriterien-Strategie & Folien-Triage ➔ Storyboard mit Outside-in-Logik)
-16. **Medienantwort-Check** (Single-Shot: Vorprüfung nach Entscheidungs- & Festlegungs-Check 1–4 ➔ Medialer Belastbarkeits-Check a–d ➔ Rotstift & versandfertige Endfassung)
+16. **Medienantwort-Check** (Single-Shot: Sachverhalts- & Risiko-Analyse ➔ Redaktions-Challenge ➔ 2 versandfertige Textvarianten: Sympathisch & substanziell vs. Entschärft)
 17. **Social Media Post** (2 Turns: Lagebild & Entwurfs-Challenge ➔ 2 Post-Varianten & Visual-Briefing; Forks zu E-Mail, Q+A & Artikel)
 
 ---

@@ -1916,7 +1916,8 @@ function renderRailUI() {
         const modChips = [
             { label: '+ Fakten korrigieren', note: 'Bitte korrigiere folgende Fakten: ' },
             { label: '+ Tiefer recherchieren', note: 'Recherchiere noch tiefer zu: ' },
-            { label: '+ Haltung vorgeben', note: 'Empfohlene Haltung soll lauten: ' }
+            { label: '+ Haltung vorgeben', note: 'Empfohlene Haltung soll lauten: ' },
+            { label: '+ Ohne Rückfrage lösen', note: 'Ziel ist es, ohne weitere interne Abklärungen/Zahlenrecherche sympathisch und substanziell zu antworten.' }
         ];
 
         modChips.forEach(c => {
