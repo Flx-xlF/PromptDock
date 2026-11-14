@@ -119,32 +119,6 @@ def render_icon(size):
                 g = int(g * (1 - cov) + 240 * cov)
                 b = int(b * (1 - cov) + 255 * cov)
 
-            # --- 4. "v2" / Workflow Mark in Bottom Right ---
-            # At small toolbar sizes (16x16), draw a bold cursor underline: (72, 86) -> (100, 86)
-            # At medium/large sizes (>= 32), render a crisp '2' mark!
-            if size <= 16:
-                # Underline cursor
-                if 72 <= nx <= 100 and abs(ny - 86) < line_w + 0.8:
-                    cov = max(0.0, min(1.0, (line_w + 0.8 - abs(ny - 86)) / 1.6))
-                    r = int(r * (1 - cov) + 244 * cov)
-                    g = int(g * (1 - cov) + 114 * cov)
-                    b = int(b * (1 - cov) + 182 * cov)
-            else:
-                # Draw digit '2'
-                d_2_top = dist_to_segment(nx, ny, 77.0, 70.0, 95.0, 70.0)
-                d_2_right = dist_to_segment(nx, ny, 95.0, 70.0, 95.0, 77.0)
-                d_2_diag = dist_to_segment(nx, ny, 95.0, 77.0, 77.0, 88.0)
-                d_2_bot = dist_to_segment(nx, ny, 76.0, 88.0, 98.0, 88.0)
-                d_2 = min(d_2_top, d_2_right, d_2_diag, d_2_bot)
-                
-                w_2 = 3.6
-                if d_2 < w_2 + 1.2:
-                    cov = max(0.0, min(1.0, (w_2 + 0.8 - d_2) / 1.6))
-                    # Vibrant neon pink-fuchsia
-                    r = int(r * (1 - cov) + 244 * cov)
-                    g = int(g * (1 - cov) + 114 * cov)
-                    b = int(b * (1 - cov) + 182 * cov)
-
             final_a = int(alpha * 255)
             buf[idx:idx+4] = [r, g, b, final_a]
             

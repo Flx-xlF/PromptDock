@@ -22,8 +22,8 @@
 
     // Compact style & quality discipline for Turn 2+ (Strategy & Output drafting) and Forks
     const G_OUTPUT_STYLE = `QUALITÄTS- & STILVORGABE:
-- Keine leeren Phrasen, Füllwörter oder KI-typischen Formulierungen. Präzise, adressatengerechte Sprache.
-- Fakten- und Strategietreue: Stütze dich strikt auf die gesicherten Erkenntnisse; markiere offene Punkte bei Bedarf mit «[Offen / Zu prüfen]».
+- Nahbar, menschlich, sympathisch & ohne Vorwissen verständlich (Anti-Technokratie): Schreib durchgehend zugänglich, warmherzig und auf Augenhöhe – komplett frei von Technokratie, Behörden-, Planer- oder Juristendeutsch, sodass auch Menschen ohne jedes Vorwissen den Sinn beim ersten Lesen mühelos verstehen. Keine leeren Phrasen oder KI-Floskeln.
+- Mehrperspektiven- & Faktentreue: Prüfe jede Aussage aus Sicht von Betroffenen/Laien, kritischer Öffentlichkeit/Medien und beteiligten Partnern. Stütze dich strikt auf gesicherte Fakten («[Offen / Zu prüfen]» bei Lücken).
 - Redundanz-Sperre: Wiederhole bereits in Vorstufen festgelegte Analysen oder Herleitungen nicht erneut, sondern wende sie direkt auf das konkrete Arbeitsprodukt an.`;
 
     // Atomic Chunk Definitions
@@ -31,53 +31,37 @@
         // --- INTAKE ADAPTERS ---
         'I-MEDIA': {
             id: 'I-MEDIA',
-            title: 'Inhalts-Analyse & Triage (Medien/Fragen)',
-            text: `TASK: FRAGENKATALOG, TYPOLOGIE & THESEN-CHECK
-Analysiere die Medienanfrage im Mailtext sowie allfällige Anhänge/Links:
-1. **Kernfrage & Teilfragen:** Isoliere das übergeordnete Thema, alle expliziten/impliziten Teilfragen (nummeriert) sowie Fristen/Deadlines.
-2. **Fragen-Typologie & Stossrichtung:** Handelt es sich um eine sachliche Routineanfrage oder um kaskadierende, suggestive bzw. kritische Fragen? Welches Narrativ (Storyline) verfolgt der Journalist?
-3. **Zuständigkeits-, Thesen- & Rohmaterial-Check:** Liegen Eigentum, Verfahrenslead oder Auftrag bei uns oder bei Dritten (z.B. Bund, Gemeinde, Kanton, Partner, Mieter)? Prüfe Vorannahmen der Anfrage sowie mitgelieferte Fach-Inputs/Entwürfe im Thread auf internen Jargon, unnötige Exposition und Angriffsflächen.
-
-TASK: ABKLÄRUNGS-TRIAGE (AUFWAND-MINIMIERUNG)
-Beschränke den internen Abklärungsaufwand in den Fachbereichen auf das absolute Minimum. Ordne jede Frage nach dem internen Faktenabgleich einer von drei Kategorien zu:
-1. **DIREKT BEANTWORTBAR (OHNE RÜCKFRAGE):** Sofort aus Mailverlauf, M365-Wissensquellen (SharePoint/Graph) oder auf übergeordneter Flughöhe beantwortbar (Priorität: maximal hier bündeln!).
-2. **BEWUSST NICHT INTERN ABKLÄREN (DETAILFALLE):** Granulare oder suggestive Teilfragen, die unnötig Fachressourcen binden und durch eine übergeordnete Kernaussage souverän abgedeckt werden.
-3. **ZWINGENDER MINIMAL-CHECK (BLOCKER):** Maximal 1–2 unverzichtbare Faktenlücken – formuliert als geschlossene Ja/Nein-Prüffrage an die Fachstelle (keine offenen Rechercheaufträge!).`
+            title: 'Diagnostische Dekonstruktion & Abklärungs-Triage',
+            text: `TASK: DIAGNOSTISCHE DEKONSTRUKTION, ROLLENKLÄRUNG & TRIAGE
+Analysiere die Anfrage im Mailtext samt Vorlauf und Anhängen in der Tiefe:
+1. **Oberfläche vs. Subtext & Prämissen-Falle:** Trenne die vordergründigen Sachfragen (inkl. Frist) vom unterschwelligen Subtext. Welche geladenen Begriffe, einseitigen Deutungen oder falschen Vorannahmen stecken in der Frage (bzw. in internen Vor-Entwürfen), die wir weder übernehmen noch durch Verneinung verstärken dürfen?
+2. **Rollen, Zuständigkeiten & Vorbehalte:** Kläre die genaue Aufgabenteilung (unsere Verantwortung vs. Federführung oder Rolle externer Partner, Behörden und Beteiligter) sowie bestehende Entscheidungs-, Verhandlungs- oder Realisierungsvorbehalte.
+3. **Abklärungs-Triage (Aufwand-Minimierung):** Ordne zu, was sich **direkt ohne interne Rückfrage** über zusammenhängende Sach-/Praxislogik und M365-Wissen souverän beantworten lässt, wo wir **bewusst auf Einzelabklärungen verzichten** (Detailfalle), und ob maximal 1 zwingender Fakten-Blocker (geschlossene Ja/Nein-Frage) besteht.`
         },
         'I-MAIL': {
             id: 'I-MAIL',
-            title: 'Inhalts-Analyse (E-Mail/Vorgang)',
-            text: `TASK: INHALTS-, THREAD- & AUFTRAGSANALYSE (OUTLOOK)
-Analysiere den E-Mail-Verlauf (Chronologie von unten nach oben) sowie allfällige Anhänge/Dokumente nach den drei Ebenen **Sache, Ermessen und Form**:
-- **Eigentlicher Auftrag & Adressatenkreis:** Worin besteht das eigentliche Ziel (**interne Einschätzung/Linie** «Was meinst du?», **Direktantwort**, **verwendbarer Textblock/Wording für Dritte** wie Betroffene/Partner/Behörden oder **Beitrag/Planung**) und für wen ist das Resultat bestimmt?
-- **Zuständigkeit, Verfahrenslead & Historie:** Was ist bisher passiert, bei wem liegt der Verfahrenslead bzw. Auftrag (z.B. Bund, Gemeinde, Partner vs. unsere Rolle), und von welchem konkreten Meilenstein oder Entscheid hängt eine Aussage ab?
-- **Rohmaterial vs. gesicherte Fakten:** Welche Angaben im Thread sind belastbare Fakten/Termine – und wo enthält mitgeliefertes Fach-Rohmaterial internen Jargon, ungesicherte Zahlen oder Formulierungen, die uns unnötig exponieren?`
+            title: 'Vorgangs-, Subtext- & Rollen-Analyse (E-Mail)',
+            text: `TASK: VORGANGS-, SUBTEXT- & ROLLEN-ANALYSE
+Analysiere den E-Mail-Verlauf (Chronologie von unten nach oben) samt Anhängen:
+- **Eigentlicher Auftrag & Subtext:** Was ist das konkrete Ziel (**interne Einschätzung**, **Direktantwort**, **verwendbarer Textblock für Dritte** oder **strategische Weichenstellung**) und welche taktischen Fallstricke stecken im Anliegen (z.B. verfrühte Festlegung, Vermischung getrennter Themen-/Entscheidungsebenen oder ein ungünstiges Setting)?
+- **Zuständigkeiten, Partner & Rohmaterial-Check:** Wer trägt für welchen Teil die Verantwortung (eigene Rolle vs. Partner, Behörden oder Gremien), welche Entscheidungsvorbehalte gelten, und wo enthält internes Rohmaterial Fachjargon, einen defensiv-belehrenden Ton oder ungesicherte Angaben?`
         },
         'I-DOC': {
             id: 'I-DOC',
-            title: 'Inhalts-Analyse (Dokumenten-, Setting- & Folienprüfung)',
-            text: `TASK: PUBLIKATIONSSETTING, ZIELPUBLIKUM & FAKTENGRENZEN-ANALYSE
-Analysiere die verlinkte/angehängte Datei (Textentwurf, Beitrag, Präsentation, Q&A) samt E-Mail-Verlauf:
-1. **Publikationssetting & Drei-Stufen-Zielpublikum:**
-   - **Setting & Auftrag:** Kläre vorab Format und Absenderinteresse (*Behörden-/Gremienvorlage* vs. *Paid Content / Jubiläums- oder Unternehmenspublikation / Partnerschaft* vs. *unabhängiger Medienbeitrag*; falls nicht eindeutig erkennbar, naheliegendste Einordnung transparent als Annahme benennen).
-   - **Zielpublika:** (a) **Primäres Zielpublikum** (inkl. Erwartung an Vollzugsstand/Nachweise bzw. Lesewert), (b) **Sekundäres Zielpublikum** (Medien/Öffentlichkeit – verständlich & isoliert zitierbar), (c) **Empfänger unserer Rückmeldung** (Absender/Verfassende im Thread).
-2. **Strategische Konzept- & Rollenpassung:** Passt das Text-/Folienkonzept grundsätzlich zum Publikationssetting und wird die eigentliche Kernrolle bzw. Gesamtleistung unserer Organisation zutreffend eingeordnet (statt verkürzt oder verzerrt dargestellt)?
-3. **Faktengrenzen & Risiken:** Trenne gesicherte Tatsachen/Beobachtungen von unbelegten Kausalitäten, fehlenden Vollzugsständen und unbelegten Zeit-/Optionsversprechen.`
+            title: 'Inhalts-Analyse (Text-, Medienmitteilungs- & Dokumentenprüfung)',
+            text: `TASK: PUBLIKATIONSSETTING, SUBTEXT & FAKTENGRENZEN-ANALYSE
+Analysiere das vorliegende Dokument (Medienmitteilung, Textentwurf, Beitrag, Q&A) samt E-Mail-Verlauf:
+1. **Setting & Zielpublika:** Kläre Format und Wirkung auf (a) **Primäres Zielpublikum (inkl. Laien ohne Vorwissen)**, (b) **kritische Öffentlichkeit/Medien (Leak-Test)** und (c) **Autorenschaft im Thread**.
+2. **Framing-, Ton- & Rollen-Diagnose:** Wo tappt der Entwurf in defensives Problem-Framing (Wiederholung oder Verneinung negativer Reizwörter), Technokratie, Eigenlob/PR-Überhöhung statt sympathischer Glaubwürdigkeit, unklare Rollentrennung oder sprachliche Echos?
+3. **Faktengrenzen & Sicherungen:** Wo fehlen notwendige Vorbehalte bei noch offenen Entscheiden/Optionen, und wo stehen volatile Langfrist-Prognosen oder unbelegte Versprechen?`
         },
         'I-PPT': {
             id: 'I-PPT',
-            title: 'Kontext-, Zielgruppen- & Deck-Analyse (Präsentation)',
-            text: `TASK: MODUS, ZIELGRUPPE & ENTSCHEIDUNGS-PSYCHOLOGIE
-Analysiere den E-Mail-Verlauf sowie verlinkte/angehängte Dokumente oder Folien (SharePoint, OneDrive, Anhang):
-1. **Arbeitsmodus:** Bestimme, ob **MODUS A (Neukonzeption aus Kontext ohne bestehende PPT)** oder **MODUS B (Originalnahes Review/Upgrade eines bestehenden Foliendecks inkl. allfälliger Q&A-Folien)** vorliegt.
-2. **Zielpublika (Primär vs. Sekundär):** Wer ist das primäre Zielpublikum (z.B. Gremium, Behörde/Amt – welche Nachweise, Zuständigkeiten und konkreten Vollzugsstände erwartet es?) und wie wirkt die Vorlage sekundär auf Öffentlichkeit/Medien?
-3. **Der «Elefant im Raum»:** Welcher Vorbehalt, Zielkonflikt oder fehlende Umsetzungsnachweis gefährdet die Akzeptanz am stärksten?
-
-TASK: SUBSTANZ-, VOLLZUGS- & BELASTBARKEITS-PRÜFUNG (LEAK-TEST)
-- **Substanz- & Faktengrenzen-Diagnose:**
-  * *Bei MODUS A:* Extrahiere die gesicherten Fakten, Zahlen und offenen Lücken für Situation (S), Komplikation (C), Kernfrage (Q) und Antrag (A).
-  * *Bei MODUS B:* Prüfe Folie für Folie (inkl. Q&A) direkt gegen den Originaltext auf Wiederholungen, fehlenden konkreten Umsetzungsstand, Inside-out-Prozesssprache und unbelegte Kausalitäten oder Zeitversprechen.
-- **Outside-in- & Leak-Test:** Welche Aussagen wären isoliert zitiert (Medien-Leak, Öffentlichkeitsgesetz, Aufsicht) ohne Fachwissen unverständlich, rechtfertigend oder als unbelegtes Versprechen angreifbar?`
+            title: 'Kontext-, Zielgruppen- & Deck-Diagnose (Präsentation)',
+            text: `TASK: MODUS, ENTSCHEIDUNGS-PSYCHOLOGIE & LEAK-TEST
+Analysiere den E-Mail-Verlauf sowie verlinkte/angehängte Unterlagen oder Folien:
+1. **Arbeitsmodus & Zielpublikum:** Bestimme **MODUS A (Neukonzeption)** vs. **MODUS B (Review/Upgrade bestehendes Deck inkl. Q&A)** sowie die Erwartungshaltung des primären Gremiums und die sekundäre Aussenwirkung (Öffentlichkeits-/Leak-Test).
+2. **Der «Elefant im Raum» & Schwachstellen:** Welcher ungelöste Zielkonflikt, welche Vermischung getrennter Entscheidungsebenen oder welche technokratische Innensicht gefährdet die Überzeugungskraft am stärksten?`
         },
         'I-MEET': {
             id: 'I-MEET',
@@ -151,20 +135,21 @@ Prüfe die zentralen Thesen und Vorannahmen auf ihre tatsächliche Belastbarkeit
         },
         'C-REQUEST': {
             id: 'C-REQUEST',
-            title: 'Kritischer Sachverhalts-, Ermessens- & Expositions-Check',
-            text: `TASK: KRITISCHER SACHVERHALTS-, ERMESSENS- & EXPOSITIONS-CHECK
-Prüfe das Anliegen nüchtern auf **Sache, Ermessen und Form**:
-- **Berechtigung & Anliegen (Steel Man):** Was ist das legitime Bedürfnis der Anfragenden bzw. Betroffenen (z.B. Planungssicherheit, Betroffenheit vor Ort) – und welche falschen Annahmen oder internen Jargon-Fallen stecken im Vorlauf?
-- **Ermessen, Präzedenz & Vorbehalt:** Stehen Aufwand und Ertrag im Verhältnis? Wo drohen Präzedenzfälle, falsche Deutungen, eine Vorfreigabe vor einem zwingenden Meilenstein (z.B. Inbetriebnahme/Behördenentscheid) oder eine falsche Rollenzuweisung (unsere Organisation als vermeintliche Auslöserin statt Auftrag/Verfahrenslead Dritter)?`
+            title: 'Taktischer Ermessens-, Mehrperspektiven- & Rollen-Check',
+            text: `TASK: TAKTISCHER ERMESSENS-, MEHRPERSPEKTIVEN- & ROLLEN-CHECK
+Prüfe das Anliegen eigenständig und scharfsinnig auf **Sache, Taktik und Mehrperspektiven-Wirkung**:
+- **Kernanliegen vs. Taktische Fallstricke:** Was ist das berechtigte Anliegen – und wo droht bei unbedachter Reaktion ein Nachteil (z.B. verfrühte Festlegung, Vermischung getrennter Themen-/Entscheidungsebenen, ungünstiges Setting oder Vorgriff auf Partner und Gremien)?
+- **Mehrperspektiven-Stresstest (3 Blickwinkel):** Wie wirkt unsere Haltung auf (1) **direkt Betroffene & Laien im Alltag** (nahbar, sympathisch und ohne Vorwissen sofort einleuchtend vs. abgehoben?), (2) **kritische Öffentlichkeit, Medien & Politik** (Angriffsfläche, Nachhak-Falle?), (3) **involvierte Partner, Behörden & Gremien** (Rollen, Abstimmung und Solidarität gewahrt?)?
+- **Klügster Spielzug:** Entwickle aus der Situation heraus das wirksamste strategische und taktische Vorgehen (ob direkte sympathische Klärung, gestuftes Vorgehen zur vorgängigen Abstimmung, Anpassung von Format/Rahmen oder inhaltliches Reframing).`
         },
         'C-PERSPECTIVE': {
             id: 'C-PERSPECTIVE',
-            title: 'Mehrperspektivische Einordnung',
-            text: `TASK: KRITISCHE MEHRPERSPEKTIVEN-EINORDNUNG
-Ordne das Thema nüchtern aus drei relevanten Risikoperspektiven ein:
-- **Medien- & Öffentlichkeits-Blick:** Welcher Aufhänger oder Kritikpunkt wäre für Journalisten am attraktivsten?
-- **Politik & Aufsicht:** Welche Fragen, Erwartungen oder Vorbehalte haben Regulatoren und politische Stakeholder?
-- **Interne & Reputative Dynamik:** Welche Folgewirkungen oder Präzedenzfälle entstehen für die Organisation?`
+            title: 'Mehrperspektivische Einordnung (360°-Stresstest)',
+            text: `TASK: KRITISCHE MEHRPERSPEKTIVEN-EINORDNUNG (360°-STRESSTEST)
+Prüfe das Thema realistisch durch die Brille der drei entscheidenden Anspruchsgruppen:
+- **1. Betroffene, Kundschaft & Laien im Alltag:** Wie erleben Menschen vor Ort (ohne Fachwissen) die Situation, und was braucht es, damit unsere Haltung nahbar, menschlich, sympathisch und sofort einleuchtend wirkt?
+- **2. Kritische Öffentlichkeit, Medien & Politik:** Welcher Aufhänger, Widerspruch oder Vorwurf wäre für Redaktionen und Kritiker am attraktivsten?
+- **3. Partner, Behörden & interne Governance:** Welche Rollen, Zuständigkeiten, Abstimmungspflichten oder Präzedenzwirkungen stehen auf dem Spiel?`
         },
         'C-DRAFT': {
             id: 'C-DRAFT',
@@ -187,29 +172,24 @@ Bringe das Lagebild in maximal 4–5 prägnanten Bulletpoints (${mustInclude}) s
         // --- STRATEGY & AUDIT CHUNKS (TURN 2) ---
         'S-FULL': {
             id: 'S-FULL',
-            title: 'Strategie-Abwägung & Haltung',
+            title: 'Strategische & Taktische Weichenstellung',
             compile: (params) => {
                 const includeFormatAnalysis = params?.includeFormatAnalysis === true;
-                const formatBlock = includeFormatAnalysis ? `
+                const formatBullet = includeFormatAnalysis
+                    ? `\n3. **Beantwortungs-Architektur & Verpflichtungsgrad:** Wähle die überzeugendste Form (*Kompakte Gesamteinordnung*, *Thematisch geclustert* oder *Punkt-für-Punkt*) und kalibriere die Selbstbindung präzise (offene Entscheide sauber wahren, keine volatilen Langfrist-Prognosen, allfällige Folgekommunikation konditional formulieren statt als unbedingtes Versprechen).`
+                    : '';
 
-TASK: BEANTWORTUNGS-ARCHITEKTUR & PROPORTIONALITÄT
-Wähle das Format, das Themenhoheit sichert und den Aufwand proportional hält:
-- **Option A (Punkt-für-Punkt):** Bei rein sachlichen, unkritischen Einzelfragen mit klarer Faktenlage.
-- **Option B (Kompakte Gesamteinordnung):** Geschlossenes Statement aus eigener Perspektive – ideal, um ein eigenes Narrativ zu setzen, falsche Prämissen/Negativ-Frames abzulösen oder Detailverzettelung zu vermeiden.
-- **Option C (Hybrid / Geclustert):** Kurze übergeordnete Einordnung + gebündelte Beantwortung der Sachfragen.
-*Entscheide verbindlich (A, B oder C) passend zur Tragweite der Anfrage.*` : '';
-
-                return `TASK: STRATEGIE-OPTIONEN, FRAMING-ZIEL & EIGENES NARRATIV
-1. **Strategie-Optionen (proportional zur Anfrage):** Stelle die 2–3 sinnvollsten Reaktionsoptionen (inkl. Chancen, Risiken und stärkstem Einwand) knapp gegenüber.
-2. **Framing-Ziel & Schutzgrenzen (Leitplanke):** Lege dich verbindlich fest: Welches **eigene, sachlich überzeugende Narrativ** setzen wir aktiv (statt Vorwürfe oder negative Frames der Anfrage zu reproduzieren), und wo wahren wir strikt unsere Grenzen (Schutz des offenen Lösungsraums, Vertraulichkeit bei Verträgen/Verhandlungen, Abgrenzung fremder Zuständigkeiten)?
-3. **Storyline & Hauptargumente:** Skizziere den roten Faden in klarer, verständlicher Logik (*Was gilt / Was tun wir → Warum ist das sachlich sinnvoll → Wie geht es weiter*).${formatBlock}`;
+                return `TASK: STRATEGISCHE & TAKTISCHE WEICHENSTELLUNG (INKL. MEHRPERSPEKTIVEN-STRESSTEST)
+Nutze deine volle kreative und strategische Urteilskraft, um für genau diese Situation die klügste Linie zu entwickeln:
+1. **Taktische Optionen & Mehrperspektiven-Abwägung (2–3 Wege):** Entwickle eigenständig die wirksamsten strategischen und taktischen Handlungsoptionen (inkl. möglicher Sequenzierungs-, Format- oder Reframing-Spielzüge). Prüfe sie gegen die drei Perspektiven (**Betroffene/Laien im Alltag**, **kritische Medien/Politik**, **Partner/Behörden/Gremien**) und lege dich verbindlich auf die beste Linie fest.
+2. **Eigenes positives Narrativ & Framing-Souveränität:** Leite aus dem konkreten Sachverhalt und dem greifbaren Nutzen für Menschen, Alltag und Umfeld unser eigenes, sympathisches und sofort einleuchtendes Narrativ ab. Übernimm oder verneine niemals fremde Vorwürfe, Reizwörter oder Negativ-Frames, sondern ersetze sie lautlos durch positive Qualitäten und nachvollziehbare Handlungslogik.${formatBullet}`;
             }
         },
         'S-LITE': {
             id: 'S-LITE',
-            title: 'Haltung, Narrativ & Schutzgrenzen',
-            text: `TASK: EMPFOHLENE HALTUNG & SCHUTZGRENZEN
-Formuliere in 1–2 prägnanten Sätzen unsere empfohlene Haltung, das **eigene sachliche Narrativ** und die **Schutzgrenzen** (worauf wir uns bewusst nicht vorab festlegen: z.B. offener Lösungsraum, laufende Verfahren/Entscheide Dritter, Vertraulichkeit).`
+            title: 'Taktische Linie, Nutzen-Framing & Schutzgrenzen',
+            text: `TASK: EMPFOHLENE LINIE & POSITIVES NUTZEN-FRAMING
+Formuliere in 2–3 prägnanten, allgemeinverständlichen Sätzen unsere empfohlene strategisch-taktische Linie, das **eigene positive Qualitäts- und Nutzen-Narrativ** (ohne fremde Reizwörter oder Negativ-Frames zu wiederholen oder zu verneinen) sowie unsere **Rollen- und Entscheidungsgrenzen** in klarer Alltagssprache.`
         },
         'S-MESSAGES': {
             id: 'S-MESSAGES',
@@ -217,8 +197,8 @@ Formuliere in 1–2 prägnanten Sätzen unsere empfohlene Haltung, das **eigene 
             compile: (params) => {
                 const count = params?.count || 'drei';
                 return `TASK: DIREKT VERWENDBARE SPRACHREGELUNG & KERNBOTSCHAFTEN
-1. **Kompakter Basistext (1 Absatz):** Formuliere einen direkt verwendbaren, menschlich und unbürokratisch geschriebenen Sprachregelungs-Block aus eigener Perspektive (*Was gilt / Was tun wir → Warum ist das sinnvoll → Wie geht es weiter*, inkl. sauberem Planungs-Vorbehalt bei offenen Punkten).
-2. **Kernbotschaften (${count} Punkte, Outside-in):** Verdichte die Linie auf ${count} prägnante, isoliert zitierfähige Kernbotschaften ohne Fach-Jargon oder unbelegte Versprechen.`;
+1. **Kompakter Basistext (1 Absatz, nahbar, menschlich & sympathisch):** Formuliere einen direkt verwendbaren, warmherzig und souverän geschriebenen Sprachregelungs-Block ohne Technokratie – so einfach und anschaulich, dass auch Menschen ohne jedes Vorwissen den Sinn sofort verstehen (mit positivem Nutzen-Framing und sauberem Vorbehalt bei offenen Entscheiden).
+2. **Kernbotschaften (${count} Punkte, Outside-in):** Verdichte die Linie auf ${count} prägnante, isoliert zitierfähige Kernbotschaften in natürlicher Alltagssprache – frei von Fach- oder Behörden-Jargon, ohne Verneinung fremder Frames und ohne unbelegte Versprechen.`;
             }
         },
         'S-DECISION': {
@@ -244,32 +224,28 @@ Analysiere die strategische Relevanz des Vorhabens:
         'S-PPT-STRATEGY': {
             id: 'S-PPT-STRATEGY',
             title: 'Präsentations-Leitlinie, Prüfkriterien & Folien-Triage',
-            text: `TASK: PROZESSDIAGNOSE & STRATEGISCHE LEITLINIE
-Prüfe zuerst, ob eine neue Strategie nötig ist oder ob eine erkennbare Linie vorliegt, die konsequent auf die Folien abgeglichen werden muss (kürzester belastbarer Weg ohne redundante Zwischenprodukte):
-- **Strategische Leitlinie (1 Satz):** Formuliere den tragenden Leitsatz, der den zentralen Zielkonflikt löst, ohne offene spätere Entscheide vorwegzunehmen.
-- **Dramaturgie-Entscheid:** Wähle bei *MODUS A (Neukonzeption)* die stärkste Dramaturgie (BLUF, SCQA oder Einordnungs-Dramaturgie); entscheide bei *MODUS B (bestehendes Deck)* zwischen *fokussiertem Strategieabgleich am bestehenden Deck* und *strukturellem Redesign*.
-
-TASK: VERDICHTETE PRÜFKRITERIEN (MAX. 5 SPRACH- & INHALTSREGELN)
-Übersetze die Leitlinie in höchstens 5 verbindliche Prüfkriterien:
-1. **Stufen-Trennung:** Gesicherten Stand, bisherige Präferenz und offene Prüf-/Realisierungsentscheide sauber trennen; offene Optionen nicht als feststehende Versprechen führen.
-2. **Rollen- & Mandatsklarheit:** Unterschiedliche Rollen und Zuständigkeiten externer Partner (z.B. Bund, Kanton, Stadt, Ämter) präzise wahren, statt sie künstlich zu vereinnahmen.
+            text: `TASK: STRATEGISCHE LEITLINIE & DRAMATURGIE
+Lege auf Basis der Diagnose die überzeugendste Linie für das Deck fest:
+- **Strategische Leitlinie & Framing (1–2 Sätze):** Formuliere den tragenden Leitsatz mit eigenem positivem Nutzen-Framing sowie sauberer Trennung von Entscheidungsebenen, Partnerrollen und offenen Entscheiden.
+- **Dramaturgie & Prüfkriterien:** Wähle die stärkste Dramaturgie (MODUS A: BLUF/SCQA; MODUS B: gezieltes Upgrade vs. Redesign) und definiere max. 4–5 prägnante Inhalts-/Sprachregeln (nahbar, frei von Technokratie, fair gegenüber Partnern und ohne ungesicherte Langfrist-Prognosen).
 
 TASK: FOLIEN-TRIAGE & HORIZONTALE STORYLINE
 - **Bei MODUS A:** Entwirf die fortlaufende Liste aller **Action Titles (ganze, aktive Aussagesätze pro Folie)** als lückenlose Storyline.
-- **Bei MODUS B:** Klassifiziere jede Folie verbindlich nach Eingriffstiefe (**stimmig** | **kleinere Anpassung** | **grössere Anpassung** | **entfernen/Reserve**). Bereinige Dubletten und Varianten – lege dich jeweils verbindlich auf **eine** überzeugende Fassung fest.`
+- **Bei MODUS B:** Klassifiziere jede Folie verbindlich nach Eingriffstiefe (**stimmig** | **kleinere Anpassung** | **grössere Anpassung** | **entfernen/Reserve**) und lege dich bei Varianten auf **eine** überzeugende Fassung fest.`
         },
         'A-AUDIT-ALL': {
             id: 'A-AUDIT-ALL',
-            title: '3D-Audit (Setting-Kalibrierung, Faktengrenzen, Outside-in)',
-            text: `TASK: SETTING-GERECHTES DREI-DIMENSIONEN-AUDIT (OHNE SCHEIN-BEANSTANDUNGEN)
+            title: '3D-Audit (Menschlichkeit, Framing & Governance)',
+            text: `TASK: SETTING-GERECHTES DREI-DIMENSIONEN-AUDIT (INKL. MEHRPERSPEKTIVEN- & LAIEN-TEST)
 Gewichte alle Beanstandungen pragmatisch nach dem konkreten Publikationsauftrag (tragfähige Passagen unverändert belassen, nur echte Verbesserungen vorschlagen):
-1. **FAKTENGRENZEN, EVIDENZ & ENTSCHEIDUNGSSTAND:**
-   - **Keine Schein-Beanstandungen:** Beanstande Zahlen oder Fakten nur dann, wenn eine Quelle ihnen nachweislich widerspricht – erzeuge keine spekulativen Pedanterie-Einwände.
-   - **Entscheidungsstufen:** Trenne *gesicherten Stand*, *Planung/Präferenz* und *offene Prüfung* sauber (offene Prüfoptionen nicht als Versprechen formulieren; fehlenden Vollzugsstand bei Bedarf als Bearbeitungskommentar markieren).
-2. **ROLLENKLARHEIT & KONSISTENZ:**
-   - Stelle Zuständigkeit und Verfahrenslead (unsere Rolle im Gesamtsystem vs. Auftrag/Entscheid Dritter) klar dar, entschärfe unnötige Zuspitzungen und bereinige offene Varianten durch Festlegung auf **eine** stimmige Fassung.
-3. **SETTING-ANGEMESSENHEIT, OUTSIDE-IN & LESBARKEIT:**
-   - **Glaubwürdigkeit vor PR-Sterilität:** Bewahre eine natürliche, lebendige Sprache. Bei Paid Content, Jubiläums-, Gast- oder Magazinbeiträgen ist journalistischer Stil und sachliche Distanz ausdrücklich erwünscht – glätte gute Texte nicht zu steriler Konzernsprache, sondern greife nur dort ein, wo Kontext fehlt oder Rollen verzerrt werden.
+1. **NAHBARE MENSCHLICHKEIT, LAIEN-VERSTÄNDLICHKEIT & POSITIVES FRAMING:**
+   - **Sympathisch, menschlich & ohne Vorwissen verständlich (Anti-Technokratie):** Übersetze Fach-, Behörden- oder Juristendeutsch sowie kühle Distanz in eine zugängliche, warme und natürliche Sprache, die jedem Laien sofort einleuchtet.
+   - **Positives Nutzen-Framing & Glaubwürdigkeit:** Ersetze defensives Problem-Framing (Wiederholung oder Verneinung negativer Reizwörter) und herablassende Partikeln durch positive Qualitäten und greifbaren Mehrwert. Korrigiere Eigenlob oder PR-Überhöhungen zu glaubwürdiger Substanz und tilge Wort-/Zahlen-Echos.
+2. **GOVERNANCE, ROLLENKLARHEIT & VERPFLICHTUNGSGRAD:**
+   - **Keine Schein-Beanstandungen:** Beanstande Fakten nur bei echtem Widerspruch.
+   - **Saubere Abgrenzung & Sicherungen:** Trenne eigene Verantwortung, Zuständigkeiten externer Partner/Behörden und unterschiedliche Verfahrensebenen präzise. Ergänze fehlende Vorbehalte bei noch offenen Entscheiden und streiche volatile Langfrist-Prognosen.
+3. **MEHRPERSPEKTIVEN- & LEAK-FESTIGKEIT:**
+   - Prüfe den Text durch die Brille von **Betroffenen/Laien**, **kritischen Medien/Politik** und **Partnern/Beteiligten**: Wirkt er durchgehend sympathisch und hält jede Aussage auch isoliert zitiert stand?
 
 WICHTIG: Gib keine doppelte Vorab-Mängelliste aus, sondern führe die Ergebnisse direkt in der nachfolgenden Ausgabelogik zusammen.`
         },
@@ -285,76 +261,73 @@ Vergleiche den Stand zu Beginn des Zeitfensters mit dem aktuellen Status:
         // --- OUTPUT TEMPLATES (TURN 3 / TURN 2 FINAL) ---
         'O-MEDIA': {
             id: 'O-MEDIA',
-            title: 'Medienantwort, Begründung & Abschluss-Check',
-            text: `TASK: MEDIENANTWORT, KURZBEGRÜNDUNG & ABSCHLUSS-CHECK
-Erstelle auf Basis der festgelegten Strategie die versandfertige Medienantwort in exakt diesen drei Schritten:
+            title: 'Versandfertige Medienantwort & Pre-Flight-Check',
+            text: `TASK: VERSANDFERTIGE MEDIENANTWORT & PRE-FLIGHT QUALITY GATE
+Erstelle auf Basis der festgelegten Linie das versandfertige Kommunikations-Asset:
 
-1. **FRAMING-ZIEL & LEITPLANKE (VORAB, MAX. 3 SÄTZE):**
-   - Definiere vorab knapp: Welches **eigene, überzeugende Narrativ** soll hängen bleiben, welche Haltung vermittelt die Antwort, und **was lassen wir aus den internen Inputs bewusst weg** (Schutz von Lösungsraum, Vertraulichkeit, fremder Zuständigkeit)?
+1. **Taktischer Hebel & Mehrperspektiven-Check (vorab, max. 3 Sätze):**
+   - Begründe knapp den gewählten strategischen Ansatz, warum er vor **Betroffenen/Laien**, **kritischer Redaktion/Politik** und **Partnern/Beteiligten** überzeugt, und was bewusst weggelassen wird.
 
-2. **MEDIENANTWORT (VERSANDFERTIGER ENTWURF):**
-   - **Menschlich, konkret am Anlass & eigenes Narrativ:** Schreib natürlich, flüssig und nahbar wie ein erfahrener Mediensprecher – frei von steifer Behörden-, Juristen- oder FAQ-Sprache. Greife den konkreten Anlass, Ort oder die Beobachtung der Anfrage direkt auf. Wiederhole oder verneine niemals Vorwürfe oder Negativ-Frames, und vermeide belehrende Banalitäten über Selbstverständlichkeiten.
-   - **Souveräne Substanz statt steriler Vorsicht:** Wo wir auf Einzelabklärungen (Zahlen, Einzelfalldaten, Termine) bewusst verzichten oder Details offen sind, weiche nicht in hohle Abstraktion oder defensive Ausreden aus, sondern sättige das journalistische Bedürfnis durch greifbare Alltags- und Ablauferklärung aus der Praxis. Schütze nur tatsächlich offene künftige Entscheide (*beschlossen* | *geplant* | *in Prüfung*) vor vorzeitiger Festlegung (Einzel-Blocker bei Bedarf als «[Kurze Bestätigung durch Fachbereich X: ...]» markieren).
+2. **Versandfertige Medienantwort (Hauptentwurf + bei Bedarf kompakte/taktische Variante 2):**
+   - **Nahbar, menschlich, sympathisch & ohne Vorwissen verständlich (Anti-Technokratie):** Schreib aktiv, warmherzig, zugänglich und komplett frei von Technokratie, Behörden-, Planer- oder Juristendeutsch – so anschaulich, dass auch Menschen ohne jedes Vorwissen den Sinn und die Zusammenhänge beim ersten Lesen mühelos verstehen. Verzichte strikt auf belehrende oder defensive Formulierungen, Zirkelschlüsse oder Banalitäten.
+   - **Prämissen-Souveränität & Positives Nutzen-Framing:** Übernimm niemals geladene Begriffe oder Negativ-Frames der Anfrage (auch nicht verneinend), sondern führe die Antwort über unser eigenes, positives Qualitäts- und Nutzen-Narrativ.
+   - **Rollen-Präzision in Alltagssprache & Kalibrierter Ausstieg (Leak-fest):** Trenne eigene Verantwortung und Zuständigkeiten Dritter in der Sache präzise, aber natürlich formuliert. Schütze offene Entscheide, nenne keine volatilen Langfrist-Zahlen und formuliere allfällige Angebote zur Nachlieferung konditional statt als unbedingte Verpflichtung.
 
-3. **ABSCHLIESSENDER REALITÄTS- & BELASTBARKEITS-CHECK (SCHEMA a–d):**
-   Prüfe den Entwurf kritisch (je 1 kurzer Prüfsatz; bei Schwächen den Entwurf oben direkt korrigieren):
-   - **a) Medial & politisch belastbar:** Fakten- und zuständigkeitssicher ohne vorzeitige Selbstbindung bei offenen Entscheiden?
-   - **b) Nahbar, individuell & frei von Banalitäten:** Wirkt der Text auf eine Redaktion menschlich und spezifisch statt wie eine sterile Textbaustein-Abfertigung?
-   - **c) Keine Reproduktion negativer Frames:** Frei von wiederholten oder defensiv verneinten Vorwürfen der Anfrage?
-   - **d) Eigenes Narrativ & journalistische Sättigung:** Liefert die Antwort genug zitierfähige Substanz, damit kein Nachhak-Anruf nötig wird?`
+3. **Pre-Flight Quality Gate (1-Zeilen-Selbsttest):**
+   - Bestätige kurz: *1. Nahbar, menschlich & sympathisch? 2. Ohne Vorwissen sofort verständlich (null Technokratie)? 3. Frei von fremden Negativ-Frames? 4. Mehrperspektiven-fest (Laien, Medien, Partner)? 5. Rollen, Vorbehalte & Ausstieg sauber?* (Etwaige Schwächen vor der Ausgabe direkt im Entwurf oben korrigieren).`
         },
         'C-MEDIA-CHECK': {
             id: 'C-MEDIA-CHECK',
-            title: 'Medienantwort-Check (Redaktions-Challenge & 2 Varianten)',
-            text: `TASK: SACHVERHALTS- & RISIKO-ANALYSE
-Analysiere den Sachverhalt nüchtern:
-1. **Journalistische Ausgangslage & Motiv:** Welches Format und Ziel verfolgt die Redaktion mit der Anfrage und welche Substanz braucht sie für ihren Beitrag?
-2. **Aufwand-Ertrags-Verhältnis (Triage):** Ist der Verzicht auf weitere interne Detailabklärungen verhältnismässig – oder wo liegt eine zwingende Fakten-/Zuständigkeitsgrenze?
-3. **Kommunikatives Risiko:** Liegt das eigentliche Risiko im Sachthema (Reputation, offener Entscheidungsraum, fremde Zuständigkeit, Vertraulichkeit) oder in der **Tonalität und Wirkung** der Antwort (z.B. lieblose Textbaustein-Abfertigung, unfreiwillige Banalitäten oder Provokation unnötiger Nachhak-Anrufe)?
+            title: 'Medienantwort-Check (Forensische Challenge & 2 Varianten)',
+            text: `TASK: DIAGNOSTISCHE DEKONSTRUKTION & MEHRPERSPEKTIVEN-RISIKOANALYSE
+Analysiere Ausgangslage und Vorlage mit strategischem Scharfblick:
+1. **Oberfläche vs. Subtext & Triage:** Was ist das tatsächliche journalistische/politische Motiv hinter der Anfrage, ist der Verzicht auf weitere interne Detailabklärungen verhältnismässig, und welche Substanz braucht die Antwort?
+2. **Mehrperspektiven-Stresstest (3 Blickwinkel):** Wie wirkt der Entwurf auf (a) **Betroffene & Laien ohne Vorwissen** (nahbar, menschlich, sympathisch und sofort einleuchtend vs. technokratisch, kühl oder belehrend?), (b) **kritische Redaktionen & Politik** (Prämissen-Falle, Nachhak-Risiko, unfreiwillige Komik?) und (c) **Partner, Behörden & Beteiligte** (Zuständigkeiten, Solidarität und Vorbehalte gewahrt?)?
 
-TASK: CHALLENGE DES ANTWORTENTWURFS
-Challenge den vorliegenden Antwortentwurf kritisch und ungeschminkt aus Sicht einer wachen Redaktion und eines erfahrenen Mediensprechers:
-- Wo verwechselt der Entwurf Vorsicht mit Sterilität, ignoriert den konkreten Anlass/Ort der Anfrage oder erklärt belehrend Selbstverständlichkeiten (Banalitäts-Falle)?
-- Wo lässt er explizite Fragen unnötig offen (Rückfrage-Gefahr), obwohl sie sich über nachvollziehbare Praxis-/Ablauferklärung risikofrei beantworten liessen?
-- Wo legt er uns umgekehrt ungesichert fest, verletzt Zuständigkeits-/Vertraulichkeitsgrenzen oder reproduziert fremdes Negativ-Framing?
+TASK: SCHONUNGSLOSE CHALLENGE DES ENTWURFS (PRE-FLIGHT-STRESSTEST)
+Prüfe den vorliegenden Entwurf kompromisslos gegen diese vier Kriterien:
+- **Nahbare Menschlichkeit & Laien-Verständlichkeit vs. Technokratie:** Wo klingt der Text nach Behörden-, Planer- oder Juristendeutsch, distanziert, passiv, herablassend, zirkulär oder banal – statt den Sachverhalt für Menschen ohne Vorwissen sympathisch, warmherzig und sofort greifbar zu erklären?
+- **Prämissen- & Negativ-Framing-Falle:** Validiert der Text unabsichtlich das Framing der Kritik, indem er geladene Reizwörter oder Vorwürfe wiederholt bzw. verneint, statt ein eigenes positives Qualitäts- und Nutzen-Narrativ zu setzen?
+- **Rollen-Klarheit & Leak-Festigkeit:** Nutzt der Entwurf angreifbare Ausreden oder vermischt er eigene und fremde Zuständigkeiten bzw. Entscheidungsebenen? Hält jeder Satz einer wörtlichen Publikation stand?
+- **Verpflichtungs- & Ausstiegs-Kalibrierung:** Fehlen Vorbehalte bei noch offenen Entscheiden, stehen dort ungesicherte Zahlen oder bindet uns ein unbedingtes Nachlieferungs-Versprechen unnötig?
 
-TASK: SORGFÄLTIGE ABWÄGUNG & OPTIMIERTE TEXTVARIANTEN
-1. **Sorgfältige Abwägung:** Wäge die wichtigsten Stellschrauben ab, wie die Antwort das journalistische Bedürfnis substanziell sättigt und sympathisch den Ball aufnimmt, ohne zusätzlichen internen Abklärungsaufwand oder Faktenrisiken auszulösen.
-2. **Optimierte Textvarianten:** Formuliere zwei versandfertige Optionen:
-   - **Variante 1 – Sympathisch & substanziell (Empfehlung):** Greift den konkreten Anlass natürlich auf, beantwortet offene Warum-/Wann-Fragen souverän über die reale Praxis-/Ablauferklärung, streicht Banalitäten und wahrt alle strategischen Schutzgrenzen.
-   - **Variante 2 – Nahe am ursprünglichen Entwurf, aber entschärft (Minimal-invasiv):** Behält Struktur und Kürze des Entwurfs weitgehend bei, verankert ihn aber im Anlass und bereinigt Banalitäten, sterile Floskeln oder ungesicherte Festlegungen.`
+TASK: TAKTISCHE ABWÄGUNG & 2 OPTIMIERTE TEXTVARIANTEN
+1. **Sorgfältige Abwägung der Stellschrauben:** Zeige präzise auf, durch welche inhaltlichen und sprachlichen Drehungen der Entwurf ohne zusätzlichen Abklärungsaufwand nahbar, sympathisch, laientauglich und unangreifbar wird.
+2. **Zwei versandfertige Textvarianten:**
+   - **Variante 1 – Nahbar, menschlich, sympathisch & narrativstark (Empfehlung):** Komplett frei von Technokratie, für Laien ohne Vorwissen sofort einleuchtend, löst fremde Prämissen positiv auf und kalibriert Vorbehalte/Ausstieg souverän.
+   - **Variante 2 – Nahe am ursprünglichen Entwurf, aber entschärft (Minimal-invasiv):** Behält Struktur und Kürze des Ausgangsentwurfs bei, macht den Ton aber menschlich-zugänglich und eliminiert alle Technokratie-, Framing- und Festlegungsfallen.`
         },
         'O-REPLY': {
             id: 'O-REPLY',
-            title: 'Antwortentwurf (E-Mail / Textblock für Dritte)',
-            text: `TASK: EMPFOHLENE LINIE & VERSANDFERTIGER E-MAIL-ENTWURF
-Liefere das Ergebnis passend zum Auftrag (interne Einschätzung, Direktantwort oder verwendbarer Textblock für Dritte):
+            title: 'Antwortentwurf & Taktische Umsetzung (E-Mail / Textblock)',
+            text: `TASK: TAKTISCHE EMPFEHLUNG & VERSANDFERTIGER E-MAIL-ENTWURF
+Liefere das Ergebnis passend zum Auftrag (interne Linie, Direktantwort, gestufter Zwischenbescheid oder Textblock für Dritte):
 
-1. **Interne Einordnung & Empfehlung (Ich-Form, 1–3 Sätze):**
-   - Gib eine klare, pragmatische Einschätzung («Aus meiner Sicht…») mit den ausschlaggebenden Gründen (z.B. Verhältnismässigkeit, Präzedenzwirkung, Zuständigkeit/Verfahrenslead oder warum bestimmte Rohdaten bewusst weggelassen werden) und dem empfohlenen nächsten Schritt.
+1. **Interne Einordnung & Mehrperspektiven-Spielzug (Ich-Form, 2–3 Sätze, leak-fest):**
+   - Gib eine scharfsinnige Empfehlung («Aus meiner Sicht…»): Welches taktische Vorgehen löst die Situation aus Sicht von **Betroffenen/Laien**, **Medien/Öffentlichkeit** und **Partnern/Beteiligten** am klügsten – und was lassen wir bewusst weg?
 
-2. **Versandfertiger Textblock / E-Mail-Entwurf:**
-   - **Natürlicher, adressatengerechter Ton:** Schreib menschlich, klar und auf Augenhöhe – übersetze internen Fach-Jargon oder sperriges Rohmaterial in verständliche Sprache.
-   - **Sache, Empathie & Spielraum:** Zeige bei Betroffenen Verständnis für das Anliegen (ohne voreiliges Schuldeingeständnis), erkläre den sachlichen Hintergrund nachvollziehbar und wahre bei offenen Terminen, Prüfungen oder Entscheiden Dritter den nötigen Spielraum durch natürliche Vorbehalte.`
+2. **Versandfertiger Textblock / E-Mail-Entwurf (bei taktischen Weichenstellungen gerne mit Kurz-Variante):**
+   - **Nahbar, menschlich, sympathisch & frei von Technokratie (Laien-Test):** Schreib aktiv, warmherzig, verbindlich und auf Augenhöhe – so klar und frei von Fach-, Behörden- oder Juristendeutsch, dass auch Menschen ohne Vorwissen das Anliegen sofort verstehen. Verzichte strikt auf bürokratische Schärfe, belehrende Partikeln und fremde Negativ-Frames.
+   - **Rollen-Sauberkeit in Alltagssprache & Kalibrierter Ausstieg:** Trenne Zuständigkeiten und Entscheidungsvorbehalte in der Sache präzise, aber natürlich und partnerschaftlich formuliert; halte allfällige Folgekommunikation konditional statt als unbedingte Zusage.`
         },
         'O-QA': {
             id: 'O-QA',
             title: 'Q+A Tabelle',
-            text: `TASK: KRITISCHES Q+A (PROPORTIONAL, OUTSIDE-IN & ZITIERFÄHIG)
-Erstelle ein kompaktes Q+A mit den 4–8 wichtigsten kritischen Fragen (Journalisten, Betroffene, Behörden/Partner – Anzahl proportional zum Thema). *Qualitätsregeln für jede Antwort:* (a) **Menschlich, konkret & eigenes Narrativ (Outside-in):** Natürliche, greifbare Sprache ohne internen Jargon oder hohle Floskeln; eigenes Handlungsnarrativ zuerst, niemals Vorwürfe wiederholen; (b) **Souveräne Abgrenzung & Vorbehalt:** Fremden Verfahrenslead/Auftrag klar benennen und offene künftige Entscheide durch nachvollziehbare Prozesslogik und natürliche Planungs-Vorbehalte schützen; (c) **Isoliert zitierbar**:
-| Kritische Frage | Empfohlene Antwort (menschlich, eigenes Narrativ & isoliert zitierbar) | Begründung der Linie / Schutzgrenze |
-|-----------------|------------------------------------------------------------------------|-------------------------------------|`
+            text: `TASK: KRITISCHES Q+A (MEHRPERSPEKTIVISCH, SYMPATHISCH & ZITIERFÄHIG)
+Erstelle ein kompaktes Q+A mit den 4–8 wichtigsten kritischen Fragen aus drei realistischen Perspektiven (**Betroffene/Laien im Alltag**, **kritische Medien/Politik**, **Partner/Behörden** – Anzahl proportional zum Thema). *Qualitätsregeln für jede Antwort:* (a) **Nahbar, menschlich, sympathisch & ohne Vorwissen verständlich (Outside-in):** Natürliche, greifbare Alltagssprache ohne Technokratie oder internen Jargon; eigenes positives Nutzen-Narrativ zuerst, niemals Vorwürfe wiederholen; (b) **Souveräne Abgrenzung & Vorbehalt:** Fremde Zuständigkeiten fair benennen und offene künftige Entscheide durch nachvollziehbare Alltagslogik schützen; (c) **Isoliert zitierbar**:
+| Kritische Frage (Perspektive) | Empfohlene Antwort (nahbar, sympathisch, laientauglich & zitierbar) | Begründung der Linie / Schutzgrenze |
+|-------------------------------|---------------------------------------------------------------------|-------------------------------------|`
         },
         'O-INTERVIEW': {
             id: 'O-INTERVIEW',
             title: 'Interview- & Medienbriefing',
             text: `TASK: INTERVIEW- UND MEDIENBRIEFING
 Erstelle das kompakte, sofort einsatzbereite Interview-Briefing in exakt folgender Struktur:
-1. **Ziel, Rahmen & Rolle:** Ziel des Gesprächs, unsere Rolle (inkl. Abgrenzung bei fremdem Verfahrenslead/Auftrag) und Tonalität (2–3 Sätze).
+1. **Ziel, Rahmen & Rolle:** Ziel des Gesprächs, unsere Rolle (inkl. klarer Abgrenzung bei fremder Federführung) und nahbar-sympathische, menschliche Tonalität (2–3 Sätze).
 2. **Eigenes Narrativ & Schutzgrenzen:** [Tragender Leitsatz aus eigener Perspektive + klare Grenze zu offenen Verfahren, Vertraulichkeit und Vorbehalten]
-3. **Drei bis vier zitierfähige Kernbotschaften (Outside-in):** [Knapp, menschlich-nahbar, anschaulich und frei von internem Jargon]
-4. **Fragenkatalog mit Antwortempfehlungen:** (Natürliche gesprochene Sprache mit greifbaren Beispielen/Praxislogik; eigenes Narrativ statt Wiederholung/Verneinung von Vorwürfen; saubere Vorbehalte bei offenen Entscheiden)
-| Kritische Frage | Taktischer Fokus (was setzen / was weglassen) | Souveräner Antwortvorschlag (mündlich & zitierfähig) |`
+3. **Drei bis vier zitierfähige Kernbotschaften (Outside-in & laientauglich):** [Knapp, sympathisch, menschlich und für Menschen ohne Vorwissen sofort einleuchtend – komplett frei von Technokratie]
+4. **Mehrperspektivischer Fragenkatalog mit Antwortempfehlungen:** (Fragen aus Sicht von Redaktion, Betroffenen/Alltag und Politik; Antworten in natürlicher, sympathischer gesprochener Sprache mit greifbaren Beispielen ohne Fach-/Behörden-Jargon; eigenes Narrativ statt Wiederholung/Verneinung von Vorwürfen)
+| Kritische Frage | Taktischer Fokus (was setzen / was weglassen) | Souveräner Antwortvorschlag (sympathisch, laientauglich & zitierfähig) |`
         },
         'O-STRATEGY': {
             id: 'O-STRATEGY',
@@ -471,9 +444,9 @@ TL;DR (KERNENTSCHEID & STATUS): [Max. 3–4 Sätze]
             text: `TASK: VOLLSTÄNDIGER ARTIKELENTWURF
 Verfasse direkt den vollständigen, publikationsreifen Artikel auf Basis der Outline und der gesicherten Recherche (offene Punkte als «[Offen: ...]» markieren).
 Qualitätskriterien:
-- **Glaubwürdigkeit & Lesewert vor PR-Sterilität:** Fesselnder Einstieg (Lead), konkrete Beispiele und anschauliche, lebendige Sprache ohne Eigenlob-Floskeln oder KI-Phrasen.
+- **Nahbar, menschlich, sympathisch & ohne Vorwissen verständlich:** Fesselnder Einstieg (Lead), konkrete Beispiele und eine warme, anschauliche, lebendige Sprache komplett frei von Technokratie, Eigenlob-Floskeln oder KI-Phrasen – sodass auch Lesende ohne Vorwissen sofort folgen können.
 - **Sauberer Faktenstatus:** Gesicherte Tatsachen klar von offenen Prüfoptionen/Planungsannahmen trennen; keine unbelegten Versprechen.
-- **Konsistente Einordnung:** Unsere Kernrolle und Leistung im Gesamtsystem organisch sichtbar machen und die Rollen externer Partner fair wahren.`
+- **Konsistente Einordnung:** Unseren konkreten Beitrag für Menschen und Alltag organisch sichtbar machen und die Rollen externer Partner fair wahren.`
         },
         'O-POST': {
             id: 'O-POST',
@@ -483,27 +456,23 @@ Qualitätskriterien:
 
 TASK: KURZ-FEEDBACK (BEI ENTWURFS-CHALLENGE) & POSITIONIERUNGS-LINIE
 1. **Einordnung an Anfragende (Ich-Form, 2–3 Sätze):**
-   - *Falls im Thread bereits ein Post-Entwurf vorliegt:* Benenne kollegial («Aus meiner Sicht…»), was am Entwurf trägt und welche 2–3 Punkte wir schärfen sollten (z.B. Einstieg konkreter statt «Ich freue mich»-Floskel, internen Projekt-Jargon in Publikumsnutzen übersetzen, Rolle der integrierten Bahn oder Partner-Lead von Stadt/Kanton/Architektur sauberer einordnen, offene Planungsstände nicht als beschlossen darstellen).
-   - *Falls ein neuer Post entsteht:* Begründe kurz den gewählten Aufhänger (Hook), das eigene Narrativ und was aus dem Rohmaterial bewusst weggelassen wird (Vertraulichkeit, ungesicherte Zahlen/Termine).
-2. **Stimm- & Kanal-Kalibrierung:** Passe Perspektive und Tonfall exakt an die Zielperson bzw. den Kanal an:
-   - *Geschäftsleitung / Executive Board (Thought Leadership):* Integrierte Gesamtsicht – Infrastruktur als Mobilitätsdrehscheibe und Visitenkarte, Einklang von Kernbetrieb und nachhaltiger Arealentwicklung, bezahlbarer Raum, Kreislaufwirtschaft/Klima, frühzeitige Partnerallianzen, Wertschätzung für Teams vor Ort.
-   - *Projektentwicklung & Baukultur (Development):* Qualitätsvolle Arealentwicklung mit hoher Baukultur (Studienaufträge, Wettbewerbe, Partizipation), Innovation konkret erlebbar machen, Dreiklang aus Ökologie, Wirtschaft und Gesellschaft im engen Schulterschluss mit Städten und Gemeinden.
-   - *Bewirtschaftung & Betrieb (Property & Asset Management):* Standorte als lebendige Treffpunkte und Begegnungsorte statt reiner Durchgangszonen, Aufenthaltsqualität, Lokalkolorit & Regionalität im Mieter-Mix, intelligente Mehrfachnutzung gegen Leerstände, Alltagskomfort für Nutzende und Reisende.
-   - *Unternehmenskanal / Social Media (Instagram / LinkedIn):* Visuell-nahbares Storytelling auf Augenhöhe der Community – konkretes Detail vor Ort oder Blick hinter die Kulissen, direkter Alltagsnutzen, knappe Caption mit echter Community-Frage.
+   - *Falls im Thread bereits ein Post-Entwurf vorliegt:* Benenne kollegial («Aus meiner Sicht…»), was am Entwurf trägt und welche 2–3 Punkte wir schärfen sollten (z.B. Einstieg konkreter statt Standard-Floskel, internen Fachjargon in greifbaren Alltagsnutzen übersetzen, Rollen von Partnern/Beteiligten sauber einordnen, offene Entscheide nicht als beschlossen darstellen).
+   - *Falls ein neuer Post entsteht:* Begründe kurz den gewählten Aufhänger (Hook), das eigene positive Nutzen-Narrativ und was aus dem Rohmaterial bewusst weggelassen wird (Vertraulichkeit, ungesicherte Zahlen/Termine).
+2. **Stimm- & Kanal-Kalibrierung:** Passe Perspektive, Flughöhe und Tonfall organisch an die Absender-Rolle bzw. den Kanal an – durchgehend nahbar, menschlich, sympathisch und frei von Technokratie (egal ob strategische Führungsperspektive, Facheinblick aus Projekt/Betrieb oder visuelles Community-Storytelling).
 
 TASK: PUBLIKATIONSREIFE POST-VARIANTEN & VISUAL-BRIEFING
 Erstelle zwei direkt verwendbare Textfassungen sowie den Bild-/Asset-Hinweis:
 
 ### 1. HAUPTENTWURF (SUBSTANZ & STORYTELLING)
-- **Starker Hook (Zeile 1–2):** Konkrete Beobachtung vor Ort, spannende Frage oder greifbarer Wandel – strikt ohne hohle LinkedIn-Floskeln («Ich freue mich sehr…», «Ein weiterer Meilenstein…», Raketen-Emojis).
-- **Körper (Outside-in & menschlich):** Konkreter Mehrwert für Nutzende, Quartier oder Umwelt zuerst; unsere Organisation und Einheiten organisch als Teil des Gesamtsystems zeigen; Faktenstatus und Planungs-Vorbehalte («nach heutigem Stand») sauber wahren; Partner (@Stadt, @Planer, Teams) fair würdigen.
-- **Abschluss & Hashtags:** Glaubwürdiger Schlusssatz oder echte Diskussionsfrage + max. 3–5 präzise Hashtags.
+- **Starker Hook (Zeile 1–2):** Konkrete Beobachtung, überraschende Perspektive oder greifbarer Nutzen – strikt ohne hohle LinkedIn-Floskeln («Ich freue mich sehr…», «Ein weiterer Meilenstein…», Raketen-Emojis).
+- **Körper (Nahbar, menschlich, sympathisch & ohne Vorwissen verständlich):** Konkreter Mehrwert für Menschen und Alltag zuerst; komplexe Zusammenhänge ohne Fachjargon erklären; Faktenstatus und offene Vorbehalte sauber wahren; beteiligte Partner und Teams fair würdigen.
+- **Abschluss & Hashtags:** Sympathischer Schlusssatz oder echte, einladende Frage an die Community + max. 3–5 passende Hashtags.
 
 ### 2. ALTERNATIVE (POINTIERTE KURZFASSUNG)
 - Kompakter, schnell scannbarer Post mit alternativem Einstieg (ideal für Mobile-Feeds oder Carousel-/Reel-Begleittext).
 
 ### 3. BILD- & ASSET-EMPFEHLUNG
-- Welches konkrete Bild-/Videomotiv (z.B. echte Szene mit Menschen/Baufortschritt vor Ort, Vorher/Nachher-Carousel, kurzes Statement-Reel statt steriler Visualisierung) die Aussage am besten trägt.`;
+- Welches konkrete, authentische Bild-/Videomotiv (z.B. echte Szene mit Menschen vor Ort, Blick hinter die Kulissen, Vorher/Nachher-Vergleich statt steriler Symbolbilder) die Botschaft am besten trägt.`;
             }
         },
         'O-PPT-STORYBOARD': {
@@ -528,49 +497,39 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
 
     // The 16 Complete Recipes
     const RECIPES = [
-        // 1. MEDIENANFRAGE (3 TURNS)
+        // 1. MEDIENANFRAGE (2 TURNS - FAST DIAGNOSTIC + STRATEGY -> DRAFT)
         {
             id: 'recipe-medienanfrage',
             name: 'Medienanfrage',
             family: 'respond',
             turns: [
                 {
-                    title: 'LAGEBILD',
-                    role: 'Du bist ein erfahrener Kommunikationsstratege und Mediensprecher.',
-                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { scope: 'media' } }, 'T-TLDR']
+                    title: 'DIAGNOSE, RECHERCHE & STRATEGIE-LINIE',
+                    role: 'Du bist ein erstklassiger Kommunikationsstratege und Mediensprecher.',
+                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { scope: 'media' } }, { chunkId: 'S-FULL', params: { includeFormatAnalysis: true } }]
                 },
                 {
-                    title: 'STRATEGIE',
-                    role: 'Du bist ein erfahrener Kommunikationsstratege.',
-                    chunks: [{ chunkId: 'S-FULL', params: { includeFormatAnalysis: true } }]
-                },
-                {
-                    title: 'OUTPUT (MEDIENANTWORT)',
-                    role: 'Du bist ein erfahrener Mediensprecher.',
+                    title: 'MEDIENANTWORT & PRE-FLIGHT-CHECK',
+                    role: 'Du bist ein erstklassiger Mediensprecher.',
                     chunks: ['O-MEDIA']
                 }
             ],
-            forks: ['O-QA', 'O-INTERVIEW', 'O-THEMENPLANUNG', 'C-MEDIA-CHECK']
+            forks: ['C-MEDIA-CHECK', 'O-QA', 'O-INTERVIEW', 'O-THEMENPLANUNG']
         },
 
-        // 2. INTERVIEW BEANTWORTEN (3 TURNS)
+        // 2. INTERVIEW BEANTWORTEN (2 TURNS)
         {
             id: 'recipe-interview',
             name: 'Interview beantworten',
             family: 'respond',
             turns: [
                 {
-                    title: 'LAGEBILD',
+                    title: 'DIAGNOSE, RECHERCHE & INTERVIEW-STRATEGIE',
                     role: 'Du bist ein erfahrener Mediensprecher und Interview-Coach.',
-                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { focus: 'bisherige Berichterstattung, bisherige Unternehmens- bzw. Organisations-Positionierungen, Journalistin/Journalist und Medium' } }, 'T-TLDR']
+                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { focus: 'bisherige Berichterstattung, bisherige Positionierungen, Journalistin/Journalist und Medium' } }, 'S-FULL']
                 },
                 {
-                    title: 'STRATEGIE',
-                    role: 'Du bist ein erfahrener Kommunikationsstratege.',
-                    chunks: [{ chunkId: 'S-FULL', params: { includeFormatAnalysis: true } }]
-                },
-                {
-                    title: 'OUTPUT (BRIEFING)',
+                    title: 'INTERVIEW-BRIEFING & ANTWORTEN',
                     role: 'Du bist ein erfahrener Medientrainer.',
                     chunks: ['O-INTERVIEW']
                 }
@@ -585,7 +544,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
             family: 'respond',
             turns: [
                 {
-                    title: 'LAGEBILD',
+                    title: 'LAGEBILD & TAKTIK-CHECK',
                     role: 'Du bist ein erfahrener Chef-Kommunikator.',
                     chunks: ['I-MAIL', { chunkId: 'R-FULL', params: { scope: 'media' } }, 'C-REQUEST', 'T-TLDR']
                 },
@@ -598,52 +557,27 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
             forks: ['O-MEDIA', 'O-STRATEGY']
         },
 
-        // 4. BERATE MICH! (3 TURNS)
+        // 4. EMAIL & BERATUNG (2 TURNS - DEEP TACTICAL SPARRING & READY-TO-SEND REPLY)
         {
-            id: 'recipe-berate-mich',
-            name: 'Berate mich!',
+            id: 'recipe-email',
+            name: 'Email & Beratung',
             family: 'respond',
             turns: [
                 {
-                    title: 'LAGEBILD',
-                    role: 'Du bist ein strategischer C-Level Sparringpartner.',
-                    chunks: ['I-MAIL', 'R-FULL', 'C-REQUEST', 'T-TLDR']
+                    title: 'LAGEBILD, SUBTEXT & TAKTISCHE WEICHENSTELLUNG',
+                    role: 'Du bist ein brillanter strategischer und taktischer C-Level Sparringpartner und Kommunikationsberater.',
+                    chunks: ['I-MAIL', 'R-FULL', 'C-REQUEST', 'S-FULL']
                 },
                 {
-                    title: 'STRATEGIE',
-                    role: 'Du bist ein strategischer C-Level Sparringpartner.',
-                    chunks: ['S-FULL']
-                },
-                {
-                    title: 'ANTWORTENTWURF',
-                    role: 'Du bist ein versierter Kommunikator.',
+                    title: 'TAKTISCHE EMPFEHLUNG & ANTWORTENTWURF',
+                    role: 'Du bist ein versierter Chef-Kommunikator und Verhandlungsstratege.',
                     chunks: ['O-REPLY']
                 }
             ],
             forks: ['O-STRATEGY', 'O-ACTIONS', 'O-QA']
         },
 
-        // 5. EMAIL BEANTWORTEN (2 TURNS)
-        {
-            id: 'recipe-email',
-            name: 'Email beantworten',
-            family: 'respond',
-            turns: [
-                {
-                    title: 'LAGEBILD',
-                    role: 'Du bist ein professioneller Kommunikationsberater.',
-                    chunks: ['I-MAIL', 'R-FULL', 'C-REQUEST', 'T-TLDR']
-                },
-                {
-                    title: 'ANTWORT',
-                    role: 'Du bist ein professioneller Kommunikationsberater.',
-                    chunks: ['O-REPLY']
-                }
-            ],
-            forks: ['O-STRATEGY']
-        },
-
-        // 7. MEETING ANALYSIEREN (2 TURNS)
+        // 5. MEETING ANALYSIEREN (2 TURNS)
         {
             id: 'recipe-meeting',
             name: 'Meeting analysieren',
@@ -662,27 +596,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
             ]
         },
 
-        // 8. THEMENANALYSE (2 TURNS)
-        {
-            id: 'recipe-themenanalyse',
-            name: 'Themenanalyse',
-            family: 'plan',
-            turns: [
-                {
-                    title: 'LAGEBILD',
-                    role: 'Du bist ein Senior Issue Manager.',
-                    chunks: ['I-MAIL', 'R-FULL', 'C-PERSPECTIVE', 'T-TLDR']
-                },
-                {
-                    title: 'BEURTEILUNG & EMPFEHLUNG',
-                    role: 'Du bist ein Senior Issue Manager.',
-                    chunks: [{ chunkId: 'S-DECISION', params: { mode: 'issue' } }, 'O-ACTIONS']
-                }
-            ],
-            forks: ['O-STRATEGY', 'O-THEMENPLANUNG']
-        },
-
-        // 8. TEXTPRÜFUNG & FREIGABE (2 TURNS)
+        // 6. TEXTPRÜFUNG & FREIGABE (2 TURNS)
         {
             id: 'recipe-freigabe',
             name: 'Textprüfung & Freigabe',
@@ -702,43 +616,39 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
             forks: ['O-REPLY', 'O-QA']
         },
 
-        // 11. THEMEN- & REDAKTIONSPLANUNG (2 TURNS)
+        // 7. THEMENANALYSE & PLANUNG (2 TURNS - 360° ISSUE TRIAGE, DECISION & THEMENBOARD)
         {
             id: 'recipe-themenplanung',
-            name: 'Themen- & Redaktionsplanung',
+            name: 'Themenanalyse & Planung',
             family: 'plan',
             turns: [
                 {
-                    title: 'LAGEBILD',
-                    role: 'Du bist Redaktionsleiter der Kommunikationsplanung.',
-                    chunks: ['I-MAIL', 'R-FULL', 'S-ALIGN', 'T-TLDR']
+                    title: 'LAGEBILD & 360°-MEHRPERSPEKTIVEN-CHECK',
+                    role: 'Du bist ein Senior Issue Manager und Redaktionsleiter der Kommunikationsplanung.',
+                    chunks: ['I-MAIL', 'R-FULL', 'C-PERSPECTIVE', 'T-TLDR']
                 },
                 {
-                    title: 'THEMENPLANUNGS-EINTRAG',
-                    role: 'Du bist Redaktionsleiter der Kommunikationsplanung.',
-                    chunks: ['O-THEMENPLANUNG']
+                    title: 'ENTSCHEID, THEMENPLANUNG & MASSNAHMEN',
+                    role: 'Du bist ein Senior Issue Manager und Redaktionsleiter der Kommunikationsplanung.',
+                    chunks: [{ chunkId: 'S-DECISION', params: { mode: 'issue' } }, 'O-THEMENPLANUNG', 'O-ACTIONS']
                 }
-            ]
+            ],
+            forks: ['O-STRATEGY', 'O-REPLY', 'O-QA']
         },
 
-        // 12. ARTIKEL SCHREIBEN (3 TURNS - USER DIRECTIVE: COMPLETE STEPS!)
+        // 12. ARTIKEL SCHREIBEN (2 TURNS - RESEARCH & OUTLINE -> FULL DRAFT)
         {
             id: 'recipe-artikel',
             name: 'Artikel schreiben',
             family: 'create',
             turns: [
                 {
-                    title: 'LAGEBILD & KERNAUSSAGEN',
-                    role: 'Du bist ein leitender Magazin-Redakteur und Co-Autor.',
-                    chunks: ['I-MAIL', 'R-FULL', 'C-THESIS', 'T-TLDR']
+                    title: 'RECHERCHE, THESEN-CHECK & ARTIKEL-OUTLINE',
+                    role: 'Du bist ein leitender Magazin-Redakteur, Dramaturg und Co-Autor.',
+                    chunks: ['I-MAIL', 'R-FULL', 'C-THESIS', 'O-ARTICLE-OUTLINE']
                 },
                 {
-                    title: 'OUTLINE & DRAMATURGIE',
-                    role: 'Du bist ein leitender Magazin-Redakteur und Dramaturg.',
-                    chunks: ['O-ARTICLE-OUTLINE']
-                },
-                {
-                    title: 'ARTIKELENTWURF',
+                    title: 'VOLLSTÄNDIGER ARTIKELENTWURF',
                     role: 'Du bist ein leitender Magazin-Redakteur und Co-Autor.',
                     chunks: ['O-ARTICLE-DRAFT']
                 }
@@ -873,21 +783,16 @@ Extrahiere alle relevanten Themen aus dem vorliegenden E-Mail-Verlauf, den Termi
             ]
         },
 
-        // 17. PRÄSENTATION & STORYBOARD (3 TURNS)
+        // 17. PRÄSENTATION & STORYBOARD (2 TURNS - DIAGNOSE & STORYLINE -> STORYBOARD)
         {
             id: 'recipe-praesentation',
             name: 'Präsentation & Storyboard',
             family: 'review',
             turns: [
                 {
-                    title: 'LAGEBILD, ZIELGRUPPE & BELASTBARKEIT',
-                    role: 'Du bist ein strategischer Executive-Präsentationsberater, Kommunikationsstratege und politisch-medialer Risikoprüfer.',
-                    chunks: ['I-PPT', 'R-FULL', 'T-TLDR']
-                },
-                {
-                    title: 'STRATEGIE, ARGUMENTATION & STORYLINE',
-                    role: 'Du bist ein leitender Kommunikationsstratege und Storyline-Architekt für anspruchsvolle Entscheidungs- und Stakeholder-Gremien.',
-                    chunks: ['S-PPT-STRATEGY']
+                    title: 'DECK-DIAGNOSE, RECHERCHE & STORYLINE-ARCHITEKTUR',
+                    role: 'Du bist ein strategischer Executive-Präsentationsberater und Storyline-Architekt für anspruchsvolle Entscheidungs- und Stakeholder-Gremien.',
+                    chunks: ['I-PPT', 'R-FULL', 'S-PPT-STRATEGY']
                 },
                 {
                     title: 'FOLIEN-STORYBOARD & KONKRETE INPUTS',

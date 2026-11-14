@@ -18,6 +18,11 @@
 
 PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI workflow cockpit & cross-device execution bridge** — engineered right inside your browser:
 
+- 🧠 **First-Principles Architecture, Laien-Test & 15 Zero-Overlap Recipes (v2.24)**  
+  Universalizes the entire recipe catalog by stripping hardcoded domain examples and condensing all workflows to a crisp **max 2-turn** cadence:
+  - **Zero Hardcoded Arguments (`shared/recipe-catalog.js`):** Removed case-specific buzzwords and prescriptive examples across intake, strategy, audit, and output chunks so host LLMs reason from first principles and adapt dynamically to any scenario.
+  - **Approachable, Human & Non-Technocratic (`G_OUTPUT_STYLE` & `Laien-Test`):** Enforces warm, accessible, jargon-free language understandable at first reading without prior knowledge, stress-tested across three perspectives (*affected laypeople*, *critical media/politics*, and *partners/authorities*).
+  - **15 Zero-Overlap Recipes:** Consolidated *Berate mich!* + *Email beantworten* into **Email & Beratung** (`recipe-email`), and *Themenanalyse* + *Themen- & Redaktionsplanung* into **Themenanalyse & Planung** (`recipe-themenplanung`), with automatic catalog migration (`v2_24_abstract_sympathetic_15recipes`).
 - 🖋️ **Editorial Liberation & Redaktions-Challenge Architecture (v2.22)**  
   Eliminates rigid sentence-level dogmas and mechanical abstraction commands across media and executive workflows:
   - **Natural Context & Everyday Logic (`O-MEDIA`, `O-QA`, `O-INTERVIEW`, `O-ARTICLE-DRAFT`):** Replaces rigid templates (*«Jeder Satz erfüllt genau eine Funktion»*) and blanket abstraction triggers with natural phrasing guidance—grounding statements in tangible everyday operational context and safeguarding only genuinely open future decisions.
@@ -36,7 +41,7 @@ PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI work
 - 🛡️ **Source-Grounded Verification & Phase Guardrails**  
   Employs strict source attribution (citing email threads, M365 Graph, or attachments) and gap markers (*«[Offen / Zu prüfen]»*) rather than decorative icons or negative-constraint bans. Turn 2+ and output forks inherit `G_OUTPUT_STYLE`, preserving uncompromising anti-fluff rules and executive tone. Furthermore, non-final turns automatically inject a strict `PHASEN-FOKUS` boundary rule preventing host LLMs from drafting premature final outputs during early analysis steps.
 - 🗜️ **Chrome Sync Quota Hardening & High-Density Compaction**  
-  All 17 active recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (e.g. `recipe-medienanfrage` at 7.2 KB, `recipe-social-post` at 7.0 KB, `recipe-praesentation` at 6.8 KB, `recipe-freigabe` at 6.1 KB, `recipe-interview` at 5.8 KB) and total sync storage stays well below the 102,400-byte ceiling (~76 KB total, 74.2%). Every turn across all recipes is strictly capped at $\le 4$ high-impact tasks. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_22_unleash_and_challenge`), preventing fatal storage quota exceptions.
+  All 15 active recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (max item `recipe-medienanfrage` at 6.3 KB, `recipe-social-post` at 6.2 KB, `recipe-email` at 6.1 KB, `recipe-freigabe` at 5.8 KB, `recipe-wording` at 5.8 KB) and total sync storage stays well below the 102,400-byte ceiling (~66.2 KB total, 64.7%). Every turn across all recipes is strictly capped at $\le 2$ turns and $\le 4$ high-impact tasks per turn. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_24_abstract_sympathetic_15recipes`), preventing fatal storage quota exceptions.
 - 🔢 **Dynamic Task Header Sequencing & Clean Unicode Flow**  
   Turn and fork compilation engines dynamically re-index all prompt tasks into clean sequential numbers (`TASK 1:`, `TASK 2:`, `TASK 3:`...) with clean Unicode arrow (`→`) flow, ensuring host LLMs follow a clear, logical step order regardless of chunk assembly.
 - ⏱️ **1500ms Debounced Cloud Gist Sync**  
@@ -138,25 +143,23 @@ Both editions share the same local-first, zero-telemetry architecture. PromptDoc
 
 ### Built-In Strategic Recipe Suite
 
-PromptDock 2.1 includes a vendor-agnostic Corporate Communications & Intelligence recipe suite:
+PromptDock 2.1 includes a vendor-agnostic Corporate Communications & Intelligence recipe suite (15 zero-overlap recipes, max 2 turns each):
 
-1. **Medienanfrage** (3 Turns: Lagebild & Abklärungs-Triage ➔ Strategie & Format-Abwägung ➔ Medienantwort, Begründung & 4-Punkte-Check)
-2. **Interview-Vorbereitung** (3 Turns: Briefing ➔ Haltung & Rote Linien ➔ Interview-Briefing mit Outside-in Q&A)
+1. **Medienanfrage** (2 Turns: Dekonstruktion, Rollenklärung & Abklärungs-Triage ➔ Versandfertige Medienantwort & Pre-Flight Quality Gate)
+2. **Interview-Vorbereitung** (2 Turns: Briefing & Faktenlage ➔ Nahbares Interview-Briefing mit Mehrperspektiven-Q&A)
 3. **Wording & Basistext** (2 Turns: Kernanalyse ➔ Outside-in Basistext, Kernbotschaften & Kritisches Q&A)
-4. **Berate mich! (Strategischer Sparringspartner)** (Herausforderndes Sparring & strategische Beratung; Forks zu Strategie, Next Actions & Q+A)
-5. **E-Mail & Stakeholder-Antwort** (2 Turns: Anliegen, Meilenstein-Kontext & Fakten ➔ Antwortentwurf nach den 4 Goldenen Email-Regeln)
-6. **Meeting-Vorbereitung & Protokoll** (Agenda/Protokoll ➔ Briefing mit Entscheidungslogik & Nicht-Festlegung)
-7. **Themenanalyse & Issue-Monitoring** (Recherche & Faktenlage ➔ Risikobewertung & Handlungsbedarfsentscheid)
-8. **Textprüfung & Freigabe** (2 Turns: Setting, Zielpublikum & Lagebild ➔ 3D-Audit, Freigabe & kollegiales Feedback; Forks zu E-Mail & Q+A)
-9. **Themen- & Redaktionsplanung** (Analyse ➔ Themenboard-Eintrag)
-10. **Artikel & Storytelling** (Recherche ➔ Publikationssetting & Outline ➔ Artikelentwurf mit journalistischer Glaubwürdigkeit)
-11. **Wochenstart Briefing** (Executive Activity Scan & Delta)
-12. **Projekt- & Status-Update** (Kompaktes Reporting)
-13. **Tiefenrecherche & Intelligence** (Quellen- & Fakten-Dossier)
-14. **Standort- & Stakeholder-Austausch** (Kompakteinträge)
-15. **Präsentation & Storyboard** (3 Turns: Lagebild & Deck-Analyse ➔ 5-Kriterien-Strategie & Folien-Triage ➔ Storyboard mit Outside-in-Logik)
-16. **Medienantwort-Check** (Single-Shot: Sachverhalts- & Risiko-Analyse ➔ Redaktions-Challenge ➔ 2 versandfertige Textvarianten: Sympathisch & substanziell vs. Entschärft)
-17. **Social Media Post** (2 Turns: Lagebild & Entwurfs-Challenge ➔ 2 Post-Varianten & Visual-Briefing; Forks zu E-Mail, Q+A & Artikel)
+4. **Email & Beratung** (2 Turns: Vorgangs-, Subtext- & Rollen-Analyse ➔ Taktische Empfehlung & versandfertiger E-Mail-Entwurf; Forks zu Strategie, Next Actions & Q+A)
+5. **Meeting-Vorbereitung & Protokoll** (2 Turns: Termin- & Anliegensanalyse ➔ Briefing mit Entscheidungslogik & Nicht-Festlegung)
+6. **Textprüfung & Freigabe** (2 Turns: Setting, Zielpublikum & Faktengrenzen ➔ 3D-Audit, Freigabe & kollegiales Feedback; Forks zu E-Mail & Q+A)
+7. **Themenanalyse & Planung** (2 Turns: Recherche, Faktenlage & Risikobewertung ➔ Themenboard-Eintrag mit Kategorie A/B/C)
+8. **Artikel & Storytelling** (2 Turns: Recherche & Publikationssetting ➔ Artikelentwurf mit journalistischer Glaubwürdigkeit)
+9. **Wochenstart Briefing** (2 Turns: Executive Activity Scan ➔ Delta-Analyse & Inbox-Triage)
+10. **Projekt- & Status-Update** (2 Turns: Delta-Analyse ➔ Kompaktes Rückkehrer-Update)
+11. **Tiefenrecherche & Intelligence** (Single-Shot: Quellen- & Fakten-Dossier)
+12. **Standort- & Stakeholder-Austausch** (Single-Shot: Kompakteinträge)
+13. **Präsentation & Storyboard** (2 Turns: Kontext-, Zielgruppen- & Deck-Diagnose ➔ Storyboard mit Outside-in-Logik & Leak-Test)
+14. **Medienantwort-Check** (Single-Shot: Diagnostische Risikoanalyse ➔ Pre-Flight-Stresstest ➔ 2 versandfertige Textvarianten: Nahbar & narrativstark vs. Entschärft)
+15. **Social Media Post** (2 Turns: Lagebild & Entwurfs-Challenge ➔ 2 Post-Varianten & Visual-Briefing; Forks zu E-Mail, Q+A & Artikel)
 
 ---
 
