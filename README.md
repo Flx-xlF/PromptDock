@@ -1,6 +1,6 @@
 # PromptDock ⚡
 
-> **Built with care (and a bit of madness) by [schema/f](https://github.com/Flx-xlF)**
+> **Built by [Felix / schema/f](https://github.com/Flx-xlF)**
 
 ### *Transform Microsoft Copilot, Google Gemini, ChatGPT, and Claude with interactive multi-turn workflows, an in-chat steering cockpit, contextual inline commenting, and one-click prompt management.*
 
@@ -11,6 +11,12 @@
 [![ChatGPT](https://img.shields.io/badge/ChatGPT-Web%20App-10A37F?logo=openai&logoColor=white)](https://chatgpt.com)
 [![Claude](https://img.shields.io/badge/Claude-Web%20App-D97706?logo=anthropic&logoColor=white)](https://claude.ai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
+
+---
+
+> **Executive Overview & Companion Case Study ([Terrain](https://github.com/Flx-xlF/strategic-analysis-app-case-study)):**  
+> PromptDock is the shipped browser-extension implementation of the **"Top-Down In-Workflow Enablement"** concept explored in **Terrain**: instead of burying corporate communication rules in static PDFs, PromptDock delivers governed multi-turn workflows directly inside Microsoft Copilot (M365, Outlook, Teams), Gemini, ChatGPT, and Claude—keeping strategic judgment and final sign-off human.  
+> 👉 **[Terrain Visual Introduction (`00 Overview`)](https://flx-xlf.github.io/strategic-analysis-app-case-study/)** · **[Terrain Interactive Demo (`01–03`)](https://flx-xlf.github.io/strategic-analysis-app-case-study/?view=demo)**
 
 ---
 
@@ -56,23 +62,23 @@ While PromptDock works with custom prompts in any language or domain, it ships o
 
 #### Recipe Reference
 
-| # | Recipe (`id`) | Category | Cadence & Turns | Inputs / Output Forks |
+| # | Recipe (`id`) | Category | Cadence & Turns (EN Summary) | Inputs / Output Forks |
 | :- | :--- | :--- | :--- | :--- |
-| 1 | **Medienanfrage** (`recipe-medienanfrage`) | PR & Medien | 2 Turns: *Diagnose, Recherche & Strategie-Linie* ➔ *Medienantwort & Pre-Flight-Check* | Forks: `Medienantwort-Check`, `Q+A Tabelle`, `Interview-Briefing`, `Themenplanung` |
-| 2 | **Interview beantworten** (`recipe-interview`) | PR & Medien | 2 Turns: *Diagnose, Recherche & Interview-Strategie* ➔ *Interview-Briefing & Antworten* | Forks: `Medienantwort`, `Q+A Tabelle` |
-| 3 | **Wording erstellen** (`recipe-wording`) | PR & Medien | 2 Turns: *Lagebild & Taktik-Check* ➔ *Wording & Q+A* | Forks: `Medienantwort`, `Kommunikationsstrategie` |
-| 4 | **Email & Beratung** (`recipe-email`) | PR & Medien | 2 Turns: *Lagebild, Subtext & taktische Weichenstellung* ➔ *Taktische Empfehlung & Antwortentwurf* | Forks: `Kommunikationsstrategie`, `Handlungsempfehlungen`, `Q+A Tabelle` |
-| 5 | **Meeting analysieren** (`recipe-meeting`) | Planung & Strategie | 2 Turns: *Lagebild* ➔ *Briefing* | — |
-| 6 | **Textprüfung & Freigabe** (`recipe-freigabe`) | Review & Audit | 2 Turns: *Lagebild* ➔ *Drei-Dimensionen-Audit & Freigabe* | Forks: `Antwortentwurf`, `Q+A Tabelle` |
-| 7 | **Themenanalyse & Planung** (`recipe-themenplanung`) | Planung & Strategie | 2 Turns: *Lagebild & 360°-Mehrperspektiven-Check* ➔ *Entscheid, Themenplanung & Massnahmen* | Forks: `Kommunikationsstrategie`, `Antwortentwurf`, `Q+A Tabelle` |
-| 8 | **Artikel schreiben** (`recipe-artikel`) | Planung & Strategie | 2 Turns: *Recherche, Thesen-Check & Artikel-Outline* ➔ *Vollständiger Artikelentwurf* | — |
-| 9 | **Wochenstart Briefing** (`recipe-wochenstart`) | Planung & Strategie | 2 Turns: *Aktivitäts-Scan* ➔ *Delta & Inbox-Triage* | Vars: `ZEITRAUM` |
-| 10 | **Update** (`recipe-update`) | Planung & Strategie | 2 Turns: *Kontext & Recherche* ➔ *Delta & Briefing* | Vars: `THEMA`*, `PERSON`, `ZEITRAUM` |
-| 11 | **Recherche** (`recipe-recherche`) | PR & Medien | 1 Turn (Single-Shot): *Lagebild* | Vars: `SUCHBEGRIFF`* · Forks: `Antwortentwurf`, `Kommunikationsstrategie`, `Q+A Tabelle`, `Themenplanung` |
-| 12 | **Standort- & Stakeholder-Austausch** (`recipe-standort-austausch`) | Planung & Strategie | 1 Turn (Single-Shot): *Stakeholder-Einträge* | — |
-| 13 | **Präsentation & Storyboard** (`recipe-praesentation`) | Review & Audit | 2 Turns: *Deck-Diagnose, Recherche & Storyline-Architektur* ➔ *Folien-Storyboard & konkrete Inputs* | Forks: `Detailtabelle`, `Q+A Tabelle`, `Antwortentwurf` |
-| 14 | **Medienantwort-Check** (`recipe-medienantwort-check`) | Review & Audit | 1 Turn (Single-Shot): *Redaktions-Challenge & Optimierung (2 Textvarianten)* | Forks: `Q+A Tabelle`, `Medienantwort` |
-| 15 | **Social Media Post** (`recipe-social-post`) | Planung & Strategie | 2 Turns: *Lagebild & Entwurfs-Challenge* ➔ *Post-Entwurf & Visual-Briefing* | Vars: `KANAL_PERSON` · Forks: `Antwortentwurf`, `Q+A Tabelle`, `Artikelentwurf` |
+| 1 | **Medienanfrage** (`recipe-medienanfrage`) | PR & Medien | 2 Turns: *Media Inquiry — Diagnose, Research & Strategy* ➔ *Press Reply & Pre-Flight Check* | Forks: `Medienantwort-Check`, `Q+A Tabelle`, `Interview-Briefing`, `Themenplanung` |
+| 2 | **Interview beantworten** (`recipe-interview`) | PR & Medien | 2 Turns: *Interview Prep — Diagnose, Research & Strategy* ➔ *Interview Briefing & Q&A* | Forks: `Medienantwort`, `Q+A Tabelle` |
+| 3 | **Wording erstellen** (`recipe-wording`) | PR & Medien | 2 Turns: *Approved Wording — Situation & Tactics* ➔ *Core Wording & Q&A* | Forks: `Medienantwort`, `Kommunikationsstrategie` |
+| 4 | **Email & Beratung** (`recipe-email`) | PR & Medien | 2 Turns: *Advisory Email — Subtext & Tactical Framing* ➔ *Recommendation & Reply Draft* | Forks: `Kommunikationsstrategie`, `Handlungsempfehlungen`, `Q+A Tabelle` |
+| 5 | **Meeting analysieren** (`recipe-meeting`) | Planung & Strategie | 2 Turns: *Meeting Notes — Situation Scan* ➔ *Executive Briefing* | — |
+| 6 | **Textprüfung & Freigabe** (`recipe-freigabe`) | Review & Audit | 2 Turns: *Copy & Approval Audit — Context* ➔ *3-Dimension Audit & Sign-Off Readiness* | Forks: `Antwortentwurf`, `Q+A Tabelle` |
+| 7 | **Themenanalyse & Planung** (`recipe-themenplanung`) | Planung & Strategie | 2 Turns: *Issue Analysis — 360° Multi-Perspective Check* ➔ *Decision, Topic Plan & Actions* | Forks: `Kommunikationsstrategie`, `Antwortentwurf`, `Q+A Tabelle` |
+| 8 | **Artikel schreiben** (`recipe-artikel`) | Planung & Strategie | 2 Turns: *Corporate Article — Research & Thesis Outline* ➔ *Full Article Draft* | — |
+| 9 | **Wochenstart Briefing** (`recipe-wochenstart`) | Planung & Strategie | 2 Turns: *Weekly Kickoff — Activity Scan* ➔ *Delta & Inbox Triage* | Vars: `ZEITRAUM` |
+| 10 | **Update** (`recipe-update`) | Planung & Strategie | 2 Turns: *Status Update — Context & Research* ➔ *Delta & Briefing* | Vars: `THEMA`*, `PERSON`, `ZEITRAUM` |
+| 11 | **Recherche** (`recipe-recherche`) | PR & Medien | 1 Turn (Single-Shot): *Structured Situation Brief* | Vars: `SUCHBEGRIFF`* · Forks: `Antwortentwurf`, `Kommunikationsstrategie`, `Q+A Tabelle`, `Themenplanung` |
+| 12 | **Standort- & Stakeholder-Austausch** (`recipe-standort-austausch`) | Planung & Strategie | 1 Turn (Single-Shot): *Site & Stakeholder Sync Entries* | — |
+| 13 | **Präsentation & Storyboard** (`recipe-praesentation`) | Review & Audit | 2 Turns: *Slide Deck — Diagnosis & Storyline* ➔ *Slide-by-Slide Storyboard & Inputs* | Forks: `Detailtabelle`, `Q+A Tabelle`, `Antwortentwurf` |
+| 14 | **Medienantwort-Check** (`recipe-medienantwort-check`) | Review & Audit | 1 Turn (Single-Shot): *Editorial Challenge & 2 Optimized Press Reply Variants* | Forks: `Q+A Tabelle`, `Medienantwort` |
+| 15 | **Social Media Post** (`recipe-social-post`) | Planung & Strategie | 2 Turns: *Executive Social — Situation & Draft Challenge* ➔ *Post Draft & Visual Briefing* | Vars: `KANAL_PERSON` · Forks: `Antwortentwurf`, `Q+A Tabelle`, `Artikelentwurf` |
 
 ---
 
@@ -135,4 +141,4 @@ Looking for the lightweight single-paste prompt manager without the workflow HUD
 
 ---
 
-Built with care (and a bit of madness) by [schema/f](https://github.com/Flx-xlF) · ☕ [Tip on Ko-fi](https://ko-fi.com/flxxlf)
+Built by [Felix / schema/f](https://github.com/Flx-xlF)

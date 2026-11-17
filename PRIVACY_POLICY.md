@@ -1,18 +1,18 @@
 # Privacy Policy for PromptDock
 
-**Last updated:** September 24, 2026
+**Last updated:** November 2026
 
 PromptDock ("we", "our", or "the extension") is committed to protecting your privacy. This Privacy Policy explains our data practices and demonstrates our commitment to transparency.
 
 ## 1. Single Purpose & Data Processing Principle
-PromptDock is designed to store user-defined AI prompt templates and inject them into web-based AI assistant interfaces (such as Microsoft Copilot and Google Gemini) upon user request. 
+PromptDock is designed to store user-defined AI prompt templates and multi-turn workflows, and inject them into web-based AI assistant interfaces (Microsoft Copilot, Google Gemini, ChatGPT, and Claude) upon user request.
 
 **We do not collect, track, sell, or monetize any personal data.**
 
 ## 2. Information Storage & Handling
 
 - **Prompts & Configuration:**
-  All prompt titles, prompt contents, and settings are saved locally in your browser using `chrome.storage.sync` (or `chrome.storage.local` if synchronization is unavailable). This data remains strictly within your browser profile and is synchronized exclusively through your authenticated browser account (e.g., Google or Firefox Sync).
+  All prompt titles, prompt contents, and settings are saved locally in your browser using `chrome.storage.sync` (or `chrome.storage.local` if synchronization is unavailable). This data remains strictly within your browser profile and is synchronized exclusively through your authenticated browser account (e.g., Google, Microsoft, or Firefox Sync).
 
 - **Mobile Sync & GitHub Tokens (Optional):**
   If you choose to enable the optional Mobile Sync feature via GitHub Gists:
@@ -24,7 +24,7 @@ PromptDock is designed to store user-defined AI prompt templates and inject them
   The `clipboardWrite` permission is used solely as a user convenience fallback. When a prompt cannot be injected directly into a recognized text input, the prompt text is copied to your clipboard and a brief toast notification is displayed. The extension never reads your clipboard contents.
 
 - **Host Permissions & Web Content:**
-  The extension requests host permissions for specific domains (Microsoft Copilot, Office, Bing, and Google Gemini). These permissions are used exclusively to detect prompt input fields and insert your requested text when you activate a prompt. The extension does not read, log, or transmit your conversations, documents, or browsing history.
+  The extension requests host permissions for supported AI web interfaces (`microsoft.com`, `cloud.microsoft`, `microsoft365.com`, `office.com`, `office365.com`, `office.net`, `bing.com`, `gemini.google.com`, `chatgpt.com`, `chat.openai.com`, and `claude.ai`). These permissions are used exclusively to detect prompt input fields, render the optional in-chat workflow cockpit/inline comment tools locally in your browser, and insert your requested text when activated. The extension does not read, log, or transmit your conversations, documents, or browsing history to any external server.
 
 ## 3. Third-Party Services
 The extension communicates exclusively with:
@@ -33,9 +33,9 @@ The extension communicates exclusively with:
 
 ## 4. Permissions Disclosure
 - `storage`: To save your custom prompts and preferences.
-- `activeTab` & `scripting`: To inject the prompt injection handler into the active tab.
+- `activeTab` & `scripting`: To inject the prompt injection handler and workflow cockpit into the active tab.
 - `clipboardWrite`: To copy prompts to the clipboard if direct injection is unavailable.
 - `host_permissions`: To enable content script interaction on supported AI assistant web applications.
 
 ## 5. Contact
-For questions or concerns regarding this policy, please open an issue on the official project repository [https://github.com/Flx-xlF](https://github.com/Flx-xlF/PromptDock).
+For questions or concerns regarding this policy, please open an issue on the official project repository: [https://github.com/Flx-xlF/PromptDock](https://github.com/Flx-xlF/PromptDock).
