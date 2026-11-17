@@ -4,237 +4,135 @@
 
 ### *Transform Microsoft Copilot, Google Gemini, ChatGPT, and Claude with interactive multi-turn workflows, an in-chat steering cockpit, contextual inline commenting, and one-click prompt management.*
 
-[![Manifest V3](https://img.shields.io/badge/Chrome%20Extension-Manifest%20V3-blue?logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/intro/)
-[![Microsoft Copilot](https://img.shields.io/badge/Microsoft%20Copilot-Web%20App-0078D4?logo=microsoft&logoColor=white)](https://copilot.microsoft.com)
+[![Manifest V3](https://img.shields.io/badge/Extension-Manifest%20V3-blue?logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/intro/)
+[![Chromium & Firefox](https://img.shields.io/badge/Browsers-Chrome%20%7C%20Edge%20%7C%20Firefox%20115+-4F46E5)](https://github.com/Flx-xlF/PromptDock)
+[![Microsoft Copilot](https://img.shields.io/badge/Microsoft%20Copilot-M365%20%7C%20Outlook%20%7C%20Teams-0078D4?logo=microsoft&logoColor=white)](https://copilot.cloud.microsoft)
 [![Google Gemini](https://img.shields.io/badge/Google%20Gemini-Web%20App-8E75B2?logo=googlegemini&logoColor=white)](https://gemini.google.com)
 [![ChatGPT](https://img.shields.io/badge/ChatGPT-Web%20App-10A37F?logo=openai&logoColor=white)](https://chatgpt.com)
 [![Claude](https://img.shields.io/badge/Claude-Web%20App-D97706?logo=anthropic&logoColor=white)](https://claude.ai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
-[![Author](https://img.shields.io/badge/Dev-schema%2Ff-indigo)](https://github.com/Flx-xlF)
 
 ---
 
-### What's New in PromptDock 2.1 🚀
-
-PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI workflow cockpit & cross-device execution bridge** — engineered right inside your browser:
-
-- 📡 **Universal Two-Tier Media & Discourse Radar (v2.25)**  
-  Expands fact-checking and research from pure internal M365 Graph grounding to a dual-channel intelligence radar across 12 of the 15 recipes:
-  - **Dual-Channel Research (`R-FULL` & `C-MEDIA-CHECK`):** Instructs host LLMs to query both internal M365 Graph sources (emails, Teams chats including `#KOM-ANKER`, meeting notes, SharePoint) and external web search (*Websuche*: online media, news portals, published press releases) for prior and ongoing media coverage.
-  - **Framing & Consistency Protection (*Konsistenzschutz*):** Evaluates active media framing, criticism, and tone, and cross-checks drafts against already published statements to prevent contradictions.
-  - **Verified Web & Media Citations (`G_RAHMEN`):** Turn 1 source attribution explicitly accepts verified web and media references alongside email threads, SharePoint/Graph, and attachments.
-- 🧠 **First-Principles Architecture, Laien-Test & 15 Zero-Overlap Recipes (v2.24)**  
-  Universalizes the entire recipe catalog by stripping hardcoded domain examples and condensing all workflows to a crisp **max 2-turn** cadence:
-  - **Zero Hardcoded Arguments (`shared/recipe-catalog.js`):** Removed case-specific buzzwords and prescriptive examples across intake, strategy, audit, and output chunks so host LLMs reason from first principles and adapt dynamically to any scenario.
-  - **Approachable, Human & Non-Technocratic (`G_OUTPUT_STYLE` & `Laien-Test`):** Enforces warm, accessible, jargon-free language understandable at first reading without prior knowledge, stress-tested across three perspectives (*affected laypeople*, *critical media/politics*, and *partners/authorities*).
-  - **15 Zero-Overlap Recipes:** Consolidated *Berate mich!* + *Email beantworten* into **Email & Beratung** (`recipe-email`), and *Themenanalyse* + *Themen- & Redaktionsplanung* into **Themenanalyse & Planung** (`recipe-themenplanung`), with automatic catalog migration (`v2_24_abstract_sympathetic_15recipes`).
-- 🖋️ **Editorial Liberation & Redaktions-Challenge Architecture (v2.22)**  
-  Eliminates rigid sentence-level dogmas and mechanical abstraction commands across media and executive workflows:
-  - **Natural Context & Everyday Logic (`O-MEDIA`, `O-QA`, `O-INTERVIEW`, `O-ARTICLE-DRAFT`):** Replaces rigid templates (*«Jeder Satz erfüllt genau eine Funktion»*) and blanket abstraction triggers with natural phrasing guidance—grounding statements in tangible everyday operational context and safeguarding only genuinely open future decisions.
-  - **3-Step Redaktions-Challenge & Dual-Variant Output (`C-MEDIA-CHECK`):** Upgrades `Medienantwort-Check` to a complete diagnostic challenge: (1) *Sachverhalts- & Risiko-Analyse* (triage, substance vs. tonal risk), (2) *Ruthless Redaktions-Challenge* (flagging sterility, banality traps, and unaddressed questions that trigger follow-up calls), and (3) *Two publication-ready variants* (*Variante 1: Sympathisch & substanziell [Empfehlung]* vs. *Variante 2: Entschärft [Minimal-invasiv]*).
-  - **Single-Click Steering Chip (`content.js`):** Adds the `+ Ohne Rückfrage lösen` chip to the HUD Spotlight Composer, steering the model to resolve inquiries substantially and warmly without triggering internal clarification cascades.
-  - **Chrome Sync Quota Relief:** Storage consumption lowered further to **75,968 B (~74.2 KB)**, expanding safe headroom to **26,432 B (~25.8 KB / 25.8%)** under the 102.4 KB sync quota, with migration flag `v2_22_unleash_and_challenge`.
-- ⚓ **#KOM-ANKER Grounding & Chrome Sync Quota Consolidation (v2.21)**  
-  High-signal Microsoft Graph grounding combined with storage optimization:
-  - **#KOM-ANKER Prioritization (`R-FULL`):** Directs Microsoft 365 BizChat and Copilot to search E-Mails, SharePoint, and Teams chats, explicitly prioritizing notes, links, and screenshots tagged with `#KOM-ANKER` in self-chats for instantaneous factual anchoring.
-  - **Catalog Consolidation & Quota Relief:** Streamlines the catalog down to 17 high-leverage recipes by consolidating `recipe-proofreading` into `recipe-freigabe` (*Textprüfung & Freigabe*) and merging standalone `recipe-strategie` into `recipe-berate-mich` (*Berate mich!*, with direct output forks to `O-STRATEGY`, `O-ACTIONS`, and `O-QA`).
-  - **Headroom Optimization:** Drops total `chrome.storage.sync` consumption from ~95 KB (92.7%) to ~79 KB (79.9%), unlocking ~20.5 KB of resilient headroom under Chrome's 102,400-byte total sync ceiling.
-- 📱 **Mobile Sync & Zero-Input Execution Bridge (v2.1)**  
-  Zero-friction mobile integration with a dedicated slide-up onboarding sheet and live QR code. Gist sync publishes a dual payload: the complete structured schema (`prompts`) with full catalog metadata resolution, plus a mobile-optimized dictionary (`quick`). All template variables automatically resolve to sensible defaults or active context fallbacks (*«Gemäss aktuellem E-Mail-Verlauf / Kontext»*), enabling mobile automation shortcuts to query, copy, and execute prompts immediately on open email threads without manual input stalls.
-- 🏢 **Microsoft 365 Graph & Outlook Native Grounding**  
-  Intelligent thread ingestion designed specifically for Outlook on Web and Microsoft Copilot. Consolidated single-task intake (`I-MAIL`, `I-MEET`) parses email thread chronology (latest sender mandate down to historic forwards and linked SharePoint/OneDrive attachments), and directs Copilot to ground claims against independent internal M365 Graph data (emails, Teams chats, meeting notes, SharePoint).
-- 🛡️ **Source-Grounded Verification & Phase Guardrails**  
-  Employs strict source attribution (citing email threads, M365 Graph, or attachments) and gap markers (*«[Offen / Zu prüfen]»*) rather than decorative icons or negative-constraint bans. Turn 2+ and output forks inherit `G_OUTPUT_STYLE`, preserving uncompromising anti-fluff rules and executive tone. Furthermore, non-final turns automatically inject a strict `PHASEN-FOKUS` boundary rule preventing host LLMs from drafting premature final outputs during early analysis steps.
-- 🗜️ **Chrome Sync Quota Hardening & High-Density Compaction**  
-  All 15 active recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (max item `recipe-medienanfrage` at 6.7 KB compiled / 6.9 KB sync, `recipe-social-post` at 6.2 KB, `recipe-email` at 6.1 KB, `recipe-freigabe` at 5.8 KB, `recipe-wording` at 5.8 KB) and total sync storage stays well below the 102,400-byte ceiling (~71.1 KB compiled / 69.4%, ~73.5 KB sync / 71.8%). Every turn across all recipes is strictly capped at $\le 2$ turns and $\le 4$ high-impact tasks per turn. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_25_universal_media_radar`), preventing fatal storage quota exceptions.
-- 🔢 **Dynamic Task Header Sequencing & Clean Unicode Flow**  
-  Turn and fork compilation engines dynamically re-index all prompt tasks into clean sequential numbers (`TASK 1:`, `TASK 2:`, `TASK 3:`...) with clean Unicode arrow (`→`) flow, ensuring host LLMs follow a clear, logical step order regardless of chunk assembly.
-- ⏱️ **1500ms Debounced Cloud Gist Sync**  
-  Eliminates burst HTTPS PATCH requests against GitHub's API by introducing an intelligent 1500ms debounce idle timer across all add, edit, and reorder operations.
-- 🧩 **Segmented Multi-Turn Recipe Composer**  
-  Design and customize your own multi-step workflows directly within the popup editor. Switch between **Single-Shot** and **Multi-Turn** modes via an interactive segmented control. Build sequences step-by-step with horizontal step pills, append subsequent turns with a single click (`+`), and configure each step's title and prompt canvas independently.
-- 💾 **Dual-Tier Resilient Storage Architecture**  
-  A modern hybrid persistence model: single-shot prompts are stored in `chrome.storage.sync` (`p_<id>`) for instant synchronization across devices, while complex multi-turn workflows are saved in `chrome.storage.local` (`r_<id>`), ensuring zero risk of sync quota bottlenecks. Both tiers are merged transparently into a unified catalog with full export and import support.
-- 🌉 **Execution Bridge & Direct Turn Injection**  
-  Custom multi-turn recipes connect directly to the in-chat HUD rail via runtime message passing. Each turn injects directly into the chat input without rigid catalog schemas, preserving user-defined instructions and allowing real-time steering notes at every checkpoint.
-- ⚡ **Deliverable-First Express Mode & Continuous Task Sequencing (v2.18)**  
-  Launch any multi-turn workflow as an instantaneous single-shot prompt: PromptDock emits a single unified persona (`ROLLE:`) at Turn 0, eliminating jarring mid-prompt persona switching. Multi-step Express prompts enforce an **80/20 Deliverable-First Gate**: turns 1 to N-1 serve as an ultra-compact diagnostic check (max. 5–8 bullet points total, zero repetitive slide passes, direct decision for the top option), and the `Redundanz-Sperre` prevents re-hashing analytical preambles so 80% of response weight is focused directly on the final ready-to-use output. Task headers are dynamically re-indexed into a clean, continuous sequence (`TASK 1:` through `TASK N:`) across the composite prompt without per-turn resets. Intermediate checkpoint summaries (`T-TLDR`) are automatically suppressed on non-final steps.
-- 🚊 **In-Chat Rail UX ("Rail, Checkpoint, Fork")**  
-  Complex corporate communication, audit, and strategic tasks are split into discrete cognitive turns (*Turn 1: Research / Situation Analysis* ➔ *Turn 2: Strategy / Audit* ➔ *Turn 3: Output Synthesis*). A floating stepper rail sits directly above the chat input, showing your current step and workflow progress.
-- 🎙️ **2-Zone Spotlight Composer**  
-  The expanded HUD is organized into two dedicated zones: a compact top row of quick steering modifier chips (*+ Fakten korrigieren*, *+ Tiefer recherchieren*, *+ Haltung vorgeben*, *+ Ohne Rückfrage lösen*) and a unified full-width input container with an integrated primary `Weiter ➔` CTA (`⌥⇧→`). The steering input spans the full card width, eliminating truncated placeholders.
-- 🏝️ **Dynamic Island 36px Capsule**  
-  A single-line, 36px minimized status capsule featuring live turn status, workflow name, a pulsing streaming indicator, and compact quick actions. It never wraps and keeps your chat conversation completely unobscured.
-- 🌊 **Spring-Physics Morph & Scale Crossfade**  
-  Transitions between the expanded Spotlight Composer and the minimized Dynamic Island are powered by physical spring overshoot curves (`cubic-bezier(0.34, 1.15, 0.64, 1)`) paired with a micro-scale content crossfade (`scale(0.96) translateY(4px) ➔ scale(1)`), eliminating jarring snap cuts or layout reflows.
-- 📐 **Zero-Overlap Spatial Docking & Sidebar Clamping (<= 460px)**  
-  PromptDock dynamically detects the host chat input container across Copilot, Gemini, ChatGPT, and Claude. Connected to a reactive `ResizeObserver`, the HUD anchors **10px above the composer** with runtime horizontal clamping `[8px, viewportWidth - 8px]`. In narrow split screens or Outlook on the Web sidebars, CSS Container Queries (`@container pd-rail (max-width: 460px)`) collapse inactive stepper labels into compact dots (~80px footprint), keeping window controls accessible with zero horizontal overflow.
-- 🎯 **Entscheidungs- & Festlegungs-Check (Corporate Media Suite v2.10)**  
-  Integrated throughout `Medienanfrage` and `Medienantwort-Check`: anchors four cognitive guardrails into Copilot's formulation pipeline:
-  1. **Faktenstatus:** Strict classification into 4 commitment tiers (*fachlich geprüft und beschlossen* | *geplant oder vorgesehen* | *in Prüfung* | *offen [Zu prüfen]*), actively flagging contradictions between confirmed timelines and open milestones.
-  2. **Notwendige Konkretion (Lösungsraum schützen):** Formulates as specifically as required, but never more specific than confirmed status—substituting clear umbrella terms (*Oberbegriffe*) for premature detail commitments.
-  3. **Satzfunktion:** Enforces that every single sentence fulfills an unambiguous communication role (acknowledgment, fact, decision rationale, organizational stance, confirmed outlook, or boundary delimitation) without bureaucratic filler.
-  4. **Framing-Ziel & Nicht-Festlegung:** Emits explicit non-commitment boundaries prior to generating the draft, safeguarding organizational maneuverability. Concludes with a mandatory 4-point impact audit (Schema a–d) and automated self-correction.
-- 📬 **Milestone Decision Logic & Executive Email Directness (v2.14)**  
-  Embedded into `E-Mail & Stakeholder-Antwort` (`I-MAIL`, `C-REQUEST`, `O-REPLY`): identifies the sender's immediate orientation/decision need, isolates the substantive milestone prerequisite behind waiting periods to prevent accidental de facto pre-approvals (*Vorfreigaben*), and enforces the 4 Golden Rules of email directness: (1) Anliegens-Fokus without commitment automatism, (2) material justification behind target dates, (3) objective external criteria rather than subjective internal language, and (4) bundling secondary checklist cascades into compact form/guideline references.
-- 📑 **Three-Tier Audience, Setting Calibration & Collegial Review (v2.11–v2.13)**  
-  Engineered into `Proofreading & Redigat`, `Freigabe-Audit`, and `Präsentation & Storyboard`:
-  - **Three-Tier Audience & Setting Calibration:** Differentiates primary authority/board readers, secondary public/media impact, and internal authors while calibrating reviews against the publication setting (*Behördenvorlage* vs. *Paid Content/Corporate* vs. *Medienbeitrag*).
-  - **Strategic Concept Pre-Check & Anti-Nitpicking Evidence Threshold:** Pre-checks big-picture concept and organizational core mandate before sentence-level editing; bans speculative factual objections unless directly contradicted by M365 context.
-  - **Collegial Feedback Pattern:** Banned patronizing phrasing («muss ersetzt werden», «die Autoren sollten»); enforces the collegial review pattern justifying only the concrete delta (*«Die Formulierung wirkt … Deshalb allenfalls besser so: …»*) with explicit `[Bearbeitungskommentar: ...]` markers for missing facts.
-  - **Slide Triage & Redundancy Lock:** Applies a strict 4-way slide triage (*stimmig*, *kleinere Anpassung*, *grössere Anpassung*, *entfernen/Reserve*) and an automated `Redundanz-Sperre` that suppresses repetitive analytical preambles across multi-turn prompts.
-- 🏛️ **Catalog-Wide Operational Harmonization (v2.15)**  
-  Extends the four core cognitive standards across all operational strategy, briefing, and creation templates:
-  - **Outside-In Core Messaging & Standalone Q&A (`S-MESSAGES`, `O-QA`):** Anchors lead-with-action phrasing, bans repeating question accusations, enforces umbrella terms for open details, and guarantees isolated quoteability without insider jargon.
-  - **Bifurcated Strategic Decisions (`S-DECISION`):** Cleanly bifurcates between document/approval options (*Konzept stimmig* vs. *Neugewichtung* vs. *Nichtfreigabe*) and issue/monitoring triggers (*aktive Positionierung* vs. *Q&A-Bereitschaft* vs. *bewusster Verzicht*).
-  - **Non-Commitment Boundaries & Role Clarity in Strategy & Briefings (`O-STRATEGY`, `O-INTERVIEW`, `O-MEETING`):** Explicitly defines *Rote Linien / Nicht-Festlegung*, anchors concrete language rules (*«Nicht X, sondern Y»*), and preserves partner role boundaries without artificial leveling.
-  - **Setting-Calibrated Editorial Drafting (`O-ARTICLE-OUTLINE`, `O-ARTICLE-DRAFT`):** Clarifies publication format (guest commentary vs. corporate/jubilee piece vs. technical article) and prioritizes lively journalistic credibility over sterile PR praise.
-- 🛡️ **Procedural Lead Grounding & Two-Layer Communication Architecture (v2.16–v2.17)**  
-  Upgraded across email, stakeholder, and media workflows:
-  - **Sache, Ermessen und Form (`I-MAIL`, `C-REQUEST`):** Distinguishes whether the sender needs an internal strategic assessment, a direct response, or a ready-to-use text block for third parties (residents, partners, authorities, suppliers).
-  - **Procedural Lead & Raw Material Screening:** Verifies legal authority and procedural lead (federal/cantonal/municipal/partner jurisdiction vs. own role) to avoid false exposure as the sole instigator; filters raw business inputs for internal jargon, premature commitments, or unnecessary self-exposure.
-  - **Two-Layer Email Output Architecture (`O-REPLY`):** Delivers Layer 1 (concise 1–3 sentence internal recommendation in 1st person with decisive reasons and next steps) alongside Layer 2 (publication-ready, jargon-free text block with empathy-before-facts, objective criteria, and milestone caveats for affected parties or internal coordination).
-  - **Media Narrative Upfront Clarity (`I-MEDIA`, `O-MEDIA`, `C-MEDIA-CHECK`):** Reorders media output to establish upfront clarity, accessible human tone, and an active own narrative, completely avoiding defensive negation of negative question frames.
-- 📱 **Executive Social Media Ghostwriting & Visual Briefing (v2.20)**  
-  New Recipe #19 (`recipe-social-post`): A 2-turn workflow engineered for LinkedIn and Instagram ghostwriting:
-  - **Draft Critique & Challenge:** When an existing draft is in the thread, delivers a collegial 2–3 sentence assessment on what works, what to sharpen, and what internal project jargon to drop before publishing.
-  - **Persona & Channel Calibration:** Tailors perspective and tone to specific leadership archetypes (Executive Board thought leadership, project development/Baukultur, property/community quality, or visual corporate community storytelling).
-  - **Dual Ready-to-Publish Variants:** Outputs Variant 1 (substantive storytelling with strong hook, outside-in audience value, and zero LinkedIn clichés like «Ich freue mich sehr…») plus Variant 2 (a punchy, compact alternative for fast-scrolling mobile feeds).
-  - **Visual Asset Briefing:** Supplies concrete recommendations for real photo, carousel, or short video assets grounded in the project context.
-- 🛑 **Streaming State Guard & Native Stop Interception**  
-  When an AI response begins streaming, PromptDock displays a pulsing amber indicator (`Generiert Antwort...`) and auto-collapses into the 36px capsule. If you click the host chat's native stop button (*"Stop generating"* / *"Stop response"*), PromptDock catches the event and advances directly to your checkpoint without freezing.
-- 🎨 **Redesigned Command Palette & Slide-Up Sheet**  
-  A dark minimalist command palette unified with modern Indigo design tokens (`--accent: #6366f1`), sticky header brand badge, search shortcut (`⌘K` / `Ctrl+K`), horizontally scrollable category pills with overflow fade masks, directional card chevrons, and a slide-up prompt editor with custom toggle controls.
-- 🔀 **Dynamic Output Forking**  
-  Branch out at workflow completion points: transform an analysis into a press reply, a defensive Q&A matrix, an editorial board entry, or an executive briefing with a single click.
-- 📋 **Variable Sheet Modal**  
-  Configure dynamic template variables (e.g. `ZEITRAUM`, `PERSON`, `THEMA`, `SUCHBEGRIFF`) before launching, and select your execution mode (*Guided*, *Autopilot*, or *Express One-Shot*).
+PromptDock (`v2.1.0`) turns browser-based AI chats into a structured workflow cockpit. Launch single-shot prompts or guided multi-turn workflows in one click, steer intermediate checkpoints directly above the chat input, branch completed analyses into new deliverables, and annotate AI drafts inline with word-level diff previews—all 100% locally in your browser with zero telemetry.
 
 ---
 
-### 📦 Classic Edition (v1.0 Single-Paste)
+### Core Capabilities
 
-Prefer the pure, ultra-minimalist single-paste prompt list without the in-chat workflow rail?
+- ⚡ **Command Palette & Resilient 3-Tier Injection**
+  - **Fast Discovery:** Instant live search (`⌘K` / `Ctrl+K`), category filter pills (`Alle`, `PR & Medien`, `Review & Audit`, `Planung & Strategie`, `Eigene`), drag-and-drop sorting, auto-send toggle, and a live `chrome.storage.sync` byte meter.
+  - **Rich-Text Safe Injection:** Uses a 3-tier injection pipeline—synthetic `ClipboardEvent('paste')` with synchronous verification, formatted `insertHTML`, and direct DOM / React native value-setter fallbacks—to work reliably across ProseMirror, Lexical, Quill, textareas, and nested M365/Outlook iframes. Falls back gracefully to the system clipboard whenever no input field is reachable.
 
-- 📌 **Git Branch:** [`v1-classic`](https://github.com/Flx-xlF/PromptDock/tree/v1-classic)
-- 💾 **Release Archive:** [PromptDock v1.0.0-classic Release](https://github.com/Flx-xlF/PromptDock/releases/tag/v1.0.0-classic)
+- 🚊 **In-Chat Multi-Turn Cockpit ("Rail, Checkpoint, Fork")**
+  - **Adaptive Floating HUD:** Anchors automatically **10px above the host chat composer** via `ResizeObserver` and viewport clamping inside an isolated Shadow DOM. Supports drag repositioning (double-click to snap back) and automatically collapses inactive step labels into compact dots in narrow split-screens or Outlook/Teams sidebars (`@container` query at `<= 460px`).
+  - **Spotlight Composer & Quick Steering Chips:** Guide the next turn without retyping instructions using built-in modifier chips (*`+ Fakten korrigieren`*, *`+ Tiefer recherchieren`*, *`+ Haltung vorgeben`*, *`+ Ohne Rückfrage lösen`*) or type custom steering notes and advance via `Enter` or `Alt+Shift+ArrowRight`.
+  - **Dynamic Island Capsule & Stop Interception:** Automatically minimizes into a compact 36px status pill with a pulsing indicator (`Generiert Antwort...`) and spring-physics transitions while the model streams. Catches native *"Stop generating"* / *"Stop response"* clicks so workflows advance cleanly without freezing.
+  - **Three Execution Modes & Variable Modal:** Configure runtime variables (`SUCHBEGRIFF`, `ZEITRAUM`, `PERSON`, `THEMA`, `KANAL_PERSON` with automatic context fallbacks) and run any multi-turn workflow in **Guided** (pause at checkpoints), **Autopilot** (hands-free turn advance), or **Express One-Shot** (combines turns with a unified opening role, sequential `TASK 1..N:` headers, an 80/20 deliverable-first gate, and redundancy suppression).
+  - **Dynamic Output Forking:** At workflow completion or the final checkpoint, branch in one click into alternative output formats (e.g., turn a completed analysis into a Q+A matrix, press reply, stakeholder email, or strategy brief).
 
-Both editions share the same local-first, zero-telemetry architecture. PromptDock 2.1 retains 100% backwards compatibility: any single-turn prompt in your list continues to execute as an instantaneous direct paste!
+- 💬 **Contextual Inline Commenting & Word-Level Diffs**
+  - Highlight any span inside a Copilot, Gemini, ChatGPT, or Claude response to attach floating review notes and persistent W3C text highlights.
+  - Apply one-click style adjustments (*"sachlicher"*, *"einkürzen"*, *"positiv formulieren"*, *"empathischer"*, *"verständlicher"*) or custom rewrite instructions, and inspect proposed edits with a **Myers word-level diff** before replacing or copying text.
 
----
+- 🧩 **Custom Workflow Composer & Dual-Tier Storage**
+  - Author your own **Single-Shot** prompts or **Multi-Turn Workflows** directly in the segmented popup editor with interactive step pills (`Turn 1`, `Turn 2`, `+` to append turns) and JSON export/import backups.
+  - **Dual-Tier Architecture:** Single-shot prompts (`p_*`) and key ordering (`prompt_order`) synchronize across browser profiles via `chrome.storage.sync` (with automatic local/localStorage fallback), while longer custom multi-turn workflows (`r_*`) reside in `chrome.storage.local` to avoid sync per-item quota limits.
 
-### Key Features
-
-- ⚡ **One-Click Prompt & Workflow Injection**  
-  Keep high-leverage prompts and multi-turn recipes organized in a minimalist command palette. One click on any item row injects and launches it in the active chat.
-- 🧩 **Custom Multi-Turn Sequence Builder**  
-  Author custom multi-turn workflows with an interactive step builder, dedicated canvas for each phase, and automatic compile fallbacks.
-- 🎛️ **Draggable In-Chat HUD Rail**  
-  A floating cockpit that keeps you focused on complex multi-turn workflows without switching tabs. Reposition freely on your screen or double-click to snap back to zero-overlap default docking.
-- ⌨️ **Muscle Memory Hotkeys**  
-  Trigger your top 3 prompts with global keyboard shortcuts (`Alt+Shift+1`, `Alt+Shift+2`, `Alt+Shift+3`), search with `Cmd+K`, and advance turns with `Alt+Shift+ArrowRight`.
-- 💬 **Contextual Inline Commenting & Rewrites**  
-  Highlight any generated text inside Copilot, Gemini, ChatGPT, or Claude to trigger a floating action bar. Run quick adjustments (*"sachlicher"*, *"einkürzen"*, *"positiv formulieren"*, *"empathischer"*, *"verständlicher"*) or leave custom instructions with a side-by-side visual diff comparison.
-- 🛡️ **Resilient 3-Tier Injection Engine**  
-  Uses synthetic paste events with synchronous editor verification, `insertHTML`, and direct DOM node construction to prevent duplicate injection and preserve paragraph formatting across complex rich text editors (ProseMirror, Lexical, Quill).
-- 🔄 **Smart Clipboard Fallback**  
-  If an input field is obscured, inside a nested iframe, or momentarily unreachable, your prompt or turn step is copied to your clipboard instantly with an unobtrusive toast notification.
-- 📱 **Mobile Shortcut & Private Gist Sync (v2.1)**  
-  Sync your prompt library and multi-turn workflows directly to your mobile device via a private GitHub Gist—featuring rich v2.1 JSON formatting, instant QR onboarding, and 1500ms debouncing, accessible natively via mobile shortcuts without third-party cloud intermediaries.
-- 🔒 **Zero Telemetry & 100% Local-First**  
-  No telemetry, no tracking pixels, no remote analytics, and no accounts required. Prompts are stored strictly in your browser's dual-tier storage (`chrome.storage.sync` for single-shot prompts, `chrome.storage.local` for multi-turn recipes).
+- 📱 **Mobile Shortcuts Sync via Private GitHub Gist**
+  - Optional direct browser-to-GitHub sync (`api.github.com`) protected by your personal access token and throttled with a 1500ms debounce timer.
+  - Generates a live QR onboarding sheet with endpoint copy for iOS Shortcuts and mobile automation, publishing both a full multi-turn JSON payload (`prompts`) and a flat lookup dictionary (`quick`).
 
 ---
 
-### Built-In Strategic Recipe Suite
+### Built-In Strategic Communications Suite (15 Recipes)
 
-PromptDock 2.1 includes a vendor-agnostic Corporate Communications & Intelligence recipe suite (15 zero-overlap recipes, max 2 turns each):
+While PromptDock works with custom prompts in any language or domain, it ships out of the box with a streamlined, German-language **15-recipe suite for Corporate Communications, Public Affairs, and Executive Intelligence** (`max 2 turns`, `≤ 4 tasks per turn`).
 
-1. **Medienanfrage** (2 Turns: Dekonstruktion, Rollenklärung & Abklärungs-Triage ➔ Versandfertige Medienantwort & Pre-Flight Quality Gate)
-2. **Interview-Vorbereitung** (2 Turns: Briefing & Faktenlage ➔ Nahbares Interview-Briefing mit Mehrperspektiven-Q&A)
-3. **Wording & Basistext** (2 Turns: Kernanalyse ➔ Outside-in Basistext, Kernbotschaften & Kritisches Q&A)
-4. **Email & Beratung** (2 Turns: Vorgangs-, Subtext- & Rollen-Analyse ➔ Taktische Empfehlung & versandfertiger E-Mail-Entwurf; Forks zu Strategie, Next Actions & Q+A)
-5. **Meeting-Vorbereitung & Protokoll** (2 Turns: Termin- & Anliegensanalyse ➔ Briefing mit Entscheidungslogik & Nicht-Festlegung)
-6. **Textprüfung & Freigabe** (2 Turns: Setting, Zielpublikum & Faktengrenzen ➔ 3D-Audit, Freigabe & kollegiales Feedback; Forks zu E-Mail & Q+A)
-7. **Themenanalyse & Planung** (2 Turns: Recherche, Faktenlage & Risikobewertung ➔ Themenboard-Eintrag mit Kategorie A/B/C)
-8. **Artikel & Storytelling** (2 Turns: Recherche & Publikationssetting ➔ Artikelentwurf mit journalistischer Glaubwürdigkeit)
-9. **Wochenstart Briefing** (2 Turns: Executive Activity Scan ➔ Delta-Analyse & Inbox-Triage)
-10. **Projekt- & Status-Update** (2 Turns: Delta-Analyse ➔ Kompaktes Rückkehrer-Update)
-11. **Tiefenrecherche & Intelligence** (Single-Shot: Quellen- & Fakten-Dossier)
-12. **Standort- & Stakeholder-Austausch** (Single-Shot: Kompakteinträge)
-13. **Präsentation & Storyboard** (2 Turns: Kontext-, Zielgruppen- & Deck-Diagnose ➔ Storyboard mit Outside-in-Logik & Leak-Test)
-14. **Medienantwort-Check** (Single-Shot: Diagnostische Risikoanalyse ➔ Pre-Flight-Stresstest ➔ 2 versandfertige Textvarianten: Nahbar & narrativstark vs. Entschärft)
-15. **Social Media Post** (2 Turns: Lagebild & Entwurfs-Challenge ➔ 2 Post-Varianten & Visual-Briefing; Forks zu E-Mail, Q+A & Artikel)
+#### Suite Architecture & Guardrails
+- **Two-Tier Media & Discourse Radar:** Grounding tasks combine internal **Microsoft 365 Graph** retrieval (emails, Teams chats prioritizing `#KOM-ANKER` self-chat bookmarks, meeting notes, SharePoint) with external **Web Search (*Websuche*)** across 12 of the 15 recipes to capture active media framing, verify consistency with published statements (*Konsistenzschutz*), and cite verified web/media sources alongside internal files.
+- **First-Principles & Accessible Writing (*Laien-Test*):** Instead of rigid sentence schemas or hardcoded examples, drafting chunks enforce warm, relatable, jargon-free language understandable without prior knowledge—stress-tested across three viewpoints (*affected laypeople*, *critical media/politics*, and *partners/authorities*).
+- **Sync Quota Hardened:** All 15 built-in recipes fit comfortably within Chrome's per-item (`8,192 B`) and total (`102,400 B`) sync limits (largest compiled recipe ~6.7 KB raw / ~6.9 KB JSON sync; total ~71.1 KB raw / ~73.5 KB sync, ~28–30% safe headroom), backed by automated upgrade migrations (`v2_25_universal_media_radar`).
+
+#### Recipe Reference
+
+| # | Recipe (`id`) | Category | Cadence & Turns | Inputs / Output Forks |
+| :- | :--- | :--- | :--- | :--- |
+| 1 | **Medienanfrage** (`recipe-medienanfrage`) | PR & Medien | 2 Turns: *Diagnose, Recherche & Strategie-Linie* ➔ *Medienantwort & Pre-Flight-Check* | Forks: `Medienantwort-Check`, `Q+A Tabelle`, `Interview-Briefing`, `Themenplanung` |
+| 2 | **Interview beantworten** (`recipe-interview`) | PR & Medien | 2 Turns: *Diagnose, Recherche & Interview-Strategie* ➔ *Interview-Briefing & Antworten* | Forks: `Medienantwort`, `Q+A Tabelle` |
+| 3 | **Wording erstellen** (`recipe-wording`) | PR & Medien | 2 Turns: *Lagebild & Taktik-Check* ➔ *Wording & Q+A* | Forks: `Medienantwort`, `Kommunikationsstrategie` |
+| 4 | **Email & Beratung** (`recipe-email`) | PR & Medien | 2 Turns: *Lagebild, Subtext & taktische Weichenstellung* ➔ *Taktische Empfehlung & Antwortentwurf* | Forks: `Kommunikationsstrategie`, `Handlungsempfehlungen`, `Q+A Tabelle` |
+| 5 | **Meeting analysieren** (`recipe-meeting`) | Planung & Strategie | 2 Turns: *Lagebild* ➔ *Briefing* | — |
+| 6 | **Textprüfung & Freigabe** (`recipe-freigabe`) | Review & Audit | 2 Turns: *Lagebild* ➔ *Drei-Dimensionen-Audit & Freigabe* | Forks: `Antwortentwurf`, `Q+A Tabelle` |
+| 7 | **Themenanalyse & Planung** (`recipe-themenplanung`) | Planung & Strategie | 2 Turns: *Lagebild & 360°-Mehrperspektiven-Check* ➔ *Entscheid, Themenplanung & Massnahmen* | Forks: `Kommunikationsstrategie`, `Antwortentwurf`, `Q+A Tabelle` |
+| 8 | **Artikel schreiben** (`recipe-artikel`) | Planung & Strategie | 2 Turns: *Recherche, Thesen-Check & Artikel-Outline* ➔ *Vollständiger Artikelentwurf* | — |
+| 9 | **Wochenstart Briefing** (`recipe-wochenstart`) | Planung & Strategie | 2 Turns: *Aktivitäts-Scan* ➔ *Delta & Inbox-Triage* | Vars: `ZEITRAUM` |
+| 10 | **Update** (`recipe-update`) | Planung & Strategie | 2 Turns: *Kontext & Recherche* ➔ *Delta & Briefing* | Vars: `THEMA`*, `PERSON`, `ZEITRAUM` |
+| 11 | **Recherche** (`recipe-recherche`) | PR & Medien | 1 Turn (Single-Shot): *Lagebild* | Vars: `SUCHBEGRIFF`* · Forks: `Antwortentwurf`, `Kommunikationsstrategie`, `Q+A Tabelle`, `Themenplanung` |
+| 12 | **Standort- & Stakeholder-Austausch** (`recipe-standort-austausch`) | Planung & Strategie | 1 Turn (Single-Shot): *Stakeholder-Einträge* | — |
+| 13 | **Präsentation & Storyboard** (`recipe-praesentation`) | Review & Audit | 2 Turns: *Deck-Diagnose, Recherche & Storyline-Architektur* ➔ *Folien-Storyboard & konkrete Inputs* | Forks: `Detailtabelle`, `Q+A Tabelle`, `Antwortentwurf` |
+| 14 | **Medienantwort-Check** (`recipe-medienantwort-check`) | Review & Audit | 1 Turn (Single-Shot): *Redaktions-Challenge & Optimierung (2 Textvarianten)* | Forks: `Q+A Tabelle`, `Medienantwort` |
+| 15 | **Social Media Post** (`recipe-social-post`) | Planung & Strategie | 2 Turns: *Lagebild & Entwurfs-Challenge* ➔ *Post-Entwurf & Visual-Briefing* | Vars: `KANAL_PERSON` · Forks: `Antwortentwurf`, `Q+A Tabelle`, `Artikelentwurf` |
 
 ---
 
 ### Supported AI Platforms
 
-| Platform | Environments Supported | Injection & Inline Commenting | Workflow Rail |
+| Platform | Supported Environments (`manifest.json` & `content.js`) | Prompt Injection & Inline Diffs | Multi-Turn Workflow HUD |
 | :--- | :--- | :---: | :---: |
-| **Microsoft Copilot** | copilot.microsoft.com, copilot.cloud.microsoft, Outlook on Web, Teams Web, M365 Portal | ✅ | ✅ |
-| **Google Gemini** | gemini.google.com | ✅ | ✅ |
-| **ChatGPT** | chatgpt.com, chat.openai.com | ✅ | ✅ |
-| **Claude** | claude.ai | ✅ | ✅ |
+| **Microsoft Copilot** | `copilot.microsoft.com`, `copilot.cloud.microsoft`, `m365.cloud.microsoft`, `teams.microsoft.com`, Outlook Web (`outlook.cloud.microsoft`, `outlook.office.com`, `outlook.office365.com`, `outlook.live.com`, `outlook.com`) | ✅ | ✅ |
+| **Google Gemini** | `gemini.google.com` | ✅ | ✅ |
+| **ChatGPT** | `chatgpt.com`, `chat.openai.com` | ✅ | ✅ |
+| **Claude** | `claude.ai` | ✅ | ✅ |
 
 ---
 
-### Quick Start & Installation
+### Installation & Build
 
-#### Option A: Install from Web Store
-*(Store links will be posted upon publication)*
-- [Chrome Web Store](https://chrome.google.com/webstore)
-- [Firefox Add-ons (AMO)](https://addons.mozilla.org/)
-- [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons)
-
-#### Option B: Load as Developer Extension (Unpacked)
-1. Clone or download this repository:
+#### Load Unpacked (Chrome / Edge / Brave)
+1. Clone this repository:
    ```bash
    git clone https://github.com/Flx-xlF/PromptDock.git
    ```
-2. Open your Chromium browser and go to `chrome://extensions` (or `edge://extensions`).
-3. Enable **Developer mode** (toggle in top-right corner).
-4. Click **Load unpacked** and select the extension directory.
-5. Pin the extension to your toolbar and start prompting.
+2. Open `chrome://extensions` (or `edge://extensions`) and enable **Developer mode**.
+3. Click **Load unpacked** and select the `PromptDock` folder.
+4. Pin PromptDock to your browser toolbar.
+
+*(Firefox 115+ MV3 metadata is configured via `manifest.json` `browser_specific_settings.gecko`; load temporarily via `about:debugging` ➔ **This Firefox** ➔ **Load Temporary Add-on**.)*
+
+#### Build Release ZIP
+Validate all JS files with Node.js / JSC and create a clean, store-ready archive (`release/promptdock-v2.1.0.zip`):
+```bash
+python3 build_release.py
+# or
+npm run build
+```
+
+#### Classic Edition (v1.0 Single-Paste)
+Looking for the lightweight single-paste prompt manager without the workflow HUD?
+- **Branch:** [`v1-classic`](https://github.com/Flx-xlF/PromptDock/tree/v1-classic)
+- **Archive:** [PromptDock v1.0.0-classic Release](https://github.com/Flx-xlF/PromptDock/releases/tag/v1.0.0-classic)
 
 ---
 
 ### Keyboard Shortcuts
 
-| Shortcut | Action |
-| :--- | :--- |
-| `Alt + Shift + 1` | Inject Prompt 1 (or launch guided workflow) |
-| `Alt + Shift + 2` | Inject Prompt 2 |
-| `Alt + Shift + 3` | Inject Prompt 3 |
-| `Alt + Shift + →` | Advance to next turn at workflow checkpoint |
-| `⌘ + K` / `Ctrl + K` | Focus prompt search bar in popup dock |
-| `Enter` | Submit steering note & advance turn at checkpoint |
-| `Esc` | Clear search query or close dialogs |
-
-*Customizable anytime via `chrome://extensions/shortcuts`.*
+| Shortcut / Command | Scope | Action |
+| :--- | :--- | :--- |
+| `Alt + Shift + →` | Chat HUD | Submit optional steering note and advance to the next workflow turn |
+| `⌘ + K` / `Ctrl + K` | Popup | Focus and select the prompt search bar |
+| `Enter` | Chat HUD / Modals | Advance workflow turn with steering note, submit variables, or save inline comment |
+| `Esc` | Popup / Chat HUD | Close active modals, clear search, or dismiss workflow HUD |
+| `Run Prompt 1–3` (`run-prompt-0..2`) | Global Browser | Configurable via `chrome://extensions/shortcuts` to trigger your top 3 prompts directly |
 
 ---
 
 ### Privacy & Data Ownership
 
-Your prompts belong to you.
-- PromptDock operates completely client-side.
-- We do not run a backend server.
-- The optional GitHub Gist synchronization connects directly from your browser to GitHub's official API (`api.github.com`) using your personal token.
-- See full details in [PRIVACY_POLICY.md](PRIVACY_POLICY.md).
+- **Zero Telemetry & Client-Side Only:** PromptDock includes no analytics, tracking scripts, or intermediary servers.
+- **Direct Storage:** Prompts and workflows stay inside your browser (`chrome.storage.sync` / `chrome.storage.local`). Optional GitHub Gist synchronization authenticates directly against `https://api.github.com/gists` using your own token.
+- Full details: [PRIVACY_POLICY.md](PRIVACY_POLICY.md) · Licensed under [MIT](LICENSE).
 
 ---
 
-### Building the Release Package
-
-To validate syntax and create a store-compliant, clean ZIP package:
-```bash
-python3 build_release.py
-```
-Outputs: `release/promptdock-v2.1.0.zip`
-
----
-
-Built with care (and a bit of madness) by [schema/f](https://github.com/Flx-xlF).
-
-☕ Enjoy my work? [Tip me on Ko-fi](https://ko-fi.com/flxxlf).
+Built with care (and a bit of madness) by [schema/f](https://github.com/Flx-xlF) · ☕ [Tip on Ko-fi](https://ko-fi.com/flxxlf)
