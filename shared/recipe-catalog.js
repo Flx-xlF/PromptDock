@@ -17,7 +17,7 @@
     // Global constraints block prepended to Turn 1 (Analysis & Fact-Checking)
     const G_RAHMEN = `RAHMENBEDINGUNGEN:
 - Keine leeren Phrasen, Füllwörter oder KI-typischen Formulierungen. Jeder Satz muss Informationsgehalt haben.
-- Unterscheide strikt zwischen gesicherten Fakten (mit kurzer Nennung der Quelle aus Mailverlauf, SharePoint/Graph oder Anhang), plausiblen Annahmen und Bewertungen.
+- Unterscheide strikt zwischen gesicherten Fakten (mit kurzer Nennung der Quelle aus Mailverlauf, SharePoint/Graph, Anhang oder verifizierter Web-/Medienquelle), plausiblen Annahmen und Bewertungen.
 - Fehlende Daten oder Informationslücken explizit als «[Offen / Zu prüfen]» benennen, niemals überspielen oder hinzuerfinden.`;
 
     // Compact style & quality discipline for Turn 2+ (Strategy & Output drafting) and Forks
@@ -101,13 +101,13 @@ Analysiere den Suchbegriff/-satz sowie allfällige Dateien. Bestimme:
             compile: (params) => {
                 const isMedia = params?.scope === 'media';
                 const defaultFocus = isMedia
-                    ? 'bisherige mediale Berichterstattung, öffentlich verfügbare Fakten, frühere Stellungnahmen und historische Kontexte'
-                    : 'relevante Hintergrundfakten, Projektstände, bisherige Entscheidungen, Sprachregelungen und organisatorische Zusammenhänge';
+                    ? 'bisherige und aktuelle mediale Berichterstattung, öffentlich verfügbare Fakten, frühere Stellungnahmen und historische Kontexte'
+                    : 'relevante Hintergrundfakten, Projektstände, bisherige Entscheidungen, Sprachregelungen sowie bisherige und aktuelle mediale Berichterstattung zum Thema';
                 const focus = params?.focus || defaultFocus;
-                return `TASK: RECHERCHE & FAKTENABGLEICH (M365 GRAPH & #KOM-ANKER)
-Durchsuche E-Mails, Teams-Chats (priorisiere dabei mit «#KOM-ANKER» markierte Notizen, Links und Screenshots im Self-Chat), Besprechungsnotizen und SharePoint gezielt nach: ${focus}.
-- Gleiche Vorannahmen der Anfrage aktiv gegen unabhängige M365-Quellen und «#KOM-ANKER»-Referenzen ab, statt sie ungeprüft zu übernehmen.
-- **Faktenstatus & Konsistenz:** Ordne jede zentrale Aussage eindeutig einer Stufe zu (*fachlich geprüft und beschlossen* | *geplant oder vorgesehen* | *in Prüfung* | *offen [Zu prüfen]* inkl. Quelle). Vermische diese Grade nicht und decke Termin-Widersprüche auf.`;
+                return `TASK: RECHERCHE, MEDIEN-RADAR & FAKTENABGLEICH (M365 GRAPH, #KOM-ANKER & WEBSUCHE)
+Durchsuche aktiv sowohl interne Quellen (M365 Graph: E-Mails, Teams-Chats – priorisiere mit «#KOM-ANKER» markierte Notizen, Links und Screenshots im Self-Chat –, Besprechungsnotizen, SharePoint) als auch externe Quellen via Websuche (Online-Medien, Newsportale, veröffentlichte Medienmitteilungen) gezielt nach: ${focus}.
+- **Bisherige & aktuelle mediale Berichterstattung prüfen:** Erfasse ausdrücklich, was zum Thema bereits oder aktuell in den Medien berichtet wird (Framing, Kritikpunkte, Tonalität) und welche eigenen Aussagen oder Partner-Stellungnahmen bereits öffentlich im Raum stehen (Konsistenzschutz).
+- **Prämissen- & Faktenstatus-Check:** Gleiche Vorannahmen aktiv gegen unabhängige M365-/«#KOM-ANKER»- und Web-Quellen ab und ordne jede zentrale Aussage eindeutig einer Stufe zu (*fachlich geprüft und beschlossen* | *geplant oder vorgesehen* | *in Prüfung* | *offen [Zu prüfen]* inkl. Quelle).`;
             }
         },
         'R-TIME': {
@@ -279,9 +279,9 @@ Erstelle auf Basis der festgelegten Linie das versandfertige Kommunikations-Asse
         'C-MEDIA-CHECK': {
             id: 'C-MEDIA-CHECK',
             title: 'Medienantwort-Check (Forensische Challenge & 2 Varianten)',
-            text: `TASK: DIAGNOSTISCHE DEKONSTRUKTION & MEHRPERSPEKTIVEN-RISIKOANALYSE
-Analysiere Ausgangslage und Vorlage mit strategischem Scharfblick:
-1. **Oberfläche vs. Subtext & Triage:** Was ist das tatsächliche journalistische/politische Motiv hinter der Anfrage, ist der Verzicht auf weitere interne Detailabklärungen verhältnismässig, und welche Substanz braucht die Antwort?
+            text: `TASK: DIAGNOSTISCHE DEKONSTRUKTION, MEDIEN-RECHERCHE & MEHRPERSPEKTIVEN-ANALYSE
+Analysiere Ausgangslage, mediale Berichterstattung und Vorlage mit strategischem Scharfblick:
+1. **Medien-Radar (M365 & Web), Subtext & Triage:** Suche aktiv in M365 (inkl. «#KOM-ANKER») und via Websuche nach **bisheriger und aktueller medialer Berichterstattung** sowie früheren Stellungnahmen zum Thema. Was ist vor diesem Hintergrund das tatsächliche Motiv der Anfrage, steht der Entwurf im Einklang mit bereits publizierten Aussagen, und ist der Verzicht auf weitere interne Detailabklärungen verhältnismässig?
 2. **Mehrperspektiven-Stresstest (3 Blickwinkel):** Wie wirkt der Entwurf auf (a) **Betroffene & Laien ohne Vorwissen** (nahbar, menschlich, sympathisch und sofort einleuchtend vs. technokratisch, kühl oder belehrend?), (b) **kritische Redaktionen & Politik** (Prämissen-Falle, Nachhak-Risiko, unfreiwillige Komik?) und (c) **Partner, Behörden & Beteiligte** (Zuständigkeiten, Solidarität und Vorbehalte gewahrt?)?
 
 TASK: SCHONUNGSLOSE CHALLENGE DES ENTWURFS (PRE-FLIGHT-STRESSTEST)
@@ -526,7 +526,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                 {
                     title: 'DIAGNOSE, RECHERCHE & INTERVIEW-STRATEGIE',
                     role: 'Du bist ein erfahrener Mediensprecher und Interview-Coach.',
-                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { focus: 'bisherige Berichterstattung, bisherige Positionierungen, Journalistin/Journalist und Medium' } }, 'S-FULL']
+                    chunks: ['I-MEDIA', { chunkId: 'R-FULL', params: { scope: 'media', focus: 'bisherige und aktuelle mediale Berichterstattung, bisherige Positionierungen, Journalistin/Journalist und Medium' } }, 'S-FULL']
                 },
                 {
                     title: 'INTERVIEW-BRIEFING & ANTWORTEN',
@@ -625,7 +625,7 @@ TASK: BACKUP-FOLIEN & DIE 3 HÄRTESTEN FRAGEN IM RAUM
                 {
                     title: 'LAGEBILD & 360°-MEHRPERSPEKTIVEN-CHECK',
                     role: 'Du bist ein Senior Issue Manager und Redaktionsleiter der Kommunikationsplanung.',
-                    chunks: ['I-MAIL', 'R-FULL', 'C-PERSPECTIVE', 'T-TLDR']
+                    chunks: ['I-MAIL', { chunkId: 'R-FULL', params: { scope: 'media' } }, 'C-PERSPECTIVE', 'T-TLDR']
                 },
                 {
                     title: 'ENTSCHEID, THEMENPLANUNG & MASSNAHMEN',
@@ -840,7 +840,7 @@ Extrahiere alle relevanten Themen aus dem vorliegenden E-Mail-Verlauf, den Termi
                     role: 'Du bist ein erfahrener Executive Social-Media-Stratege und Ghostwriter.',
                     chunks: [
                         'I-MAIL',
-                        { chunkId: 'R-FULL', params: { focus: 'Projektkontext, bisherige Positionierungen, Partnerrollen (Stadt/Kanton/Planer), Faktenstand und verfügbare Bild-/Video-Assets' } },
+                        { chunkId: 'R-FULL', params: { focus: 'bisherige und aktuelle mediale Berichterstattung, Hintergrundkontext, bisherige Positionierungen, Partnerrollen, Faktenstand und verfügbare Bild-/Video-Assets' } },
                         'C-REQUEST',
                         'T-TLDR'
                     ]

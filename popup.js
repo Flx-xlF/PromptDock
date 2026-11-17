@@ -300,10 +300,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (loaded && loaded.length > 0) {
         prompts = loaded;
 
-        // One-time catalog sync & high-signal compaction upgrade (v2.24)
+        // One-time catalog sync & high-signal compaction upgrade (v2.25)
         try {
-            const local = await ext.storage.local.get(['v2_1_praesentation_seeded', 'v2_24_abstract_sympathetic_15recipes']);
-            if ((!local?.v2_1_praesentation_seeded || !local?.v2_24_abstract_sympathetic_15recipes) && Catalog?.RECIPES) {
+            const local = await ext.storage.local.get(['v2_1_praesentation_seeded', 'v2_25_universal_media_radar']);
+            if ((!local?.v2_1_praesentation_seeded || !local?.v2_25_universal_media_radar) && Catalog?.RECIPES) {
                 let changed = false;
                 const deprecatedIds = new Set(['recipe-proofreading', 'recipe-strategie', 'recipe-berate-mich', 'recipe-themenanalyse']);
                 const deprecatedNames = new Set(['Proofreading', 'Strategie entwickeln', 'Berate mich!', 'Themenanalyse']);
@@ -364,7 +364,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         v2_21_kom_anker_and_quota_relief: true,
                         v2_22_unleash_and_challenge: true,
                         v2_23_blueprint_2turn: true,
-                        v2_24_abstract_sympathetic_15recipes: true
+                        v2_24_abstract_sympathetic_15recipes: true,
+                        v2_25_universal_media_radar: true
                     });
                 }
             }

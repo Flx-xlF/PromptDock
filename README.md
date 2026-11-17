@@ -18,6 +18,11 @@
 
 PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI workflow cockpit & cross-device execution bridge** — engineered right inside your browser:
 
+- 📡 **Universal Two-Tier Media & Discourse Radar (v2.25)**  
+  Expands fact-checking and research from pure internal M365 Graph grounding to a dual-channel intelligence radar across 12 of the 15 recipes:
+  - **Dual-Channel Research (`R-FULL` & `C-MEDIA-CHECK`):** Instructs host LLMs to query both internal M365 Graph sources (emails, Teams chats including `#KOM-ANKER`, meeting notes, SharePoint) and external web search (*Websuche*: online media, news portals, published press releases) for prior and ongoing media coverage.
+  - **Framing & Consistency Protection (*Konsistenzschutz*):** Evaluates active media framing, criticism, and tone, and cross-checks drafts against already published statements to prevent contradictions.
+  - **Verified Web & Media Citations (`G_RAHMEN`):** Turn 1 source attribution explicitly accepts verified web and media references alongside email threads, SharePoint/Graph, and attachments.
 - 🧠 **First-Principles Architecture, Laien-Test & 15 Zero-Overlap Recipes (v2.24)**  
   Universalizes the entire recipe catalog by stripping hardcoded domain examples and condensing all workflows to a crisp **max 2-turn** cadence:
   - **Zero Hardcoded Arguments (`shared/recipe-catalog.js`):** Removed case-specific buzzwords and prescriptive examples across intake, strategy, audit, and output chunks so host LLMs reason from first principles and adapt dynamically to any scenario.
@@ -41,7 +46,7 @@ PromptDock 2.1 evolves from a fast prompt launcher into an **interactive AI work
 - 🛡️ **Source-Grounded Verification & Phase Guardrails**  
   Employs strict source attribution (citing email threads, M365 Graph, or attachments) and gap markers (*«[Offen / Zu prüfen]»*) rather than decorative icons or negative-constraint bans. Turn 2+ and output forks inherit `G_OUTPUT_STYLE`, preserving uncompromising anti-fluff rules and executive tone. Furthermore, non-final turns automatically inject a strict `PHASEN-FOKUS` boundary rule preventing host LLMs from drafting premature final outputs during early analysis steps.
 - 🗜️ **Chrome Sync Quota Hardening & High-Density Compaction**  
-  All 15 active recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (max item `recipe-medienanfrage` at 6.3 KB, `recipe-social-post` at 6.2 KB, `recipe-email` at 6.1 KB, `recipe-freigabe` at 5.8 KB, `recipe-wording` at 5.8 KB) and total sync storage stays well below the 102,400-byte ceiling (~66.2 KB total, 64.7%). Every turn across all recipes is strictly capped at $\le 2$ turns and $\le 4$ high-impact tasks per turn. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_24_abstract_sympathetic_15recipes`), preventing fatal storage quota exceptions.
+  All 15 active recipes strictly respect Chrome's 8,192-byte `QUOTA_BYTES_PER_ITEM` limit (max item `recipe-medienanfrage` at 6.7 KB compiled / 6.9 KB sync, `recipe-social-post` at 6.2 KB, `recipe-email` at 6.1 KB, `recipe-freigabe` at 5.8 KB, `recipe-wording` at 5.8 KB) and total sync storage stays well below the 102,400-byte ceiling (~71.1 KB compiled / 69.4%, ~73.5 KB sync / 71.8%). Every turn across all recipes is strictly capped at $\le 2$ turns and $\le 4$ high-impact tasks per turn. Backed by defensive clipping fallbacks in `storage.js` and automatic catalog migration (`v2_25_universal_media_radar`), preventing fatal storage quota exceptions.
 - 🔢 **Dynamic Task Header Sequencing & Clean Unicode Flow**  
   Turn and fork compilation engines dynamically re-index all prompt tasks into clean sequential numbers (`TASK 1:`, `TASK 2:`, `TASK 3:`...) with clean Unicode arrow (`→`) flow, ensuring host LLMs follow a clear, logical step order regardless of chunk assembly.
 - ⏱️ **1500ms Debounced Cloud Gist Sync**  
